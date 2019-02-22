@@ -1,0 +1,7 @@
+{
+    "BASE_DATOS": "tdbsystem",
+    "SERVIDOR": "localhost",
+    "PUERTO": "5432",
+    "USUARIO": "postgres",
+    "CONTRASENA": "XXXXXXXX"
+}
