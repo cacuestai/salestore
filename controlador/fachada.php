@@ -14,7 +14,6 @@ class Controlador {
             if ($_SERVER["REQUEST_METHOD"] !== 'POST') {
                 throw new Exception("Método de solicitud no permitida");
             }
-
             $contentType = isset($_SERVER["CONTENT_TYPE"]) ? trim($_SERVER["CONTENT_TYPE"]) : '';
 
             if ($contentType === "application/json") {
@@ -25,21 +24,20 @@ class Controlador {
             } else {
                 $post = $_POST['data'];
             }
-
             if (is_array($post)) {
                 $this->ejecutar($post);
             } else {
                 throw new Exception("Error al decodificar los datos:\n" . print_r($post, TRUE));
             }
         } catch (Exception $e) {
-            error_log($e->getMessage() . "\n" . print_r($contenido, TRUE));
+            // error_log($e->getMessage() . "\n" . print_r($contenido, TRUE));  // quite el comentario para ver el mensaje de error
             echo json_encode(["ok" => FALSE, "mensaje" => $e->getMessage()]);
         }
     }
 
     private function ejecutar($param) {
 
-        error_log(print_r($param, 1));
+        // error_log(print_r($param, 1)); // quite el comentario si quiere ver qué argumentos llegan del front-end
 
         extract($param);
         $static = FALSE;
@@ -52,7 +50,7 @@ class Controlador {
             throw new Exception("Falta el nombre de la clase");
         }
 
-        if (!array_key_exists('accion', $param)) { //////////////////// actualizar esta parte en el documento
+        if (!array_key_exists('accion', $param)) {
             throw new Exception("Falta el nombre del método");
         }
 
@@ -85,7 +83,7 @@ class Controlador {
     }
 
     private function leerConfiguracion() {
-        define("PATH_APP", $_SERVER['DOCUMENT_ROOT'] . '/demotdb/');
+        define("PATH_APP", $this->rutaAplicacion());
 
         // iniciar la sesión, solo si no existe. Esto debe ir antes de enviar cualquier cosa al navegador
         date_default_timezone_set('America/Bogota');
@@ -105,6 +103,12 @@ class Controlador {
 
         include_once "../servicios/util/Conexion.php";
         //  require '../vendor/autoload.php'; // si se usa composer
+    }
+
+    private function rutaAplicacion() {
+        $rutaFachada = str_replace("\\", "/", dirname(__FILE__));
+        $pos = strrpos($rutaFachada, "/") + 1;
+        return substr($rutaFachada, 0, $pos);
     }
 
 }

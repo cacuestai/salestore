@@ -1,5 +1,8 @@
 -- TDBSystem (Base de datos para el Sistema "Tienda de Barrio"), versión 0.1
 -- Un simple modelo de bases de datos para fines académicos
+-- Cree una base de datos Postgres en blanco y corra este script sobre ella.
+
+-- Enseguida, se usa DDL (Data Definition Language) para crear la base de datos
 
 DROP TABLE IF EXISTS categorias_productos CASCADE;
 DROP TABLE IF EXISTS presentaciones_productos CASCADE;
@@ -266,3 +269,58 @@ CREATE TABLE detalles_devoluciones_compras (
 	ON UPDATE CASCADE
 	NOT DEFERRABLE
 );
+
+-- A continuación un poco de Data Manipulation Language (DML) para disponer de algunas pruebas
+
+INSERT INTO clientes(
+	id_cliente, nombre, telefonos, direccion, con_credito)
+	VALUES ('CL001', 'Juan José Hernández Hernández', '8760001', 'Calle 10 # 11-11', true)
+	ON CONFLICT DO NOTHING;	
+	
+INSERT INTO clientes(
+	id_cliente, nombre, telefonos, direccion, con_credito)
+	VALUES ('CL002', 'Miguel Angel García García', '8760002', 'Calle 11 # 11-12', true)
+	ON CONFLICT DO NOTHING;		
+
+INSERT INTO clientes(
+	id_cliente, nombre, telefonos, direccion, con_credito)
+	VALUES ('CL003', 'Juan Sebastián García García', '8760003', 'Calle 12 # 11-13', true)
+	ON CONFLICT DO NOTHING;		
+
+INSERT INTO clientes(
+	id_cliente, nombre, telefonos, direccion, con_credito)
+	VALUES ('CL004', 'Juan David García Hernández', '8760004', 'Calle 13 # 11-14', false)
+	ON CONFLICT DO NOTHING;		
+
+INSERT INTO clientes(
+	id_cliente, nombre, telefonos, direccion, con_credito)
+	VALUES ('CL005', 'Samuel David García García', '8760005', 'Calle 13 # 12-14', false)
+	ON CONFLICT DO NOTHING;		
+
+INSERT INTO clientes(
+	id_cliente, nombre, telefonos, direccion, con_credito)
+	VALUES ('CL006', 'Juan Pablo García García', '8760006', 'Calle 13 # 12-15', false)
+	ON CONFLICT DO NOTHING;		
+
+INSERT INTO clientes(
+	id_cliente, nombre, telefonos, direccion, con_credito)
+	VALUES ('CL007', 'Andrés Felipe García Martínez', '8760007', 'Calle 10 # 12-15', true)
+	ON CONFLICT DO NOTHING;		
+
+INSERT INTO clientes(
+	id_cliente, nombre, telefonos, direccion, con_credito)
+	VALUES ('CL008', 'Juan Esteban Hernández Hernández', '8760008', 'Calle 12 # 11-15', false)
+	ON CONFLICT DO NOTHING;		
+
+INSERT INTO clientes(
+	id_cliente, nombre, telefonos, direccion, con_credito)
+	VALUES ('CL009', 'Juan Diego Flores García', '8760009', 'Calle 10 # 11-15', false)
+	ON CONFLICT DO NOTHING;		
+
+INSERT INTO clientes(
+	id_cliente, nombre, telefonos, direccion, con_credito)
+	VALUES ('CL010', 'Angel David García Hernández', '8760010', 'Calle 9 # 11-15', false)
+	ON CONFLICT DO NOTHING;	
+
+
+
