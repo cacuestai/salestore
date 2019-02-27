@@ -9,6 +9,7 @@ Un simple ejemplo de ventas y adquisición de mercancía con fines académicos p
 ### Características de la versión 0.02
 
   - Se agrega clientes.html y clientes.js para demostrar la carga de datos desde el back-end.
+  - cliente.js incluye la creación de un objeto anónimo mediante una clase anónima.
   - Se agrega la librería [tabulator] para mostrar la información obtenida de la base de datos.
   - Se hacen pequeños ajustes a main.js para permitir la gestión de clientes.
   - carga-scripts.js permite ahora cargar además de scripts JS, módulos JS.
