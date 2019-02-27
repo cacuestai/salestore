@@ -35,7 +35,7 @@ window.util = util;
 
     let opciones = {
         'menu-ir-a-inicio': () => window.location.href = 'index.html',
-        'menu-clientes': gestionarClientes,
+        'menu-clientes': './vista/html/clientes.html', // gestionarClientes,
         // ...,
         // ...,
         'menu-btnacercade': './vista/html/acercade.html'

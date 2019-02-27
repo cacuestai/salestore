@@ -6,6 +6,13 @@ Un simple ejemplo de ventas y adquisición de mercancía con fines académicos p
   - Arquitectura por capas.
   - API Fetch de ECMAScript 2015 (ES6)
 
+### Características de la versión 0.02
+
+  - Se agrega clientes.html y clientes.js para demostrar la carga de datos desde el back-end.
+  - Se agrega la librería [tabulator] para mostrar la información obtenida de la base de datos.
+  - Se hacen pequeños ajustes a main.js para permitir la gestión de clientes.
+  - carga-scripts.js permite ahora cargar además de scripts JS, módulos JS.
+
 ### Características de la versión 0.01
 
   - Uso de la API Fetch para acceder a datos del servidor sin necesidad de AJAX.
@@ -38,3 +45,5 @@ También se incluye el archivo ./servicios/varios/conexion.json.**back** que deb
 Y en él deberá asignar el nombre correcto de la base de datos y demás parámetros de conexión.
 
 Por favor tenga en cuenta que esto es una simple demostración para quienes apenas se inician en el mundo de la programación web. Siendo así son muy bienvenidas las sugerencias para mejorar este producto de demostración.
+
+[Tabulator]: <http://tabulator.info/>
