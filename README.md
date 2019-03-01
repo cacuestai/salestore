@@ -6,6 +6,17 @@ Un simple ejemplo de ventas y adquisición de mercancía con fines académicos p
   - Arquitectura por capas.
   - API Fetch de ECMAScript 2015 (ES6)
 
+### Características de la versión 0.03
+  - Se elimina de main.js el método gestionarClientes(), credo para pruebas en la versión 0.02
+  - Se actualiza el objeto "opciones" de main.js para cargar la página que gestiona "clientes"
+  - El método generarTabla() de main.js cambió para retornar el objeto Tabulator creado.
+  - Ligeros cambios en main.css para mejorar la visualización de formularios
+  - se agrega el parámetro clasesCSS a Util.mensaje para flexibilizar el estilo de los mensajes
+  - Se reemplaza Util.getEstado() por Util.errorInfo. 
+  - Util.errorInfo informa sobre errores lanzados por objetos de tipo PDO o PDOStatement
+  - Se implementa la inserción de clientes desde la aplicación
+  - Se implementa la eliminación de clientes desde la aplicación
+
 ### Características de la versión 0.02
 
   - Se agrega clientes.html y clientes.js para demostrar la carga de datos desde el back-end.

@@ -8,34 +8,9 @@ window.util = util;
 
     let menuPrincipal;
 
-    const gestionarClientes = () => {
-        // se envía un solicitud de datos al back-end
-        util.fetchData('./controlador/fachada.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: {
-                clase: 'Cliente', // Nombre de la clase PHP
-                accion: 'seleccionar', // Método de la clase
-                id_cliente: '', // este y los siguientes datos son simples ejemplos de argumentos adicionales que se envían al back-end
-                nombre: '',
-                telefonos: '',
-                direccion: ''
-            }
-        }).then(data => {
-            // tratamiento dado a la respuesta que llega del back-end
-            console.log(data);
-            // hacer algo con la información que llega
-            // ...
-        }).catch(error => {
-            util.mensaje(error, 'No se pudo acceder a clientes');
-        });
-    }
-
     let opciones = {
         'menu-ir-a-inicio': () => window.location.href = 'index.html',
-        'menu-clientes': './vista/html/clientes.html', // gestionarClientes,
+        'menu-clientes': './vista/html/clientes.html',
         // ...,
         // ...,
         'menu-btnacercade': './vista/html/acercade.html'

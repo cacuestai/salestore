@@ -4,7 +4,7 @@
  * Manejo de conexiones a bases de datos Postgres mediante PDO
  * Importante:
  *   La instrucción $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
- *   le permite incluir en un try - catch instrucciones que contengan SQL, 
+ *   le permite incluir en un try - catch instrucciones que contengan SQL,
  *   y en caso de error lograr observarlo en el log
  *
  * @author Carlos Cuesta Iglesias
@@ -34,18 +34,19 @@ class Conexion {
 
     /**
      * Devuelve el estado que reporta el motor de base de datos luego de una transacción
-     * @param boolean $json TRUE por defecto, para indicar que se devuelve una cadena JSON con el estado,
-     * FALSE, devuelve un array asociativo con el estado.
-     * @return type Un array asociativo o una cadena JSON con el estado de la ejecución.
+     * Ver http://php.net/manual/es/pdo.errorinfo.php
+     * @param object Un objeto de tipo PDO o de tipo PDOStatement según el tipo de instrucción que se esté ejecutando
+     * @param boolean $json TRUE por defecto, para indicar que se devuelve una cadena JSON con el estado, FALSE, devuelve un array asociativo con el estado.
+     * @return String Un array asociativo o una cadena JSON con el estado de la ejecución.
      */
-    public function getEstado($json = TRUE) {
-        ////error_log('¡Pilas! ' . print_r($this->pdo->errorInfo(), TRUE));  // dejar por si se requiere
-        if (!($ok = !($this->pdo->errorInfo()[1]))) {
-            //error_log('¡Pilas! ' . print_r($this->pdo->errorInfo(), TRUE)); // dejar por si se requiere
+    public function errorInfo($origen, $json = TRUE) {
+        // error_log('¡Pilas! ' . print_r($origen->errorInfo(), TRUE));  // dejar por si se requiere
+        if (!($ok = !($origen->errorInfo()[1]))) {
+            error_log('¡Pilas! ' . print_r($origen->errorInfo(), TRUE)); // dejar por si se requiere
         }
         $mensaje = '';
-        if (count($errorInfo = explode("\n", $this->pdo->errorInfo()[2])) > 1) {
-            $mensaje = substr($errorInfo[0], 8);
+        if (strlen($origen->errorInfo()[2]) > 5) {
+            $mensaje = substr($origen->errorInfo()[2], 8);
         }
         return $json ? json_encode(['ok' => $ok, 'mensaje' => $mensaje]) : ['ok' => $ok, 'mensaje' => $mensaje];
     }
@@ -66,6 +67,3 @@ class Conexion {
     }
 
 }
-
-
-

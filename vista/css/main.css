@@ -9,3 +9,13 @@ body {
 main {
     flex: 1 0 auto;
 }
+
+.modal {
+    /* 
+        estas instrucciones evitan que los formularios superen el 100% de la altura y también la
+        barra de scroll vertical en dichos formularios. También puede modificarse el ancho máximo:
+            width: 75% !important;
+    */
+    max-height: 100% !important;
+    overflow-y: hidden !important;
+}

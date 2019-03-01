@@ -1,3 +1,9 @@
+
+-- ******************************
+-- Tabla baja productos error serial
+-- Revisar relaciones baja productos el nombre de la fk 
+-- ******************************
+
 -- TDBSystem (Base de datos para el Sistema "Tienda de Barrio"), versión 0.1
 -- Un simple modelo de bases de datos para fines académicos
 -- Cree una base de datos Postgres en blanco y corra este script sobre ella.

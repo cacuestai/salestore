@@ -6,15 +6,24 @@ var verLog = true;
  * Muestra un mensaje de error por consola y al usuario
  * @param {String} mensajeLog el mensaje que aparece por consola
  * @param {String} mensajeUsuario el mensaje que se da al usuario. Si se omite se utiliza mensajeLog
+ * @param {String} clasesCSS las clases que se aplicarán al aviso
  * @param {boolean} depurar activa o desactiva la visualización por consolas
  */
-export const mensaje = (mensajeLog, mensajeUsuario = mensajeLog, depurar = verLog) => {
-    if (depurar) {
+export const mensaje = (mensajeLog, mensajeUsuario = mensajeLog, clasesCSS = 'red darken-4', depurar = verLog) => {
+    mensajeLog = String(mensajeLog); // hacer un cast del log, por si las moscas...
+    if (depurar && mensajeLog) {
         console.error(mensajeLog);
+    }
+    if (mensajeUsuario !== mensajeLog) {
+        let pos = mensajeLog.indexOf('DETAIL:');
+        if (pos > -1) {
+            mensajeLog = mensajeLog.substr(pos + 8);
+            mensajeUsuario = `${mensajeUsuario}<br>${mensajeLog}`;
+        }
     }
     M.toast({
         html: mensajeUsuario,
-        classes: 'red darken-4'
+        classes: clasesCSS
     })
 }
 
@@ -67,9 +76,6 @@ export async function fetchData(url, data = {}) {
     }
 
     const respuesta = await fetch(url, data);
-
-    console.log(respuesta);
-
 
     if (!respuesta.ok) {
         throw new Error(`Error al cargar ${url}: ${respuesta.status} - ${respuesta.statusText}`); // <<<<<<<<<<<<<<<<<<<<<<<<
