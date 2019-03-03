@@ -62,44 +62,19 @@
      */
     let cargarScripts = (html) => {
         let doc = (new DOMParser()).parseFromString(html, "text/html");
-
         // parser para cada uno de los script de la página (se admiten otros selectores: 'head > script' | 'head > link')
-        doc.querySelectorAll("script").forEach(async(scriptElement) => { // < OJO con el async
-            console.log(scriptElement.type);
-            if (scriptElement.type === 'module') {
-                importarModulo(scriptElement.src);
+        doc.querySelectorAll("script").forEach(script => {
+            let objScript = document.createElement('script');
+            if (script.type && script.type === 'module') {
+                objScript.setAttribute("type", "module");
             } else {
-                // scriptElement.prop tiene otras propiedades como: innerHTML, textContent, ...
-                let script = '';
-                if (scriptElement.src) { // es una referencia a un <script src="..."></script>
-                    try {
-                        const resupuesta = await fetch(scriptElement.src);
-                        script = await resupuesta.text();
-                    } catch (error) {
-                        console.log('fetch fallido', error);
-                    }
-                } else { // es una horrible incrustación <script>...</script> en la cabecera
-                    script = scriptElement.textContent;
-                }
-                let nodoScript = document.createElement("script");
-                nodoScript.text = script;
-                document.head.appendChild(nodoScript);
+                objScript.setAttribute("type", "text/javascript");
             }
+            objScript.setAttribute("src", script.src);
+            const head = document.head || document.getElementsByTagName("head")[0] || document.documentElement;
+            head.insertBefore(objScript, head.lastChild);
         });
     }
-
-    let importarModulo = function(src) {
-        return new Promise(function(resolve, reject) {
-            var script = document.createElement('script');
-            script.setAttribute('type', 'module');
-            script.setAttribute('src', src);
-
-            script.onload = resolve;
-            script.onerror = reject;
-
-            document.body.appendChild(script);
-        });
-    };
 
     /**
      * Permite usar el identificador $ como nombre de la función querySelector o querySelectorAll

@@ -6,8 +6,16 @@ Un simple ejemplo de ventas y adquisición de mercancía con fines académicos p
   - Arquitectura por capas.
   - API Fetch de ECMAScript 2015 (ES6)
 
+### Características de la versión 0.04
+  - Se modifica la función cargarScripts() de carga-scripts.js para hacerla compatible con Mozilla Firefox.
+  - Las funciones control() y acciones() de la clase Clientes.js cambian de funciones flecha a normalitas por culpa de M. Firefox.
+  - La clase para el manejo de clientes deja de ser anónima y pasa a llamarse Cliente el objeto sigue siendo anónimo.
+  - Los métodos actualizarRegistro() y eliminarRegistro() se definen como métodos de clase en esta versión.
+  - Se corrige ./servicios/varios/tdbsystem-pgscript.sql la relación bajas_productos <--> productos
+  - se elimina el método acciones() y se reemplaza por uno anónimo een la primera columna de la tabla
+
 ### Características de la versión 0.03
-  - Se elimina de main.js el método gestionarClientes(), credo para pruebas en la versión 0.02
+  - Se elimina de main.js el método gestionarClientes(), creado para pruebas en la versión 0.02
   - Se actualiza el objeto "opciones" de main.js para cargar la página que gestiona "clientes"
   - El método generarTabla() de main.js cambió para retornar el objeto Tabulator creado.
   - Ligeros cambios en main.css para mejorar la visualización de formularios

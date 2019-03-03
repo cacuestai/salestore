@@ -1,12 +1,8 @@
 
--- ******************************
--- Tabla baja productos error serial
--- Revisar relaciones baja productos el nombre de la fk 
--- ******************************
-
--- TDBSystem (Base de datos para el Sistema "Tienda de Barrio"), versión 0.1
+-- TDBSystem (Base de datos para el Sistema "Tienda de Barrio"), versión 0.2
 -- Un simple modelo de bases de datos para fines académicos
 -- Cree una base de datos Postgres en blanco y corra este script sobre ella.
+-- En la siguiente versión tener en cuenta INT2 e INT4
 
 -- Enseguida, se usa DDL (Data Definition Language) para crear la base de datos
 
@@ -65,14 +61,14 @@ CREATE TABLE productos (
 );
 
 CREATE TABLE bajas_productos (
-	id_baja_producto int4 NOT NULL,
+	id_baja_producto SERIAL NOT NULL,
 	tipo_baja varchar NOT NULL,
 	cantidad int2 NOT NULL DEFAULT 0,
 	precio_producto numeric NOT NULL DEFAULT 0,
-	id_presentacion_producto int4 NOT NULL,
+	id_producto int4 NOT NULL,
 	PRIMARY KEY(id_baja_producto),
 	CONSTRAINT tipos_bajas CHECK (tipo_baja IN ('Donación', 'Daño', 'Pérdida', 'Descomposición', 'Destrucción', 'Exclusion')),
-	CONSTRAINT ref_baja_productos__producto FOREIGN KEY (id_presentacion_producto)
+	CONSTRAINT ref_baja_productos__producto FOREIGN KEY (id_producto)
 		REFERENCES productos(id_producto)
 	MATCH SIMPLE
 	ON DELETE NO ACTION
