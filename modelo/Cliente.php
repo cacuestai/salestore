@@ -50,6 +50,39 @@ class Cliente {
     }
 
     /**
+     * Inserta un registro de clientes en la base de datos
+     */
+    public function actualizar($param) {
+        extract($param);
+        // error_log(print_r($param, TRUE)); // quitar comentario para ver lo que se recibe del front-end
+
+        $sql = "UPDATE clientes
+                   SET id_cliente=:id_cliente, nombre=:nombre, telefonos=:telefonos, direccion=:direccion, con_credito=:con_credito
+                   WHERE id_cliente = :id_actual";
+
+        // Prepara la instrucción SQL para ejecutarla luego de recibir los parámetros de inserción
+        $instruccion = $conexion->pdo->prepare($sql);
+
+        if ($instruccion) {
+            $instruccion->bindParam(':id_actual', $data['id_actual']);
+            $instruccion->bindParam(':id_cliente', $data['id_cliente']);
+            $instruccion->bindParam(':nombre', $data['nombre']);
+            $instruccion->bindParam(':direccion', $data['direccion']);
+            $instruccion->bindParam(':telefonos', $data['telefonos']);
+            // para datos distintos a string, especificar el tipo: http://php.net/manual/es/pdo.constants.php
+            $instruccion->bindParam(':con_credito', $data['con_credito'], PDO::PARAM_BOOL);
+
+            if ($instruccion->execute()) {
+                echo $conexion->errorInfo($instruccion);
+            } else {
+                echo $conexion->errorInfo($instruccion);
+            }
+        } else {
+            echo json_encode(['ok' => FALSE, 'mensaje' => 'Falló en la instrucción de actualización para clientes']);
+        }
+    }
+
+    /**
      * Elimina un registro con base en su PK
      */
     public function eliminar($param) {
@@ -60,6 +93,7 @@ class Cliente {
 
         if ($instruccion) {
             if ($instruccion->execute([":id_cliente" => $id_cliente])) {
+                $estado = $conexion->errorInfo($instruccion);
                 echo $conexion->errorInfo($instruccion);
             } else {
                 echo $conexion->errorInfo($instruccion);
