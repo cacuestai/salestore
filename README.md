@@ -12,6 +12,7 @@ Un simple ejemplo de ventas y adquisición de mercancía con fines académicos p
   - Actualizado Tabulator a la versión 4.2.2
   - Se incluye en ./vista/images la representación gráfica de la base de datos utilizada
   - Se agregan registros de pruebas en ./servicios/varios/tdbsystem-pgscript.sql 
+  - **Importante**: se agrega la vista "lista_productos" a tdbsystem-pgscript.sql. Esta vista se requiere la edición de productos.
   - Otros cambios menores.
 
 ### Características de la versión 0.04

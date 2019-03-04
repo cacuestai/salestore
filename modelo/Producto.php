@@ -8,9 +8,7 @@ class Producto {
      */
     public function seleccionar($param) {
         extract($param);
-        $sql = "SELECT id_cliente, nombre, telefonos, direccion, con_credito
-                   FROM productos
-                ORDER BY nombre";
+        $sql = "SELECT * FROM lista_productos ORDER BY nombre";
         // prepara la instrucción SQL para ejecutarla, luego recibir los parámetros de filtrado
         $q = $conexion->pdo->prepare($sql);
         $q->execute();
