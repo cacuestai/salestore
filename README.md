@@ -6,7 +6,7 @@ Un simple ejemplo de ventas y adquisición de mercancía con fines académicos p
   - Arquitectura por capas.
   - API Fetch de ECMAScript 2015 (ES6)
 
-![N|Solid](https://github.com/cacuestai/salestore/tree/master/vista/images/screenshot.png)
+![Screenshot](screenshot.png)
 
 ### Características de la versión 0.05
   - Actualizado Tabulator a la versión 4.2.2
