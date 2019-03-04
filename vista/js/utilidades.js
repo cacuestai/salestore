@@ -83,3 +83,41 @@ export async function fetchData(url, data = {}) {
 
     return await respuesta.json();
 }
+
+/**
+ * 
+ * @param {*} selectContenedor 
+ * @param {*} elementos 
+ * @param {*} clave 
+ * @param {*} valor 
+ */
+export let crearLista = (selectContenedor, elementos, clave, valor, elementoInicial) => {
+    let select = $(selectContenedor);
+    select.innerHTML = '';
+    let opciones = `<option value="" disabled selected>${elementoInicial}</option>`;
+
+    elementos.forEach((item) => {
+        opciones += `<option value="${item[clave]}">${item[valor]}</option>`;
+    });
+
+    select.innerHTML = opciones;
+    M.FormSelect.init($(selectContenedor));
+}
+
+export let cargarLista = opciones => {
+    util.fetchData('./controlador/fachada.php', {
+        'body': {
+            'clase': opciones.clase,
+            'accion': opciones.accion
+        }
+    }).then(data => {
+        if (data.ok) {
+            crearLista(opciones.contenedor, data.lista, opciones.clave, opciones.valor, opciones.valorInicial);
+        } else {
+            throw new Error(data.mensaje);
+        }
+    }).catch(error => {
+        util.mensaje(error);
+    });
+
+}

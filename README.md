@@ -11,8 +11,9 @@ Un simple ejemplo de ventas y adquisición de mercancía con fines académicos p
 ### Características de la versión 0.05
   - Actualizado Tabulator a la versión 4.2.2
   - Se incluye en ./vista/images la representación gráfica de la base de datos utilizada
+  - Se agrega a utilidades.js las funciones crearLista() y cargarLista() para agregar elementos a listas seleccionables.
   - Se agregan registros de pruebas en ./servicios/varios/tdbsystem-pgscript.sql 
-  - **Importante**: se agrega la vista "lista_productos" a tdbsystem-pgscript.sql. Esta vista se requiere la edición de productos.
+  - **Importante**: se agrega la vista "lista_productos" a tdbsystem-pgscript.sql. Esta vista se requiere para editar productos.
   - Otros cambios menores.
 
 ### Características de la versión 0.04
@@ -75,5 +76,3 @@ Y en él deberá asignar el nombre correcto de la base de datos y demás paráme
 Por favor tenga en cuenta que esto es una simple demostración para quienes apenas se inician en el mundo de la programación web. Siendo así son muy bienvenidas las sugerencias para mejorar este producto de demostración.
 
 [Tabulator]: <http://tabulator.info/>
-
-[//]: <> (Archivo editado con https://dillinger.io/)

@@ -1,18 +1,18 @@
 'use strict';
 
 // se crea un nuevo objeto anónimo a partir de una clase anónima
-// dicho objeto define la gestión de clientes, utilizando el componente 'Tabulator' (http://tabulator.info/)
+// dicho objeto define la gestión de productos, utilizando el componente 'Tabulator' (http://tabulator.info/)
 
-new class Cliente {
+new class Producto {
 
     constructor() {
 
-        this.contenedor = '#tabla-clientes'; // el div que contendrá la tabla de datos de clientes
+        this.contenedor = '#tabla-productos'; // el div que contendrá la tabla de datos de productos
         this.url = './controlador/fachada.php'; // la url del controlador de fachada
         this.filasPorPagina = 7;
 
         this.parametros = { // parámetros que se envían al servidor para mostrar la tabla
-            clase: 'Cliente',
+            clase: 'Producto',
             accion: 'seleccionar'
         };
 
@@ -38,26 +38,49 @@ new class Cliente {
                     }
                 }
             },
-            { title: 'ID Cliente', field: 'id_cliente', editor: 'input', width: 100, align: 'center' },
-            { title: 'Nombre', field: 'nombre', editor: 'input', width: 270 },
-            { title: 'Dirección', field: 'direccion', editor: 'input' },
-            { title: 'Teléfonos', field: 'telefonos', editor: 'input', align: 'center' },
-            { title: 'Crédito', field: 'con_credito', align: 'center', width: 90, formatter: 'tickCross', cellClick: this.conmutar }
+            { title: 'ID', field: 'id_producto', visible: false },
+            { title: 'Categoría', field: 'categoria', width: 100 },
+            { title: 'Presentación', field: 'presentacion', width: 100 },
+            { title: 'Nombre', field: 'nombre', width: 200 },
+            { title: 'Precio', field: 'precio', align: 'right', formatter: "money" },
+            { title: 'Disponible', field: 'cantidad_disponible', align: 'center', width: 70 },
+            { title: 'Mínimo', field: 'cantidad_minima', align: 'center', width: 70 },
+            { title: 'Máximo', field: 'cantidad_maxima', align: 'center', width: 70 }
         ];
 
         this.ordenInicial = [ // establece el orden inicial de los datos
             { column: 'nombre', dir: 'asc' }
         ]
 
-        this.indice = 'id_cliente'; // estable la PK como índice único para cada fila de la tabla visualizada
+        this.indice = 'id_producto'; // estable la PK como índice único para cada fila de la tabla visualizada
         this.tabla = this.generarTabla();
         this.filaActual; // guarda el objeto "fila actual" cuando se elige actualizar o eliminar sobre una fila
         this.operacion; // insertar | actualizar | eliminar
 
-        this.frmEdicionCliente = M.Modal.init($('#cliente-frmedicion'), {
+        this.frmEdicionProducto = M.Modal.init($('#producto-frmedicion'), {
             dismissible: false, // impedir el acceso a la aplicación durante la edición
             onOpenStart: () => {
-                // luego miraremos para que sirve esta belleza
+                M.updateTextFields();
+                let listasSeleccionables = document.querySelectorAll('select'); /////////////////////////
+                let instances = M.FormSelect.init(listasSeleccionables);
+
+                util.cargarLista({ // llenar los elementos de la lista desplegable de categorías de productos
+                    clase: 'CategoriaProducto',
+                    accion: 'listar',
+                    contenedor: '#producto-lstcategoria',
+                    clave: 'id_categoria_producto',
+                    valor: 'nombre',
+                    valorInicial: 'Seleccione una categoría de producto'
+                });
+
+                util.cargarLista({ // llenar los elementos de la lista desplegable de presentaciones de productos
+                    clase: 'PresentacionProducto',
+                    accion: 'listar',
+                    contenedor: '#producto-lstpresentacion',
+                    clave: 'id_presentacion_producto',
+                    valor: 'descripcion',
+                    valorInicial: 'Seleccione una presentación de producto'
+                });
             }
         });
 
@@ -101,16 +124,16 @@ new class Cliente {
     }
 
     /**
-     * Se asignan los eventos a los botones principales para la gestión de clientes
+     * Se asignan los eventos a los botones principales para la gestión de productos
      */
     gestionarEventos() {
-        $('#cliente-btnagregar').addEventListener('click', event => {
+        $('#producto-btnagregar').addEventListener('click', event => {
             this.operacion = 'insertar';
             // despliega el formulario para editar clientes. Ir a la definición del boton 
             // 'cliente-btnagregar' en clientes.html para ver cómo se dispara este evento
         });
 
-        $('#cliente-btnaceptar').addEventListener('click', event => {
+        $('#producto-btnaceptar').addEventListener('click', event => {
             // dependiendo de la operación elegida cuando se abre el formulario de
             // edición y luego se pulsa en 'Aceptar', se inserta o actualiza un registro.
             if (this.operacion == 'insertar') {
@@ -118,11 +141,11 @@ new class Cliente {
             } else if (this.operacion == 'actualizar') {
                 this.actualizarRegistro();
             }
-            this.frmEdicionCliente.close();
+            this.frmEdicionProducto.close();
         });
 
-        $('#cliente-btncancelar').addEventListener('click', event => {
-            this.frmEdicionCliente.close();
+        $('#producto-btncancelar').addEventListener('click', event => {
+            this.frmEdicionProducto.close();
         });
     }
 
@@ -132,11 +155,11 @@ new class Cliente {
     insertarRegistro() {
         // se creas un objeto con los datos del formulario
         let nuevoCliente = {
-            id_cliente: $('#cliente-txtid').value,
-            nombre: $('#cliente-txtnombre').value,
-            direccion: $('#cliente-txtdireccion').value,
-            telefonos: $('#cliente-txttelefonos').value,
-            con_credito: $('#cliente-chkcredito').checked
+            id_cliente: $('#producto-txtid').value,
+            nombre: $('#producto-txtnombre').value,
+            direccion: $('#producto-txtdireccion').value,
+            telefonos: $('#producto-txttelefonos').value,
+            con_credito: $('#producto-chkcredito').checked
         };
 
         // se envían los datos del nuevo cliente al back-end y se nuestra la nueva fila en la tabla
@@ -151,10 +174,10 @@ new class Cliente {
             if (data.ok) {
                 util.mensaje('', '<i class="material-icons">done</i>', 'teal darken');
                 this.tabla.addData([nuevoCliente]);
-                $('#cliente-txtid').value = '';
-                $('#cliente-txtnombre').value = '';
-                $('#cliente-txtdireccion').value = '';
-                $('#cliente-txttelefonos').value = '';
+                $('#producto-txtid').value = '';
+                $('#producto-txtnombre').value = '';
+                $('#producto-txtdireccion').value = '';
+                $('#producto-txttelefonos').value = '';
             } else {
                 throw new Error(data.mensaje);
             }
@@ -169,14 +192,14 @@ new class Cliente {
      * @param {Row} filaActual Una fila Tabulator con los datos de la fila actual
      */
     editarRegistro() {
-        this.frmEdicionCliente.open();
+        this.frmEdicionProducto.open();
         // se muestran en el formulario los datos de la fila a editar
         let filaActual = this.filaActual.getData();
-        $('#cliente-txtid').value = filaActual.id_cliente;
-        $('#cliente-txtnombre').value = filaActual.nombre;
-        $('#cliente-txtdireccion').value = filaActual.direccion;
-        $('#cliente-txttelefonos').value = filaActual.telefonos;
-        $('#cliente-chkcredito').checked = filaActual.con_credito;
+        $('#producto-txtid').value = filaActual.id_cliente;
+        $('#producto-txtnombre').value = filaActual.nombre;
+        $('#producto-txtdireccion').value = filaActual.direccion;
+        $('#producto-txttelefonos').value = filaActual.telefonos;
+        $('#producto-chkcredito').checked = filaActual.con_credito;
         M.updateTextFields();
     }
 
@@ -189,11 +212,11 @@ new class Cliente {
         let idClienteActual = this.filaActual.getData().id_cliente;
         let nuevosDatosCliente = {
             id_actual: idClienteActual,
-            id_cliente: $('#cliente-txtid').value, // el posible nuevo ID
-            nombre: $('#cliente-txtnombre').value,
-            direccion: $('#cliente-txtdireccion').value,
-            telefonos: $('#cliente-txttelefonos').value,
-            con_credito: $('#cliente-chkcredito').checked
+            id_cliente: $('#producto-txtid').value, // el posible nuevo ID
+            nombre: $('#producto-txtnombre').value,
+            direccion: $('#producto-txtdireccion').value,
+            telefonos: $('#producto-txttelefonos').value,
+            con_credito: $('#producto-chkcredito').checked
         };
 
         // se envían los datos del nuevo cliente al back-end y se nuestra la nueva fila en la tabla

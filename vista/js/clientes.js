@@ -38,10 +38,10 @@ new class Cliente {
                     }
                 }
             },
-            { title: 'ID Cliente', field: 'id_cliente', editor: 'input', width: 100, align: 'center' },
-            { title: 'Nombre', field: 'nombre', editor: 'input', width: 270 },
-            { title: 'Dirección', field: 'direccion', editor: 'input' },
-            { title: 'Teléfonos', field: 'telefonos', editor: 'input', align: 'center' },
+            { title: 'ID Cliente', field: 'id_cliente', width: 100, align: 'center' },
+            { title: 'Nombre', field: 'nombre', width: 270 },
+            { title: 'Dirección', field: 'direccion' },
+            { title: 'Teléfonos', field: 'telefonos', align: 'center' },
             { title: 'Crédito', field: 'con_credito', align: 'center', width: 90, formatter: 'tickCross', cellClick: this.conmutar }
         ];
 

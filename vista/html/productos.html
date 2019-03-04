@@ -22,46 +22,50 @@
     <!-- especificaciones de un cuadro modal -->
     <div id="producto-frmedicion" class="modal">
         <div class="modal-content">
-            <h5 id="producto-titulo" class="teal-text center">Datos del cliente</h5>
-            <div class="section">
-                <!-- se fuerza una espacio vertical -->
-            </div>
+            <h5 id="producto-titulo" class="teal-text center">Datos del producto</h5>
 
             <div class="container">
-                <div class="row">
-                    <div class="input-field col s6">
-                        <input class="validate" type="text" name="producto-txtid" id="producto-txtid" required/>
-                        <label for="producto-txtid">Identificación del cliente</label>
-                    </div>
 
-                    <div class="switch col s5 offset-s1">
-                        <label>
-                                Crédito&nbsp;&nbsp;&nbsp;No
-                                <input id="producto-chkcredito" type="checkbox">
-                                <span class="lever"></span>
-                                Si
-                            </label>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <select id="producto-lstcategoria"></select>
+                        <label>Categoría del producto</label>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="input-field col s12">
+                        <select id="producto-lstpresentacion"></select>
+                        <label>Presentación del producto</label>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="input-field col s12">
                         <input class="validate" type="text" name="producto-txtnombre" id="producto-txtnombre" required/>
-                        <label for="producto-txtnombre">Nombres y apellidos</label>
+                        <label for="producto-txtnombre">Nombre del producto</label>
                     </div>
                 </div>
 
                 <div class="row">
-                    <div class="input-field col s12">
-                        <input class="validate" type="text" name="producto-txtdireccion" id="producto-txtdireccion" required/>
-                        <label for="producto-txtdireccion">Dirección</label>
+                    <div class="input-field col s6">
+                        <input class="validate" type="number" name="producto-txtprecio" id="producto-txtprecio" required min="0.0" />
+                        <label for="producto-txtprecio">Precio del producto</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <input class="validate" type="number" name="producto-txtcantidad" id="producto-txtcantidad" required min="0" max="999" />
+                        <label for="producto-txtcantidad">Cantidad disponible</label>
                     </div>
                 </div>
 
                 <div class="row">
-                    <div class="input-field col s12">
-                        <input class="validate" type="text" name="producto-txttelefonos" id="producto-txttelefonos" required/>
-                        <label for="producto-txttelefonos">Teléfono(s)</label>
+                    <div class="input-field col s6">
+                        <input class="validate" type="number" name="producto-txtminimo" id="producto-txtminimo" required min="1" max="999" />
+                        <label for="producto-txtminimo">Cantidad mínima</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <input class="validate active" type="number" name="producto-txtmaximo" id="producto-txtmaximo" required min="1" max="999" />
+                        <label for="producto-txtmaximo">Cantidad máxima</label>
                     </div>
                 </div>
 
@@ -76,11 +80,10 @@
         <!-- hasta aquí las especificaciones de un cuadro modal -->
     </div>
 
-    <div id="tabla-clientes"></div>
+    <div id="tabla-productos"></div>
     <br>
     <div class=" teal lighten-4">
-        &nbsp;Pulse clic sobre la columna "crédito" para establecer o no que un cliente tiene crédito.
-        <br> &nbsp;Para editar otras celdas, pulse doble clic sobre ellas.
+        <br> &nbsp;
     </div>
 </body>
 
