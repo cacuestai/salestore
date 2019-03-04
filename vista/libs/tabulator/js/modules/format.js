@@ -1,6 +1,6 @@
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-/* Tabulator v4.2.1 (c) Oliver Folkerd */
+/* Tabulator v4.2.2 (c) Oliver Folkerd */
 
 var Format = function Format(table) {
 	this.table = table; //hold Tabulator object
@@ -513,7 +513,7 @@ Format.prototype.formatters = {
 
 		element.setAttribute("aria-label", percentValue);
 
-		return "<div style='position:absolute; top:8px; bottom:8px; left:4px; right:4px;'  data-max='" + max + "' data-min='" + min + "'><div style='position:relative; height:100%; width:calc(" + percentValue + "%); background-color:" + color + "; display:inline-block;'></div></div>" + (legend ? "<div style='position:absolute; top:4px; left:0; text-align:" + legendAlign + "; width:100%; color:" + legendColor + ";'>" + legend + "</div>" : "");
+		return "<div style='position:realtive; height:100%;'  data-max='" + max + "' data-min='" + min + "'><div style='position:relative; height:100%; width:calc(" + percentValue + "%); background-color:" + color + "; display:inline-block;'></div></div>" + (legend ? "<div style='position:absolute; top:4px; left:0; text-align:" + legendAlign + "; width:100%; color:" + legendColor + ";'>" + legend + "</div>" : "");
 	},
 
 	//background color

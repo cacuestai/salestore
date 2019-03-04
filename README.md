@@ -6,6 +6,14 @@ Un simple ejemplo de ventas y adquisición de mercancía con fines académicos p
   - Arquitectura por capas.
   - API Fetch de ECMAScript 2015 (ES6)
 
+![N|Solid](https://github.com/cacuestai/salestore/tree/master/vista/images/screenshot.png)
+
+### Características de la versión 0.05
+  - Actualizado Tabulator a la versión 4.2.2
+  - Se incluye en ./vista/images la representación gráfica de la base de datos utilizada
+  - Se agregan registros de pruebas en ./servicios/varios/tdbsystem-pgscript.sql 
+  - Otros cambios menores.
+
 ### Características de la versión 0.04
   - Se modifica la función cargarScripts() de carga-scripts.js para hacerla compatible con Mozilla Firefox.
   - Las funciones control() y acciones() de la clase Clientes.js cambian de funciones flecha a normalitas por culpa de M. Firefox.
@@ -66,3 +74,5 @@ Y en él deberá asignar el nombre correcto de la base de datos y demás paráme
 Por favor tenga en cuenta que esto es una simple demostración para quienes apenas se inician en el mundo de la programación web. Siendo así son muy bienvenidas las sugerencias para mejorar este producto de demostración.
 
 [Tabulator]: <http://tabulator.info/>
+
+[//]: <> (Archivo editado con https://dillinger.io/)

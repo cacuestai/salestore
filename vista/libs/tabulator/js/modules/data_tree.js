@@ -1,6 +1,6 @@
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-/* Tabulator v4.2.1 (c) Oliver Folkerd */
+/* Tabulator v4.2.2 (c) Oliver Folkerd */
 
 var DataTree = function DataTree(table) {
 	this.table = table;
@@ -18,11 +18,12 @@ var DataTree = function DataTree(table) {
 
 DataTree.prototype.initialize = function () {
 	var dummyEl = null,
+	    firstCol = this.table.columnManager.getFirstVisibileColumn(),
 	    options = this.table.options;
 
 	this.field = options.dataTreeChildField;
 	this.indent = options.dataTreeChildIndent;
-	this.elementField = options.dataTreeElementColumn;
+	this.elementField = options.dataTreeElementColumn || (firstCol ? firstCol.field : false);
 
 	if (options.dataTreeBranchElement) {
 
@@ -88,8 +89,10 @@ DataTree.prototype.initialize = function () {
 };
 
 DataTree.prototype.initializeRow = function (row) {
+	var childArray = row.getData()[this.field];
+	var isArray = Array.isArray(childArray);
 
-	var children = typeof row.getData()[this.field] !== "undefined";
+	var children = isArray || !isArray && (typeof childArray === "undefined" ? "undefined" : _typeof(childArray)) === "object" && childArray !== null;
 
 	row.modules.dataTree = {
 		index: 0,
@@ -106,18 +109,20 @@ DataTree.prototype.layoutRow = function (row) {
 	    el = cell.getElement(),
 	    config = row.modules.dataTree;
 
-	el.style.paddingLeft = parseInt(window.getComputedStyle(el, null).getPropertyValue('padding-left')) + config.index * this.indent + "px";
-
 	if (config.branchEl) {
 		config.branchEl.parentNode.removeChild(config.branchEl);
 	}
 
 	this.generateControlElement(row, el);
 
-	if (config.index && this.branchEl) {
-		config.branchEl = this.branchEl.cloneNode(true);
-		el.insertBefore(config.branchEl, el.firstChild);
-		el.style.paddingLeft = parseInt(el.style.paddingLeft) + (config.branchEl.offsetWidth + config.branchEl.style.marginRight) * (config.index - 1) + "px";
+	if (config.index) {
+		if (this.branchEl) {
+			config.branchEl = this.branchEl.cloneNode(true);
+			el.insertBefore(config.branchEl, el.firstChild);
+			config.branchEl.style.marginLeft = (config.branchEl.offsetWidth + config.branchEl.style.marginRight) * (config.index - 1) + config.index * this.indent + "px";
+		} else {
+			el.style.paddingLeft = parseInt(window.getComputedStyle(el, null).getPropertyValue('padding-left')) + config.index * this.indent + "px";
+		}
 	}
 };
 
@@ -232,11 +237,19 @@ DataTree.prototype.generateChildren = function (row) {
 
 	var children = [];
 
-	row.getData()[this.field].forEach(function (childData) {
+	var childArray = row.getData()[this.field];
+
+	if (!Array.isArray(childArray)) {
+		childArray = [childArray];
+	}
+
+	childArray.forEach(function (childData) {
 		var childRow = new Row(childData || {}, _this4.table.rowManager);
 		childRow.modules.dataTree.index = row.modules.dataTree.index + 1;
 		childRow.modules.dataTree.parent = row;
-		childRow.modules.dataTree.open = _this4.startOpen(row, childRow.modules.dataTree.index);
+		if (childRow.modules.dataTree.children) {
+			childRow.modules.dataTree.open = _this4.startOpen(childRow.getComponent(), childRow.modules.dataTree.index);
+		}
 		children.push(childRow);
 	});
 
