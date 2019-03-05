@@ -14,7 +14,8 @@ Un simple ejemplo de ventas y adquisición de mercancía, **escrito en Javascrip
   - Actualizado Tabulator a la versión 4.2.2
   - Se incluye en ./vista/images la representación gráfica de la base de datos utilizada
   - Se agrega a utilidades.js las funciones crearLista() y cargarLista() para agregar elementos a listas seleccionables.
-  - Se agregan pequeños ajustes y registros de pruebas a ./servicios/varios/tdbsystem-pgscript.sql 
+  - Se corrigen inconsistencias y se agregan registros de pruebas a ./servicios/varios/tdbsystem-pgscript.sql 
+  - Se incluye el CRUD de productos para mostrar la carga y edición de tablas con llaves foráneas
   - **Importante**: se agrega la vista "lista_productos" a tdbsystem-pgscript.sql. Esta vista se requiere para editar productos.
   - Otros cambios menores.
 

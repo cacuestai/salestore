@@ -40,6 +40,8 @@ new class Producto {
                 }
             },
             { title: 'ID', field: 'id_producto', visible: false },
+            { title: 'ID', field: 'id_presentacion_producto', visible: false },
+            { title: 'ID', field: 'id_categoria_producto', visible: false },
             { title: 'Categoría', field: 'categoria', width: 100 },
             { title: 'Presentación', field: 'presentacion', width: 100 },
             { title: 'Nombre', field: 'nombre', width: 200 },
@@ -60,6 +62,45 @@ new class Producto {
 
         this.frmEdicionProducto = M.Modal.init($('#producto-frmedicion'), {
             dismissible: false, // impedir el acceso a la aplicación durante la edición
+            onOpenStart: () => {
+                let idCategoria = '';
+                let idPresentacion = '';
+                if (this.operacion === 'actualizar') {
+                    // cuando se edita, estos ID se requieren para seleccionar los elementos de las listas de categorías y de presentaciones
+                    idCategoria = this.filaActual.getData().id_categoria_producto;
+                    idPresentacion = this.filaActual.getData().id_presentacion_producto;
+                }
+
+                util.cargarLista({ // llenar los elementos de la lista desplegable de categorías de productos
+                    clase: 'CategoriaProducto',
+                    accion: 'listar',
+                    listaSeleccionable: '#producto-lstcategoria',
+                    clave: 'id_categoria_producto',
+                    valor: 'nombre',
+                    primerItem: 'Seleccione una categoría de producto'
+                }).then(data => {
+                    console.log('cargadas las categorías');
+                    $('#producto-lstcategoria').value = idCategoria;
+                    M.FormSelect.init($('#producto-lstcategoria'));
+                }).catch(error => {
+                    util.mensaje(error);
+                });
+
+                util.cargarLista({ // llenar los elementos de la lista desplegable de presentaciones de productos
+                    clase: 'PresentacionProducto',
+                    accion: 'listar',
+                    listaSeleccionable: '#producto-lstpresentacion',
+                    clave: 'id_presentacion_producto',
+                    valor: 'descripcion',
+                    primerItem: 'Seleccione una presentación de producto'
+                }).then(data => {
+                    console.log('cargadas las presentaciones');
+                    $('#producto-lstpresentacion').value = idPresentacion;
+                    M.FormSelect.init($('#producto-lstpresentacion'));
+                }).catch(error => {
+                    util.mensaje(error);
+                });
+            }
         });
 
         this.gestionarEventos();
@@ -107,8 +148,6 @@ new class Producto {
     gestionarEventos() {
         $('#producto-btnagregar').addEventListener('click', event => {
             this.operacion = 'insertar';
-            // despliega el formulario para editar clientes. Ir a la definición del boton 
-            // 'cliente-btnagregar' en clientes.html para ver cómo se dispara este evento
         });
 
         $('#producto-btnaceptar').addEventListener('click', event => {
@@ -128,39 +167,49 @@ new class Producto {
     }
 
     /**
-     * Envía un nuevo registro al back-end para ser insertado en la tabla clientes
+     * Envía un nuevo registro al back-end para ser insertado en la tabla productos
      */
     insertarRegistro() {
         // se creas un objeto con los datos del formulario
-        let nuevoCliente = {
-            id_cliente: $('#producto-txtid').value,
+        let lstCategorias = $('#producto-lstcategoria');
+        let lstPresentacion = $('#producto-lstpresentacion');
+
+        let nuevoProducto = {
+            presentacion: lstPresentacion.options[lstPresentacion.selectedIndex].text,
+            categoria: lstCategorias.options[lstCategorias.selectedIndex].text,
+            cantidad_disponible: $('#producto-txtcantidad').value,
+            id_presentacion_producto: lstPresentacion.value,
+            cantidad_minima: $('#producto-txtminimo').value,
+            cantidad_maxima: $('#producto-txtmaximo').value,
+            id_categoria_producto: lstCategorias.value,
             nombre: $('#producto-txtnombre').value,
-            direccion: $('#producto-txtdireccion').value,
-            telefonos: $('#producto-txttelefonos').value,
-            con_credito: $('#producto-chkcredito').checked
+            precio: $('#producto-txtprecio').value
         };
 
-        // se envían los datos del nuevo cliente al back-end y se nuestra la nueva fila en la tabla
+        // se envían los datos del nuevo producto al back-end y se nuestra la nueva fila en la tabla
         util.fetchData('./controlador/fachada.php', {
             'method': 'POST',
             'body': {
-                clase: 'Cliente',
+                clase: 'Producto',
                 accion: 'insertar',
-                data: nuevoCliente
+                data: nuevoProducto
             }
         }).then(data => {
             if (data.ok) {
                 util.mensaje('', '<i class="material-icons">done</i>', 'teal darken');
-                this.tabla.addData([nuevoCliente]);
-                $('#producto-txtid').value = '';
-                $('#producto-txtnombre').value = '';
-                $('#producto-txtdireccion').value = '';
-                $('#producto-txttelefonos').value = '';
+                this.tabla.addData([nuevoProducto]);
+                $('#producto-lstpresentacion').value = "";
+                $('#producto-lstcategoria').value = "";
+                $('#producto-txtnombre').value = "";
+                $('#producto-txtprecio').value = "";
+                $('#producto-txtcantidad').value = "";
+                $('#producto-txtminimo').value = "";
+                $('#producto-txtmaximo').value = "";
             } else {
                 throw new Error(data.mensaje);
             }
         }).catch(error => {
-            util.mensaje(error, 'No se pudo insertar el cliente');
+            util.mensaje(error, 'No se pudo insertar el producto');
         });
     }
 
@@ -172,43 +221,11 @@ new class Producto {
     editarRegistro() {
         // un buen ejemplo de asincronicidad
         this.frmEdicionProducto.open();
-        let filaActual = this.filaActual.getData();
-
-        util.cargarLista({ // llenar los elementos de la lista desplegable de categorías de productos
-            clase: 'CategoriaProducto',
-            accion: 'listar',
-            contenedor: '#producto-lstcategoria',
-            clave: 'id_categoria_producto',
-            valor: 'nombre',
-            valorInicial: 'Seleccione una categoría de producto'
-        }).then(data => {
-            console.log('cargadas las categorías');
-            $('#producto-lstcategoria').value = filaActual.id_categoria_producto;
-            M.FormSelect.init($('#producto-lstcategoria'));
-        }).catch(error => {
-            util.mensaje(error);
-        });
-
-        util.cargarLista({ // llenar los elementos de la lista desplegable de presentaciones de productos
-            clase: 'PresentacionProducto',
-            accion: 'listar',
-            contenedor: '#producto-lstpresentacion',
-            clave: 'id_presentacion_producto',
-            valor: 'descripcion',
-            primerItem: 'Seleccione una presentación de producto'
-        }).then(data => {
-            console.log('cargadas las presentaciones');
-            $('#producto-lstpresentacion').value = filaActual.id_presentacion_producto;
-            M.FormSelect.init($('#producto-lstpresentacion'));
-        }).catch(error => {
-            util.mensaje(error);
-        });
-
-        $('#producto-txtnombre').value = filaActual.nombre;
-        $('#producto-txtprecio').value = filaActual.precio;
-        $('#producto-txtcantidad').value = filaActual.cantidad_disponible;
-        $('#producto-txtminimo').value = filaActual.cantidad_minima;
-        $('#producto-txtmaximo').value = filaActual.cantidad_maxima;
+        $('#producto-txtnombre').value = this.filaActual.getData().nombre;
+        $('#producto-txtprecio').value = this.filaActual.getData().precio;
+        $('#producto-txtcantidad').value = this.filaActual.getData().cantidad_disponible;
+        $('#producto-txtminimo').value = this.filaActual.getData().cantidad_minima;
+        $('#producto-txtmaximo').value = this.filaActual.getData().cantidad_maxima;
         M.updateTextFields();
         console.log('actualizado el resto de campos');
     }
@@ -218,35 +235,42 @@ new class Producto {
      * también actualizados en la base de datos.
      */
     actualizarRegistro() {
+        let lstCategorias = $('#producto-lstcategoria');
+        let lstPresentacion = $('#producto-lstpresentacion');
+        let idProductoActual = this.filaActual.getData().id_producto;
+
         // se crea un objeto con los nuevos datos de la fila modificada
-        let idClienteActual = this.filaActual.getData().id_cliente;
-        let nuevosDatosCliente = {
-            id_actual: idClienteActual,
-            id_cliente: $('#producto-txtid').value, // el posible nuevo ID
+        let nuevosDatosProducto = {
+            id_actual: idProductoActual,
+            presentacion: lstPresentacion.options[lstPresentacion.selectedIndex].text,
+            categoria: lstCategorias.options[lstCategorias.selectedIndex].text,
+            cantidad_disponible: $('#producto-txtcantidad').value,
+            id_presentacion_producto: lstPresentacion.value,
+            cantidad_minima: $('#producto-txtminimo').value,
+            cantidad_maxima: $('#producto-txtmaximo').value,
+            id_categoria_producto: lstCategorias.value,
             nombre: $('#producto-txtnombre').value,
-            direccion: $('#producto-txtdireccion').value,
-            telefonos: $('#producto-txttelefonos').value,
-            con_credito: $('#producto-chkcredito').checked
+            precio: $('#producto-txtprecio').value
         };
 
-        // se envían los datos del nuevo cliente al back-end y se nuestra la nueva fila en la tabla
+        // se envían los datos del nuevo producto al back-end y se nuestra la nueva fila en la tabla
         util.fetchData('./controlador/fachada.php', {
             'method': 'POST',
             'body': {
-                clase: 'Cliente',
+                clase: 'Producto',
                 accion: 'actualizar',
-                data: nuevosDatosCliente
+                data: nuevosDatosProducto
             }
         }).then(data => {
             if (data.ok) {
                 util.mensaje('', '<i class="material-icons">done</i>', 'teal darken');
-                delete nuevosDatosCliente.id_actual; // elimina esta propiedad del objeto, ya no se requiere
-                this.tabla.updateRow(idClienteActual, nuevosDatosCliente);
+                delete nuevosDatosProducto.id_actual; // elimina esta propiedad del objeto, ya no se requiere
+                this.tabla.updateRow(idProductoActual, nuevosDatosProducto);
             } else {
                 throw new Error(data.mensaje);
             }
         }).catch(error => {
-            util.mensaje(error, 'No se pudo insertar el cliente');
+            util.mensaje(error, 'No se pudo actualizar el producto');
         });
     }
 
@@ -255,15 +279,15 @@ new class Producto {
      * @param {Row} filaActual Una fila Tabulator con los datos de la fila actual
      */
     eliminarRegistro() {
-        let idFila = this.filaActual.getData().id_cliente;
+        let idFila = this.filaActual.getData().id_producto;
 
-        // se envía el ID del cliente al back-end para el eliminado y se actualiza la tabla
+        // se envía el ID del producto al back-end para el eliminado y se actualiza la tabla
         util.fetchData('./controlador/fachada.php', {
             'method': 'POST',
             'body': {
-                clase: 'Cliente',
+                clase: 'Producto',
                 accion: 'eliminar',
-                id_cliente: idFila
+                id_producto: idFila
             }
         }).then(data => {
             if (data.ok) {
@@ -273,7 +297,7 @@ new class Producto {
                 throw new Error(data.mensaje);
             }
         }).catch(error => {
-            util.mensaje(error, `No se pudo eliminar el cliente con ID ${idFila}`);
+            util.mensaje(error, `No se pudo eliminar el producto con ID ${idFila}`);
         });
     }
 

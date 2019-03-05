@@ -23,19 +23,21 @@ class Producto {
         extract($param);
         // error_log(print_r($param, TRUE)); // quitar comentario para ver lo que se recibe del front-end
 
-        $sql = "INSERT INTO productos (id_cliente, nombre, direccion, telefonos, con_credito)
-                   VALUES (:id_cliente, :nombre, :direccion, :telefonos, :con_credito)";
+        $sql = "INSERT INTO productos(
+                    nombre, precio, cantidad_disponible, cantidad_minima, cantidad_maxima, id_presentacion_producto, id_categoria_producto)
+                    VALUES (:nombre, :precio, :cantidad_disponible, :cantidad_minima, :cantidad_maxima, :id_presentacion_producto, :id_categoria_producto)";
 
         // Prepara la instrucción SQL para ejecutarla luego de recibir los parámetros de inserción
         $instruccion = $conexion->pdo->prepare($sql);
 
         if ($instruccion) {
-            $instruccion->bindParam(':id_cliente', $data['id_cliente']);
             $instruccion->bindParam(':nombre', $data['nombre']);
-            $instruccion->bindParam(':direccion', $data['direccion']);
-            $instruccion->bindParam(':telefonos', $data['telefonos']);
-            // para datos distintos a string, especificar el tipo: http://php.net/manual/es/pdo.constants.php
-            $instruccion->bindParam(':con_credito', $data['con_credito'], PDO::PARAM_BOOL);
+            $instruccion->bindParam(':precio', $data['precio']);
+            $instruccion->bindParam(':cantidad_disponible', $data['cantidad_disponible']);
+            $instruccion->bindParam(':cantidad_minima', $data['cantidad_minima']);
+            $instruccion->bindParam(':cantidad_maxima', $data['cantidad_maxima']);
+            $instruccion->bindParam(':id_presentacion_producto', $data['id_presentacion_producto']);
+            $instruccion->bindParam(':id_categoria_producto', $data['id_categoria_producto']);
 
             if ($instruccion->execute()) {
                 echo $conexion->errorInfo($instruccion);
@@ -55,20 +57,21 @@ class Producto {
         // error_log(print_r($param, TRUE)); // quitar comentario para ver lo que se recibe del front-end
 
         $sql = "UPDATE productos
-                   SET id_cliente=:id_cliente, nombre=:nombre, telefonos=:telefonos, direccion=:direccion, con_credito=:con_credito
-                   WHERE id_cliente = :id_actual";
+                   SET nombre=:nombre, precio=:precio, cantidad_disponible=:cantidad_disponible, cantidad_minima=:cantidad_minima, cantidad_maxima=:cantidad_maxima, id_presentacion_producto=:id_presentacion_producto, id_categoria_producto=:id_categoria_producto
+                   WHERE id_producto = :id_actual";
 
         // Prepara la instrucción SQL para ejecutarla luego de recibir los parámetros de inserción
         $instruccion = $conexion->pdo->prepare($sql);
 
         if ($instruccion) {
             $instruccion->bindParam(':id_actual', $data['id_actual']);
-            $instruccion->bindParam(':id_cliente', $data['id_cliente']);
             $instruccion->bindParam(':nombre', $data['nombre']);
-            $instruccion->bindParam(':direccion', $data['direccion']);
-            $instruccion->bindParam(':telefonos', $data['telefonos']);
-            // para datos distintos a string, especificar el tipo: http://php.net/manual/es/pdo.constants.php
-            $instruccion->bindParam(':con_credito', $data['con_credito'], PDO::PARAM_BOOL);
+            $instruccion->bindParam(':precio', $data['precio']);
+            $instruccion->bindParam(':cantidad_disponible', $data['cantidad_disponible']);
+            $instruccion->bindParam(':cantidad_minima', $data['cantidad_minima']);
+            $instruccion->bindParam(':cantidad_maxima', $data['cantidad_maxima']);
+            $instruccion->bindParam(':id_presentacion_producto', $data['id_presentacion_producto']);
+            $instruccion->bindParam(':id_categoria_producto', $data['id_categoria_producto']);
 
             if ($instruccion->execute()) {
                 echo $conexion->errorInfo($instruccion);
@@ -86,11 +89,11 @@ class Producto {
     public function eliminar($param) {
         extract($param);
         // error_log(print_r($param, TRUE)); // quitar comentario para ver lo que se recibe del front-end
-        $sql = "DELETE FROM productos WHERE id_cliente = :id_cliente";
+        $sql = "DELETE FROM productos WHERE id_producto = :id_producto";
         $instruccion = $conexion->pdo->prepare($sql);
 
         if ($instruccion) {
-            if ($instruccion->execute([":id_cliente" => $id_cliente])) {
+            if ($instruccion->execute([":id_producto" => $id_producto])) {
                 $estado = $conexion->errorInfo($instruccion);
                 echo $conexion->errorInfo($instruccion);
             } else {

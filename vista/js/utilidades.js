@@ -85,25 +85,39 @@ export async function fetchData(url, data = {}) {
 }
 
 /**
- * 
- * @param {*} selectContenedor 
- * @param {*} elementos 
- * @param {*} clave 
- * @param {*} valor 
+ * Crea los elementos de una lista seleccionable a partir de un array de objetos
+ * @param {String} listaSeleccionable el '#nombre' de la lista seleccionable
+ * @param {Array} elementos Un array de objetos con cualquier número de propiedades
+ * @param {String} clave Nombre de la propiedad de los objetos que se usará como 'value' en la lista
+ * @param {String} valor Nombre de la propiedad de los objetos que se mostrará en la lista
  */
-export let crearLista = (selectContenedor, elementos, clave, valor, primerItem) => {
-    let select = $(selectContenedor);
+export let crearLista = (listaSeleccionable, elementos, clave, valor, primerItem = false) => {
+    let select = $(listaSeleccionable);
     select.innerHTML = '';
-    let opciones = `<option value="" disabled selected>${primerItem}</option>`;
+    let opciones;
+
+    if (primerItem) {
+        opciones = `<option value="" disabled selected>${primerItem}</option>`;
+    }
 
     elementos.forEach((item) => {
         opciones += `<option value="${item[clave]}">${item[valor]}</option>`;
     });
 
     select.innerHTML = opciones;
-    M.FormSelect.init($(selectContenedor));
+    M.FormSelect.init($(listaSeleccionable));
 }
 
+/**
+ * Crea los elementos de una lista seleccionable a partir de un array de objetos solicitado al back-end
+ * @param {Object} opciones Un array de objetos cuyas propiedades deben incluir:
+ *  clase: el nombre de la clase PHP de donde se recupera el array de objetos
+ *  accion: el nombre del método que devuelve el array de objetos
+ *  listaSeleccionable: el nombre de la lista donde se insertarán los datos
+ *  clave: nombre de la propiedad de los objetos que se utilizará como 'value' en la lista
+ *  valor: nombre de la propiedad de los objetos que se mostrará en la lista
+ *  primerItem: opcionalmente un elemento que se agrega al inicio de la lista
+ */
 export let cargarLista = opciones => {
     return util.fetchData('./controlador/fachada.php', {
         'body': {
@@ -112,7 +126,7 @@ export let cargarLista = opciones => {
         }
     }).then(data => {
         if (data.ok) {
-            crearLista(opciones.contenedor, data.lista, opciones.clave, opciones.valor, opciones.primerItem);
+            crearLista(opciones.listaSeleccionable, data.lista, opciones.clave, opciones.valor, opciones.primerItem);
         } else {
             throw new Error(data.mensaje);
         }

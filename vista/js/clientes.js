@@ -210,7 +210,7 @@ new class Cliente {
                 throw new Error(data.mensaje);
             }
         }).catch(error => {
-            util.mensaje(error, 'No se pudo insertar el cliente');
+            util.mensaje(error, 'No se pudo actualizar el cliente');
         });
 
     }
