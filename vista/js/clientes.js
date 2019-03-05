@@ -24,12 +24,12 @@ new class Cliente {
                 align: "center",
                 formatter: (cell, formatterParams) => {
                     // en cada fila, en la primera columna, se asignan los botones de editar y actualizar 
-                    return `<i id="tabulator-btnactualizar" class="material-icons teal-text">edit</i>
+                    return `<i id="cliente-btnactualizar" class="material-icons teal-text">edit</i>
                             <i id="tabulator-btneliminar" class="material-icons deep-orange-text">delete</i>`;
                 },
                 cellClick: (e, cell) => {
                     // define qué hacer si se pulsan los botones de actualizar o eliminar
-                    this.operacion = e.target.id === 'tabulator-btnactualizar' ? 'actualizar' : 'eliminar';
+                    this.operacion = e.target.id === 'cliente-btnactualizar' ? 'actualizar' : 'eliminar';
                     this.filaActual = cell.getRow();
                     if (this.operacion === 'actualizar') {
                         this.editarRegistro();

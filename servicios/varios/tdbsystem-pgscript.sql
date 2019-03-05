@@ -24,9 +24,9 @@ DROP TABLE IF EXISTS devoluciones_compras CASCADE;
 DROP TABLE IF EXISTS detalles_devoluciones_compras;
 
 CREATE TABLE categorias_productos (
-	id_categorias_productos SMALLSERIAL NOT NULL,
+	id_categoria_producto SMALLSERIAL NOT NULL,
 	nombre varchar NOT NULL,
-	PRIMARY KEY(id_categorias_productos)
+	PRIMARY KEY(id_categoria_producto)
 );
 
 CREATE TABLE presentaciones_productos (
@@ -43,10 +43,10 @@ CREATE TABLE productos (
 	cantidad_minima int2 NOT NULL DEFAULT 1,
 	cantidad_maxima int2 NOT NULL DEFAULT 1,
 	id_presentacion_producto int2 NOT NULL,
-	id_categorias_productos int2 NOT NULL,
+	id_categoria_producto int2 NOT NULL,
 	PRIMARY KEY(id_producto),
-	CONSTRAINT ref_producto__categorias_productos FOREIGN KEY (id_categorias_productos)
-		REFERENCES categorias_productos(id_categorias_productos)
+	CONSTRAINT ref_producto__categoria_producto FOREIGN KEY (id_categoria_producto)
+		REFERENCES categorias_productos(id_categoria_producto)
 	MATCH SIMPLE
 	ON DELETE NO ACTION
 	ON UPDATE CASCADE
@@ -462,15 +462,16 @@ INSERT INTO productos(nombre, precio, cantidad_disponible, cantidad_minima, cant
 								  
 CREATE OR REPLACE VIEW lista_productos AS										  
 	SELECT productos.id_producto,
-		categorias_productos.nombre categoria_producto,
-		productos.nombre,									  
+		productos.id_categoria_producto,
+		categorias_productos.nombre categoria,
+		productos.nombre,			
+		productos.id_presentacion_producto,
 		presentaciones_productos.descripcion presentacion,									  
 		productos.precio,									  
 		productos.cantidad_disponible,									  
 		productos.cantidad_minima,									  
 		productos.cantidad_maxima									  
-	FROM producto									  
+	FROM productos									  
 		INNER JOIN categorias_productos ON productos.id_categoria_producto = categorias_productos.id_categoria_producto
-		INNER JOIN presentaciones_productos ON productos.id_tipo_presentacion = presentaciones_productos.id_tipo_presentacion;
-								  
+		INNER JOIN presentaciones_productos ON productos.id_presentacion_producto = presentaciones_productos.id_presentacion_producto;
 

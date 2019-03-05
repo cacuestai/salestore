@@ -1,10 +1,12 @@
 # SaleStore
 
-Un simple ejemplo de ventas y adquisición de mercancía con fines académicos para mostrar:
+Un simple ejemplo de ventas y adquisición de mercancía, **escrito en Javascript puro** y PHP, con fines académicos para mostrar:
 
   - Conexión a bases de datos Postgres mediante PDO.
   - Arquitectura por capas.
-  - API Fetch de ECMAScript 2015 (ES6)
+  - ECMAScript 2015 (ES6), ECMAScript2016 (ES2016) y ECMAScript2018 (ES8).
+  - Uso de la librería [tabulator] para crear tablas interactivas sin usar jQuery.
+  - Uso de [Materialize], un moderno front-end framework basado en Material Design y orientado al diseño adaptativo.
 
 ![Screenshot](screenshot.png)
 
@@ -12,7 +14,7 @@ Un simple ejemplo de ventas y adquisición de mercancía con fines académicos p
   - Actualizado Tabulator a la versión 4.2.2
   - Se incluye en ./vista/images la representación gráfica de la base de datos utilizada
   - Se agrega a utilidades.js las funciones crearLista() y cargarLista() para agregar elementos a listas seleccionables.
-  - Se agregan registros de pruebas en ./servicios/varios/tdbsystem-pgscript.sql 
+  - Se agregan pequeños ajustes y registros de pruebas a ./servicios/varios/tdbsystem-pgscript.sql 
   - **Importante**: se agrega la vista "lista_productos" a tdbsystem-pgscript.sql. Esta vista se requiere para editar productos.
   - Otros cambios menores.
 
@@ -48,16 +50,15 @@ Un simple ejemplo de ventas y adquisición de mercancía con fines académicos p
   - Se usa un método alternativo propio para la carga de páginas web con lo funcionalidad de jQuery load.
   - Implementación de la característica SPA (Single-Page Application) y de URL limpias o amigables.
 
-
 ### Dependencias
 
-La aplicación de demostración tiene dos dependencia: *Materialize* e *IconFont*, que se incluyen en la carpeta *libs* con el fin de facilitar las cosas.
+La aplicación de demostración tiene tres dependencia: *Materialize*, *IconFont* y *Tabulator* que se incluyen en la carpeta *libs* con el fin de facilitar la instalación.
 
 ### Instalación
 
 Simplemente descargue, descomprima en la carpeta pública de un servidor de internet (XAMPP, Wamp, Lamp o cualquier otro que se le ocurra). Tenga en cuenta que esta demostración no funcionará correctamente sobre Live Server de Visual Studio Code, por razones obvias.
 
-Se proporciona el archivo .servicios/varios/**tdbsystem-pgscript.sql** para que con base en él cree la base de datos que se usa para el ejemplo, que por defecto se ha llamado **tdbsystem**.
+Se proporciona el archivo .servicios/varios/**tdbsystem-pgscript.sql** para que con base en él, cree la base de datos que se usa para el ejemplo, que por defecto se ha llamado **tdbsystem**.
 
 También se incluye el archivo ./servicios/varios/conexion.json.**back** que deberá renombrar o guardar  como ./servicios/varios/**conexion.json**. El contenido de este archivo es:
 
@@ -76,3 +77,4 @@ Y en él deberá asignar el nombre correcto de la base de datos y demás paráme
 Por favor tenga en cuenta que esto es una simple demostración para quienes apenas se inician en el mundo de la programación web. Siendo así son muy bienvenidas las sugerencias para mejorar este producto de demostración.
 
 [Tabulator]: <http://tabulator.info/>
+[Materialize]: <https://materializecss.com/<>

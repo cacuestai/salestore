@@ -101,7 +101,7 @@ export let crearLista = (selectContenedor, elementos, clave, valor, elementoInic
     });
 
     select.innerHTML = opciones;
-    M.FormSelect.init($(selectContenedor));
+    /////M.FormSelect.init($(selectContenedor));
 }
 
 export let cargarLista = opciones => {

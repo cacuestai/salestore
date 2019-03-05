@@ -31,6 +31,8 @@ new class Producto {
                     // define qué hacer si se pulsan los botones de actualizar o eliminar
                     this.operacion = e.target.id === 'tabulator-btnactualizar' ? 'actualizar' : 'eliminar';
                     this.filaActual = cell.getRow();
+                    console.log(this.filaActual);
+
                     if (this.operacion === 'actualizar') {
                         this.editarRegistro();
                     } else if (this.operacion === 'eliminar') {
@@ -60,9 +62,11 @@ new class Producto {
         this.frmEdicionProducto = M.Modal.init($('#producto-frmedicion'), {
             dismissible: false, // impedir el acceso a la aplicación durante la edición
             onOpenStart: () => {
-                M.updateTextFields();
-                let listasSeleccionables = document.querySelectorAll('select'); /////////////////////////
-                let instances = M.FormSelect.init(listasSeleccionables);
+                console.log('onOpenStart - se cargan las listas');
+
+
+                //let listasSeleccionables = document.querySelectorAll('select'); /////////////////////////
+                //let instances = M.FormSelect.init(listasSeleccionables);
 
                 util.cargarLista({ // llenar los elementos de la lista desplegable de categorías de productos
                     clase: 'CategoriaProducto',
@@ -81,6 +85,10 @@ new class Producto {
                     valor: 'descripcion',
                     valorInicial: 'Seleccione una presentación de producto'
                 });
+
+                M.updateTextFields();
+                //let listasSeleccionables = document.querySelectorAll('select'); /////////////////////////
+                //let instances = M.FormSelect.init(listasSeleccionables);
             }
         });
 
@@ -195,12 +203,18 @@ new class Producto {
         this.frmEdicionProducto.open();
         // se muestran en el formulario los datos de la fila a editar
         let filaActual = this.filaActual.getData();
-        $('#producto-txtid').value = filaActual.id_cliente;
+        console.log(filaActual);
+
         $('#producto-txtnombre').value = filaActual.nombre;
-        $('#producto-txtdireccion').value = filaActual.direccion;
-        $('#producto-txttelefonos').value = filaActual.telefonos;
-        $('#producto-chkcredito').checked = filaActual.con_credito;
+        $('#producto-txtprecio').value = filaActual.precio;
+        $('#producto-txtcantidad').value = filaActual.cantidad_disponible;
+        $('#producto-txtminimo').value = filaActual.cantidad_minima;
+        $('#producto-txtmaximo').value = filaActual.cantidad_maxima;
+        console.log('se termina la inicialización');
+
         M.updateTextFields();
+        var elems = document.querySelectorAll('select');
+        var instances = M.FormSelect.init(elems);
     }
 
     /**
