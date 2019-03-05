@@ -30,8 +30,7 @@ new class Producto {
                 cellClick: (e, cell) => {
                     // define qué hacer si se pulsan los botones de actualizar o eliminar
                     this.operacion = e.target.id === 'tabulator-btnactualizar' ? 'actualizar' : 'eliminar';
-                    this.filaActual = cell.getRow();
-                    console.log(this.filaActual);
+                    this.filaActual = cell.getRow(); // se obtienen los datos correctamente
 
                     if (this.operacion === 'actualizar') {
                         this.editarRegistro();
@@ -61,35 +60,6 @@ new class Producto {
 
         this.frmEdicionProducto = M.Modal.init($('#producto-frmedicion'), {
             dismissible: false, // impedir el acceso a la aplicación durante la edición
-            onOpenStart: () => {
-                console.log('onOpenStart - se cargan las listas');
-
-
-                //let listasSeleccionables = document.querySelectorAll('select'); /////////////////////////
-                //let instances = M.FormSelect.init(listasSeleccionables);
-
-                util.cargarLista({ // llenar los elementos de la lista desplegable de categorías de productos
-                    clase: 'CategoriaProducto',
-                    accion: 'listar',
-                    contenedor: '#producto-lstcategoria',
-                    clave: 'id_categoria_producto',
-                    valor: 'nombre',
-                    valorInicial: 'Seleccione una categoría de producto'
-                });
-
-                util.cargarLista({ // llenar los elementos de la lista desplegable de presentaciones de productos
-                    clase: 'PresentacionProducto',
-                    accion: 'listar',
-                    contenedor: '#producto-lstpresentacion',
-                    clave: 'id_presentacion_producto',
-                    valor: 'descripcion',
-                    valorInicial: 'Seleccione una presentación de producto'
-                });
-
-                M.updateTextFields();
-                //let listasSeleccionables = document.querySelectorAll('select'); /////////////////////////
-                //let instances = M.FormSelect.init(listasSeleccionables);
-            }
         });
 
         this.gestionarEventos();
@@ -200,21 +170,47 @@ new class Producto {
      * @param {Row} filaActual Una fila Tabulator con los datos de la fila actual
      */
     editarRegistro() {
+        // un buen ejemplo de asincronicidad
         this.frmEdicionProducto.open();
-        // se muestran en el formulario los datos de la fila a editar
         let filaActual = this.filaActual.getData();
-        console.log(filaActual);
+
+        util.cargarLista({ // llenar los elementos de la lista desplegable de categorías de productos
+            clase: 'CategoriaProducto',
+            accion: 'listar',
+            contenedor: '#producto-lstcategoria',
+            clave: 'id_categoria_producto',
+            valor: 'nombre',
+            valorInicial: 'Seleccione una categoría de producto'
+        }).then(data => {
+            console.log('cargadas las categorías');
+            $('#producto-lstcategoria').value = filaActual.id_categoria_producto;
+            M.FormSelect.init($('#producto-lstcategoria'));
+        }).catch(error => {
+            util.mensaje(error);
+        });
+
+        util.cargarLista({ // llenar los elementos de la lista desplegable de presentaciones de productos
+            clase: 'PresentacionProducto',
+            accion: 'listar',
+            contenedor: '#producto-lstpresentacion',
+            clave: 'id_presentacion_producto',
+            valor: 'descripcion',
+            primerItem: 'Seleccione una presentación de producto'
+        }).then(data => {
+            console.log('cargadas las presentaciones');
+            $('#producto-lstpresentacion').value = filaActual.id_presentacion_producto;
+            M.FormSelect.init($('#producto-lstpresentacion'));
+        }).catch(error => {
+            util.mensaje(error);
+        });
 
         $('#producto-txtnombre').value = filaActual.nombre;
         $('#producto-txtprecio').value = filaActual.precio;
         $('#producto-txtcantidad').value = filaActual.cantidad_disponible;
         $('#producto-txtminimo').value = filaActual.cantidad_minima;
         $('#producto-txtmaximo').value = filaActual.cantidad_maxima;
-        console.log('se termina la inicialización');
-
         M.updateTextFields();
-        var elems = document.querySelectorAll('select');
-        var instances = M.FormSelect.init(elems);
+        console.log('actualizado el resto de campos');
     }
 
     /**
@@ -252,7 +248,6 @@ new class Producto {
         }).catch(error => {
             util.mensaje(error, 'No se pudo insertar el cliente');
         });
-
     }
 
     /**

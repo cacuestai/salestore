@@ -56,9 +56,6 @@ new class Cliente {
 
         this.frmEdicionCliente = M.Modal.init($('#cliente-frmedicion'), {
             dismissible: false, // impedir el acceso a la aplicación durante la edición
-            onOpenStart: () => {
-                // luego miraremos para que sirve esta belleza
-            }
         });
 
         this.gestionarEventos();
