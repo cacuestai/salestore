@@ -89,8 +89,12 @@ class Controlador {
         date_default_timezone_set('America/Bogota');
         ini_set('display_errors', 'Off');
         ini_set('log_errors', 'On');
-
+        // --------------------------------------------------------------------------------------
+        // IMPORTANTE: asigne una nueva ruta de lecto/escritura para el siguiente archivo. No se
+        // recomienda que sea la ruta que se asigna aquí, porque puede estar protegida, por ser 
+        // la ruta de la aplicación y si no lo está, estará dejando un hueco de seguridad grave
         ini_set('error_log', PATH_APP . 'demotdb.log');
+        // --------------------------------------------------------------------------------------
         session_start();
 
         $conexionDB = json_decode(file_get_contents("../servicios/varios/conexion.json"), TRUE);
