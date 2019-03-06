@@ -132,3 +132,36 @@ export let cargarLista = opciones => {
         }
     });
 }
+
+export let langTabulator = {
+    "es": {
+        "columns": {
+            "name": "Name", //replace the title of column name with the value "Name"
+        },
+        "ajax": {
+            "loading": "Cargando...", //ajax loader text
+            "error": "Error", //ajax error text
+        },
+        "groups": { //copy for the auto generated item count in group header
+            "item": "item", //the singular  for item
+            "items": "items", //the plural for items
+        },
+        "pagination": {
+            "page_size": "Page Size", //label for the page size select element
+            "first": "Primero", //text for the first page button
+            "first_title": "Página inicial", //tooltip text for the first page button
+            "last": "Último",
+            "last_title": "Última página",
+            "prev": "Anterior",
+            "prev_title": "Página anterior",
+            "next": "Siguiente",
+            "next_title": "Página siguiente",
+        },
+        "headerFilters": {
+            "default": "filter column...", //default header filter placeholder text
+            "columns": {
+                "name": "filter name...", //replace default header filter text for column name
+            }
+        }
+    }
+}

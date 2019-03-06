@@ -126,7 +126,9 @@ new class Producto {
             // addRowPos: 'top', // no se usa aquí. Aquí se usa un formulario de edición personalizado
             index: this.indice, // indice único de cada fila
             // locale: true, // se supone que debería utilizar el idioma local
-            rowAdded: (row) => this.filaActual = row
+            rowAdded: (row) => this.filaActual = row,
+            locale: "es", // idioma. Ver script de utilidades
+            langs: util.langTabulator // ver script de utilidades
         });
     }
 
