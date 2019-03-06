@@ -199,6 +199,7 @@ new class Producto {
         }).then(data => {
             if (data.ok) {
                 util.mensaje('', '<i class="material-icons">done</i>', 'teal darken');
+                nuevoProducto['id_producto'] = data.id_producto;
                 this.tabla.addData([nuevoProducto]);
                 $('#producto-lstpresentacion').value = "";
                 $('#producto-lstcategoria').value = "";

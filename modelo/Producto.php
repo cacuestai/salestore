@@ -23,10 +23,7 @@ class Producto {
         extract($param);
         // error_log(print_r($param, TRUE)); // quitar comentario para ver lo que se recibe del front-end
 
-        $sql = "INSERT INTO productos(
-                    nombre, precio, cantidad_disponible, cantidad_minima, cantidad_maxima, id_presentacion_producto, id_categoria_producto)
-                    VALUES (:nombre, :precio, :cantidad_disponible, :cantidad_minima, :cantidad_maxima, :id_presentacion_producto, :id_categoria_producto)";
-
+        $sql = "SELECT * FROM insertar_producto(:nombre, :precio, :cantidad_disponible, :cantidad_minima, :cantidad_maxima, :id_presentacion_producto, :id_categoria_producto)";
         // Prepara la instrucción SQL para ejecutarla luego de recibir los parámetros de inserción
         $instruccion = $conexion->pdo->prepare($sql);
 
@@ -40,7 +37,10 @@ class Producto {
             $instruccion->bindParam(':id_categoria_producto', $data['id_categoria_producto']);
 
             if ($instruccion->execute()) {
-                echo $conexion->errorInfo($instruccion);
+                $fila = $instruccion->fetch(PDO::FETCH_ASSOC); // si la inserción fue exitosa, recuperar el ID retornado
+                $info = $conexion->errorInfo($instruccion, FALSE);
+                $info['id_producto'] = $fila['insertar_producto']; // agregar el nuevo ID a la info que se envía al front-end
+                echo json_encode($info);
             } else {
                 echo $conexion->errorInfo($instruccion);
             }

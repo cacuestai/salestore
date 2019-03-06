@@ -475,3 +475,26 @@ CREATE OR REPLACE VIEW lista_productos AS
 		INNER JOIN categorias_productos ON productos.id_categoria_producto = categorias_productos.id_categoria_producto
 		INNER JOIN presentaciones_productos ON productos.id_presentacion_producto = presentaciones_productos.id_presentacion_producto;
 
+CREATE OR REPLACE FUNCTION insertar_producto(
+	nombre_producto character varying,
+	precio_producto numeric,
+	disponible integer,
+	minimo integer,
+	maximo integer,
+	id_presentacion integer,
+	id_categoria integer)
+    RETURNS integer
+    LANGUAGE 'plpgsql'
+AS $BODY$
+   DECLARE
+      idproducto integer;
+BEGIN
+	idproducto = 0;
+	
+	INSERT INTO productos(
+		nombre, precio, cantidad_disponible, cantidad_minima, cantidad_maxima, id_presentacion_producto, id_categoria_producto)
+		VALUES (nombre_producto, precio_producto, disponible, minimo, maximo, id_presentacion, id_categoria)
+		RETURNING id_producto into idproducto;
+	RETURN idproducto;
+END;
+$BODY$;
