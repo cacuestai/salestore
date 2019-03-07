@@ -40,6 +40,7 @@ class Producto {
                 $fila = $instruccion->fetch(PDO::FETCH_ASSOC); // si la inserción fue exitosa, recuperar el ID retornado
                 $info = $conexion->errorInfo($instruccion, FALSE);
                 $info['id_producto'] = $fila['insertar_producto']; // agregar el nuevo ID a la info que se envía al front-end
+                $info['ok'] = $fila['insertar_producto'] > 0;
                 echo json_encode($info);
             } else {
                 echo $conexion->errorInfo($instruccion);

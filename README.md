@@ -14,6 +14,8 @@ Un simple ejemplo de ventas y adquisición de mercancía, **escrito en Javascrip
   - La inserción de productos se cambia por una función almacenada en la base de datos.
   - Con la nueva función de inserción es posible conocer el ID  del nuevo producto.
   - Se agrega a Utilidades.js un objeto para traducir a español a Tabulator.
+  - En main.css se modifica la clase .modal para intentar mejorar el comportamiento de los formularios.
+  - 
 
 ### Características de la versión 0.05
   - Actualizado Tabulator a la versión 4.2.2

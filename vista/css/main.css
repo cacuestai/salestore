@@ -11,11 +11,13 @@ main {
 }
 
 .modal {
-    /* 
-        estas instrucciones evitan que los formularios superen el 100% de la altura y también la
-        barra de scroll vertical en dichos formularios. También puede modificarse el ancho máximo:
-            width: 75% !important;
+    /*
+      Inicialmente se probarón los formularios con este estilo:
+        max-height: 100% !important;
+        overflow-y: hidden !important;
+      pero no funcionó muy bien que digamos...
+      Se intenta el siguiente cambio para ver resultados
     */
-    max-height: 100% !important;
-    overflow-y: hidden !important;
+    height: auto !important;
+    max-height: calc(100vh - 100px) !important;
 }

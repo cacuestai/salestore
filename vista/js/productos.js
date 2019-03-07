@@ -63,6 +63,7 @@ new class Producto {
         this.frmEdicionProducto = M.Modal.init($('#producto-frmedicion'), {
             dismissible: false, // impedir el acceso a la aplicación durante la edición
             onOpenStart: () => {
+                // ... es posible que desee limpiar los campos aquí y no en insertarRegistro() como está actualmente ...
                 let idCategoria = '';
                 let idPresentacion = '';
                 if (this.operacion === 'actualizar') {
@@ -201,13 +202,13 @@ new class Producto {
                 util.mensaje('', '<i class="material-icons">done</i>', 'teal darken');
                 nuevoProducto['id_producto'] = data.id_producto;
                 this.tabla.addData([nuevoProducto]);
-                $('#producto-lstpresentacion').value = "";
-                $('#producto-lstcategoria').value = "";
-                $('#producto-txtnombre').value = "";
-                $('#producto-txtprecio').value = "";
-                $('#producto-txtcantidad').value = "";
-                $('#producto-txtminimo').value = "";
-                $('#producto-txtmaximo').value = "";
+                $('#producto-lstpresentacion').value = '';
+                $('#producto-lstcategoria').value = '';
+                $('#producto-txtnombre').value = '';
+                $('#producto-txtprecio').value = '';
+                $('#producto-txtcantidad').value = '';
+                $('#producto-txtminimo').value = '';
+                $('#producto-txtmaximo').value = '';
             } else {
                 throw new Error(data.mensaje);
             }
