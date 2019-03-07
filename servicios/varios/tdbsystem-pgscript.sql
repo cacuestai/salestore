@@ -25,19 +25,19 @@ DROP TABLE IF EXISTS detalles_devoluciones_compras;
 
 CREATE TABLE categorias_productos (
 	id_categoria_producto SMALLSERIAL NOT NULL,
-	nombre varchar NOT NULL,
+	nombre varchar NOT NULL UNIQUE,
 	PRIMARY KEY(id_categoria_producto)
 );
 
 CREATE TABLE presentaciones_productos (
 	id_presentacion_producto SMALLSERIAL NOT NULL,
-	descripcion varchar NOT NULL,
+	descripcion varchar NOT NULL UNIQUE,
 	PRIMARY KEY(id_presentacion_producto)
 );
 
 CREATE TABLE productos (
 	id_producto SERIAL NOT NULL,
-	nombre varchar NOT NULL,
+	nombre varchar NOT NULL UNIQUE,
 	precio numeric NOT NULL DEFAULT 0,
 	cantidad_disponible int2 NOT NULL DEFAULT 0,
 	cantidad_minima int2 NOT NULL DEFAULT 1,
