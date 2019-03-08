@@ -68,7 +68,7 @@ new class Cliente {
             ajaxConfig: 'POST', // tipo de solicitud HTTP ajax
             ajaxContentType: 'json', // enviar parámetros al servidor como una cadena JSON
             layout: 'fitColumns', // ajustar columnas al ancho de la tabla
-            responsiveLayout: 'hide', // ocultar columnas que no caben en el espacio de trabajola tabla
+            responsiveLayout: 'hide', // ocultar columnas que no caben en el espacio de la trabajo tabla
             tooltips: true, // mostrar mensajes sobre las celdas.
             addRowPos: 'top', // al agregar una nueva fila, agréguela en la parte superior de la tabla
             history: true, // permite deshacer y rehacer acciones sobre la tabla.
@@ -83,7 +83,7 @@ new class Cliente {
             // locale: true, // se supone que debería utilizar el idioma local
             rowAdded: (row) => this.filaActual = row,
             locale: "es", // idioma. Ver script de utilidades
-            langs: util.langTabulator // ver script de utilidades
+            langs: util.tabulatorES // ver script de utilidades
         });
     }
 
@@ -142,8 +142,8 @@ new class Cliente {
         util.fetchData('./controlador/fachada.php', {
             'method': 'POST',
             'body': {
-                clase: 'Cliente',
-                accion: 'insertar',
+                clase: this.parametros.clase,
+                accion: actualizar,
                 data: nuevoCliente
             }
         }).then(data => {
@@ -199,8 +199,8 @@ new class Cliente {
         util.fetchData('./controlador/fachada.php', {
             'method': 'POST',
             'body': {
-                clase: 'Cliente',
-                accion: 'actualizar',
+                clase: this.parametros.clase,
+                accion: this.parametros.accion,
                 data: nuevosDatosCliente
             }
         }).then(data => {
@@ -228,7 +228,7 @@ new class Cliente {
         util.fetchData('./controlador/fachada.php', {
             'method': 'POST',
             'body': {
-                clase: 'Cliente',
+                clase: this.parametros.clase,
                 accion: 'eliminar',
                 id_cliente: idFila
             }

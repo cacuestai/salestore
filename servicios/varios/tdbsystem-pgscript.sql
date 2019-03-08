@@ -1,5 +1,5 @@
 
--- TDBSystem (Base de datos para el Sistema "Tienda de Barrio"), versión 0.5
+-- TDBSystem (Base de datos para el Sistema "Tienda de Barrio"), versión 0.6
 -- Un simple modelo de bases de datos para fines académicos
 -- Cree una base de datos Postgres en blanco y corra este script sobre ella.
 
@@ -23,6 +23,9 @@ DROP TABLE IF EXISTS detalles_compras;
 DROP TABLE IF EXISTS devoluciones_compras CASCADE;
 DROP TABLE IF EXISTS detalles_devoluciones_compras;
 
+DROP VIEW IF EXISTS lista_productos CASCADE;
+DROP FUNCTION IF EXISTS insertar_producto CASCADE;
+
 CREATE TABLE categorias_productos (
 	id_categoria_producto SMALLSERIAL NOT NULL,
 	nombre varchar NOT NULL UNIQUE,
@@ -39,6 +42,7 @@ CREATE TABLE productos (
 	id_producto SERIAL NOT NULL,
 	nombre varchar NOT NULL UNIQUE,
 	precio numeric NOT NULL DEFAULT 0,
+	iva numeric NOT NULL DEFAULT 0.0,
 	cantidad_disponible int2 NOT NULL DEFAULT 0,
 	cantidad_minima int2 NOT NULL DEFAULT 1,
 	cantidad_maxima int2 NOT NULL DEFAULT 1,
@@ -352,6 +356,8 @@ INSERT INTO clientes(
 	id_cliente, nombre, telefonos, direccion, con_credito)
 	VALUES('CL016','Sol Carvajal Mejia','8530000','Cra.1 #13-20',true)
 	ON CONFLICT DO NOTHING;
+	
+-------------------------------------	
 
 INSERT INTO categorias_productos(nombre) VALUES ('Lacteos') ON CONFLICT DO NOTHING;
 INSERT INTO categorias_productos(nombre) VALUES ('Cárnicos') ON CONFLICT DO NOTHING;
@@ -377,6 +383,8 @@ INSERT INTO presentaciones_productos(descripcion) VALUES ('Caja x 250 gramos') O
 INSERT INTO presentaciones_productos(descripcion) VALUES ('Caja x 500 gramos') ON CONFLICT DO NOTHING;
 INSERT INTO presentaciones_productos(descripcion) VALUES ('Paquete x 3 Unidades') ON CONFLICT DO NOTHING;
 INSERT INTO presentaciones_productos(descripcion) VALUES ('Caja') ON CONFLICT DO NOTHING;
+
+-------------------------------------	
 
 INSERT INTO productos(nombre, precio, cantidad_disponible, cantidad_minima, cantidad_maxima, id_presentacion_producto, id_categoria_producto)
 	VALUES('Leche Colanta', 2000, 1, 3, 20, 1, 1) 
@@ -457,27 +465,46 @@ INSERT INTO productos(nombre, precio, cantidad_disponible, cantidad_minima, cant
 INSERT INTO productos(nombre, precio, cantidad_disponible, cantidad_minima, cantidad_maxima, id_presentacion_producto, id_categoria_producto)
 	VALUES('Crema dental Colgate', 1800, 1, 10, 20, 9, 6)
 	ON CONFLICT DO NOTHING;
+	
+-------------------------------------	
+
+INSERT INTO personal(id_persona, nombre, telefono, direccion, perfil, contrasena)
+	VALUES('001','Jorge Pérez','8530001','Cra.3#10-34','Administrador','827ccb0eea8a706c4c34a16891f84e7b')
+	ON CONFLICT DO NOTHING;
+	
+INSERT INTO personal(id_persona, nombre, telefono, direccion, perfil, contrasena)
+	VALUES('002','Valeria Mejia Zapata','8536345','Cra.5#19-37','Vendedor','827ccb0eea8a706c4c34a16891f84e7b')
+	ON CONFLICT DO NOTHING;
+	
+INSERT INTO personal(id_persona, nombre, telefono, direccion, perfil, contrasena)
+	VALUES('003','Juan Bermudez Duque','8531235','Cra.1#11-23','Vendedor','827ccb0eea8a706c4c34a16891f84e7b')
+	ON CONFLICT DO NOTHING;
+
 								  
 -- A continuación algunas instrucciones DML disponibles mediante vistas o procedimientos almacenados
 								  
 CREATE OR REPLACE VIEW lista_productos AS										  
-	SELECT productos.id_producto,
-		productos.id_categoria_producto,
-		categorias_productos.nombre categoria,
-		productos.nombre,			
-		productos.id_presentacion_producto,
-		presentaciones_productos.descripcion presentacion,									  
-		productos.precio,									  
-		productos.cantidad_disponible,									  
-		productos.cantidad_minima,									  
-		productos.cantidad_maxima									  
-	FROM productos									  
-		INNER JOIN categorias_productos ON productos.id_categoria_producto = categorias_productos.id_categoria_producto
-		INNER JOIN presentaciones_productos ON productos.id_presentacion_producto = presentaciones_productos.id_presentacion_producto;
+	SELECT 	c.id_categoria_producto,
+				c. nombre categoria,
+				pp.id_presentacion_producto,
+				pp.descripcion presentacion,
+				p.id_producto,
+				p.nombre nombre,	
+				p.nombre || ' ' || pp.descripcion descripcion_producto,
+				iva porcentaje_iva,
+				p.precio,
+				p.cantidad_disponible,									  
+				p.cantidad_minima,									  
+				p.cantidad_maxima									  
+			FROM productos p
+				INNER JOIN categorias_productos c ON p.id_categoria_producto = c.id_categoria_producto
+				INNER JOIN presentaciones_productos pp ON p.id_presentacion_producto = pp.id_presentacion_producto
+			ORDER BY p.nombre, pp.descripcion;
 
 CREATE OR REPLACE FUNCTION insertar_producto(
 	nombre_producto character varying,
 	precio_producto numeric,
+	porcentaje_iva numeric,
 	disponible integer,
 	minimo integer,
 	maximo integer,
@@ -492,9 +519,26 @@ BEGIN
 	idproducto = 0;
 	
 	INSERT INTO productos(
-		nombre, precio, cantidad_disponible, cantidad_minima, cantidad_maxima, id_presentacion_producto, id_categoria_producto)
-		VALUES (nombre_producto, precio_producto, disponible, minimo, maximo, id_presentacion, id_categoria)
+		nombre, precio, iva, cantidad_disponible, cantidad_minima, cantidad_maxima, id_presentacion_producto, id_categoria_producto)
+		VALUES (nombre_producto, precio_producto, porcentaje_iva, disponible, minimo, maximo, id_presentacion, id_categoria)
 		RETURNING id_producto into idproducto;
 	RETURN idproducto;
 END;
 $BODY$;
+
+CREATE OR REPLACE FUNCTION id_siguiente_venta()
+    RETURNS integer
+    LANGUAGE 'plpgsql'
+AS $BODY$
+   DECLARE
+      idventa integer;
+BEGIN
+	SELECT MAX(id_venta) INTO idventa FROM ventas;
+	IF idventa IS NULL THEN
+		idventa = 1;
+	END IF;
+	
+	RETURN idventa;
+END;
+$BODY$;
+

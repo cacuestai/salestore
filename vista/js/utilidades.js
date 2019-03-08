@@ -133,7 +133,15 @@ export let cargarLista = opciones => {
     });
 }
 
-export let langTabulator = {
+export let datePickerES = {
+    months: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+    monthsShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Set", "Oct", "Nov", "Dic"],
+    weekdays: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"],
+    weekdaysShort: ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"],
+    weekdaysAbbrev: ["D", "L", "M", "M", "J", "V", "S"]
+}
+
+export let tabulatorES = {
     "es": {
         "columns": {
             "name": "Name", //replace the title of column name with the value "Name"

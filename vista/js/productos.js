@@ -46,6 +46,7 @@ new class Producto {
             { title: 'Presentación', field: 'presentacion', width: 100 },
             { title: 'Nombre', field: 'nombre', width: 200 },
             { title: 'Precio', field: 'precio', align: 'right', formatter: "money" },
+            { title: 'IVA', field: 'porcentaje_iva', align: 'right', formatter: "money" },
             { title: 'Disponible', field: 'cantidad_disponible', align: 'center', width: 70 },
             { title: 'Mínimo', field: 'cantidad_minima', align: 'center', width: 70 },
             { title: 'Máximo', field: 'cantidad_maxima', align: 'center', width: 70 }
@@ -81,7 +82,7 @@ new class Producto {
                     primerItem: 'Seleccione una categoría de producto'
                 }).then(data => {
                     console.log('cargadas las categorías');
-                    $('#producto-lstcategoria').value = idCategoria;
+                    $('#producto-lstcategoria').value = idCategoria; // se asignó si la operación es actualizar
                     M.FormSelect.init($('#producto-lstcategoria'));
                 }).catch(error => {
                     util.mensaje(error);
@@ -129,7 +130,7 @@ new class Producto {
             // locale: true, // se supone que debería utilizar el idioma local
             rowAdded: (row) => this.filaActual = row,
             locale: "es", // idioma. Ver script de utilidades
-            langs: util.langTabulator // ver script de utilidades
+            langs: util.tabulatorES // ver script de utilidades
         });
     }
 
@@ -186,14 +187,15 @@ new class Producto {
             cantidad_maxima: $('#producto-txtmaximo').value,
             id_categoria_producto: lstCategorias.value,
             nombre: $('#producto-txtnombre').value,
-            precio: $('#producto-txtprecio').value
+            precio: $('#producto-txtprecio').value,
+            iva: $('#producto-txtiva').value
         };
 
         // se envían los datos del nuevo producto al back-end y se nuestra la nueva fila en la tabla
         util.fetchData('./controlador/fachada.php', {
             'method': 'POST',
             'body': {
-                clase: 'Producto',
+                clase: this.parametros.clase,
                 accion: 'insertar',
                 data: nuevoProducto
             }
@@ -206,6 +208,7 @@ new class Producto {
                 $('#producto-lstcategoria').value = '';
                 $('#producto-txtnombre').value = '';
                 $('#producto-txtprecio').value = '';
+                $('#producto-txtiva').value = '';
                 $('#producto-txtcantidad').value = '';
                 $('#producto-txtminimo').value = '';
                 $('#producto-txtmaximo').value = '';
@@ -227,6 +230,7 @@ new class Producto {
         this.frmEdicionProducto.open();
         $('#producto-txtnombre').value = this.filaActual.getData().nombre;
         $('#producto-txtprecio').value = this.filaActual.getData().precio;
+        $('#producto-txtiva').value = this.filaActual.getData().iva;
         $('#producto-txtcantidad').value = this.filaActual.getData().cantidad_disponible;
         $('#producto-txtminimo').value = this.filaActual.getData().cantidad_minima;
         $('#producto-txtmaximo').value = this.filaActual.getData().cantidad_maxima;
@@ -254,14 +258,15 @@ new class Producto {
             cantidad_maxima: $('#producto-txtmaximo').value,
             id_categoria_producto: lstCategorias.value,
             nombre: $('#producto-txtnombre').value,
-            precio: $('#producto-txtprecio').value
+            precio: $('#producto-txtprecio').value,
+            iva: $('#producto-txtiva').value
         };
 
         // se envían los datos del nuevo producto al back-end y se nuestra la nueva fila en la tabla
         util.fetchData('./controlador/fachada.php', {
             'method': 'POST',
             'body': {
-                clase: 'Producto',
+                clase: this.parametros.clase,
                 accion: 'actualizar',
                 data: nuevosDatosProducto
             }
@@ -289,7 +294,7 @@ new class Producto {
         util.fetchData('./controlador/fachada.php', {
             'method': 'POST',
             'body': {
-                clase: 'Producto',
+                clase: this.parametros.clase,
                 accion: 'eliminar',
                 id_producto: idFila
             }

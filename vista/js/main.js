@@ -12,6 +12,7 @@ window.util = util;
         'menu-ir-a-inicio': () => window.location.href = 'index.html',
         'menu-clientes': './vista/html/clientes.html',
         'menu-productos': './vista/html/productos.html',
+        'menu-ventas': './vista/html/ventas.html',
         // ...,
         // ...,
         'menu-btnacercade': './vista/html/acercade.html'

@@ -103,4 +103,29 @@ class Cliente {
         }
     }
 
+    public function listar($param) {
+        extract($param);
+
+        $sql = "SELECT id_cliente, nombre, telefonos, direccion, con_credito
+                    FROM clientes
+                    ORDER BY nombre";
+
+        // se ejecuta la instrucción SQL, para obtener el conjunto de resultados (si los hay) como un objeto PDOStatement
+        if ($stmt = $conexion->pdo->query($sql, PDO::FETCH_OBJ)) {
+            // se obtiene el array de objetos con las posibles filas obtenidas
+            $lista = $stmt->fetchAll();
+            // si la lista tiene elementos, se envía al frontend, si no, se envía un mensaje de error
+            if (count($lista)) {
+                echo json_encode(['ok' => TRUE, 'lista' => $lista]);
+            } else {
+                echo json_encode(['ok' => FALSE, 'mensaje' => 'No existen clientes']);
+            }
+        } else {
+            // si falla la ejecución se comunica del error al frontend
+            $conexion->errorInfo(stmt);
+            echo json_encode(['ok' => FALSE, 'mensaje' => 'Imposible consultar el listado de clientes']);
+        }
+    }
+
+
 }

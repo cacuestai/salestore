@@ -10,12 +10,20 @@ Un simple ejemplo de ventas y adquisición de mercancía, **escrito en Javascrip
 
 ![Screenshot](screenshot.png)
 
+**Importante**: debe ejecutar nuevamente el script de la base de datos, luego de incorporarle sus aportes. 
+
 ### Características de la versión 0.06
   - La inserción de productos se cambia por una función almacenada en la base de datos.
   - Con la nueva función de inserción es posible conocer el ID  del nuevo producto.
   - Se agrega a Utilidades.js un objeto para traducir a español a Tabulator.
   - En main.css se modifica la clase .modal para intentar mejorar el comportamiento de los formularios.
-  - 
+  - Se actualizó el diagrama de la base de datos para incluir el IVA a los productos.
+  - Se actualizó tdbsystem-pgscript.sql para incluir el IVA a los productos.
+  - Se actualizó la vista lista_productos para incluir el iva y la columna calculada descripcion_producto.
+  - Se modifica la función insertar_producto en tdbsystem-pgscript.sql.
+  - Se actualiza la gestión de la tabla productos para incorporar el olvidado IVA
+  - Se entrega un **prototipo JS** de lo que sería **venta**, el cual se espera que complemente.
+  - Queda pendiente guardar la venta lo que se hará mendiante una funcion PGSQL.
 
 ### Características de la versión 0.05
   - Actualizado Tabulator a la versión 4.2.2

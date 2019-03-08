@@ -21,15 +21,16 @@ class Producto {
      */
     public function insertar($param) {
         extract($param);
-        // error_log(print_r($param, TRUE)); // quitar comentario para ver lo que se recibe del front-end
+        error_log(print_r($param, TRUE)); // quitar comentario para ver lo que se recibe del front-end
 
-        $sql = "SELECT * FROM insertar_producto(:nombre, :precio, :cantidad_disponible, :cantidad_minima, :cantidad_maxima, :id_presentacion_producto, :id_categoria_producto)";
+        $sql = "SELECT * FROM insertar_producto(:nombre, :precio, :iva, :cantidad_disponible, :cantidad_minima, :cantidad_maxima, :id_presentacion_producto, :id_categoria_producto)";
         // Prepara la instrucción SQL para ejecutarla luego de recibir los parámetros de inserción
         $instruccion = $conexion->pdo->prepare($sql);
 
         if ($instruccion) {
             $instruccion->bindParam(':nombre', $data['nombre']);
             $instruccion->bindParam(':precio', $data['precio']);
+            $instruccion->bindParam(':iva', $data['iva']);
             $instruccion->bindParam(':cantidad_disponible', $data['cantidad_disponible']);
             $instruccion->bindParam(':cantidad_minima', $data['cantidad_minima']);
             $instruccion->bindParam(':cantidad_maxima', $data['cantidad_maxima']);
@@ -58,7 +59,7 @@ class Producto {
         // error_log(print_r($param, TRUE)); // quitar comentario para ver lo que se recibe del front-end
 
         $sql = "UPDATE productos
-                   SET nombre=:nombre, precio=:precio, cantidad_disponible=:cantidad_disponible, cantidad_minima=:cantidad_minima, cantidad_maxima=:cantidad_maxima, id_presentacion_producto=:id_presentacion_producto, id_categoria_producto=:id_categoria_producto
+                   SET nombre=:nombre, precio=:precio, iva=:iva, cantidad_disponible=:cantidad_disponible, cantidad_minima=:cantidad_minima, cantidad_maxima=:cantidad_maxima, id_presentacion_producto=:id_presentacion_producto, id_categoria_producto=:id_categoria_producto
                    WHERE id_producto = :id_actual";
 
         // Prepara la instrucción SQL para ejecutarla luego de recibir los parámetros de inserción
@@ -68,6 +69,7 @@ class Producto {
             $instruccion->bindParam(':id_actual', $data['id_actual']);
             $instruccion->bindParam(':nombre', $data['nombre']);
             $instruccion->bindParam(':precio', $data['precio']);
+            $instruccion->bindParam(':iva', $data['iva']);
             $instruccion->bindParam(':cantidad_disponible', $data['cantidad_disponible']);
             $instruccion->bindParam(':cantidad_minima', $data['cantidad_minima']);
             $instruccion->bindParam(':cantidad_maxima', $data['cantidad_maxima']);
@@ -110,7 +112,28 @@ class Producto {
      */
     public function listar($param) {
         extract($param);
-        // implementar a partir de una VISTA de productos
+
+        $sql = "SELECT * FROM lista_productos ORDER BY descripcion_producto";
+
+        // se ejecuta la instrucción SQL, para obtener el conjunto de resultados (si los hay) como un objeto PDOStatement
+        if ($stmt = $conexion->pdo->query($sql, PDO::FETCH_OBJ)) {
+            // se obtiene el array de objetos con las posibles filas obtenidas
+            $listaCompleta = $stmt->fetchAll();
+            // si la lista tiene elementos, se envía al frontend, si no, se envía un mensaje de error
+            if (count($listaCompleta)) {
+                $listaMinima = [];
+                foreach ($listaCompleta as $fila) {
+                    $listaMinima[] = $fila->id_producto .'-' . $fila->descripcion_producto;
+                }
+                echo json_encode(['ok' => TRUE, 'lista_completa' => $listaCompleta, 'lista_minima' => $listaMinima]);
+            } else {
+                echo json_encode(['ok' => FALSE, 'mensaje' => 'No existen productos']);
+            }
+        } else {
+            // si falla la ejecución se comunica del error al frontend
+            $conexion->errorInfo(stmt);
+            echo json_encode(['ok' => FALSE, 'mensaje' => 'Imposible consultar el listado de productos']);
+        }
     }
 
 }
