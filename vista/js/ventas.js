@@ -9,7 +9,8 @@ new class Venta {
         let elems = document.querySelectorAll('.datepicker');
         var instances = M.Datepicker.init(elems, {
             format: 'yyyy-mm-dd',
-            i18n: util.datePickerES
+            i18n: util.datePickerES,
+            defaultDate: new Date()
         });
 
         this.url = './controlador/fachada.php'; // la url del controlador de fachada
@@ -77,7 +78,7 @@ new class Venta {
             }
         }).then(productos => {
             if (productos.ok) {
-                this.crearLineasDeVenta(productos, this.calcularLineaVenta, this.calcularTotal, this.calcularTodo);
+                this.crearLineasDeVenta(productos, this.calcularLineaVenta, this.calcularTotales, this.calcularTodo);
             } else {
                 throw new Error(productos.mensaje);
             }
@@ -148,10 +149,15 @@ new class Venta {
         this.agregarLineaDeVenta();
     }
 
+    /**
+     * Configura el oyente de eventos para el botón que permite agregar líneas de venta y
+     * lanza el evento tan pronto se carga el formulario, para disponer de una fila inicial.
+     */
     agregarLineaDeVenta() {
         let btnAgregar = $('#venta-btnagregar');
         btnAgregar.addEventListener('click', event => {
-            let adicionar = true;
+
+            let adicionar = true; // pasará a false si encuentra una línea de venta incompleta
             let lineasDeVenta = this.tablaVentas.getData();
 
             lineasDeVenta.forEach((lineaVenta) => {
@@ -169,7 +175,11 @@ new class Venta {
         btnAgregar.click();
     }
 
-    calcularTotal(lineasDeVenta) {
+    /**
+     * Calcula y muestra el valor total de la factura y el total de IVA
+     * @param {Array} lineasDeVenta Los detalles de la venta
+     */
+    calcularTotales(lineasDeVenta) {
         let totalFacturado = 0;
         let totalIVA = 0;
 
@@ -185,6 +195,9 @@ new class Venta {
         M.updateTextFields();
     }
 
+    /**
+     * Actualiza cada detalle de venta con el valor del IVA y del total de la línea de venta
+     */
     calcularLineaVenta(celda, productos) {
         let filaActual = celda.getRow().getData();
         let idProducto = filaActual.producto.split('-')[0];
