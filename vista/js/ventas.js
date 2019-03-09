@@ -4,8 +4,7 @@ new class Venta {
 
     constructor() {
 
-        this.tablaVentas = null;
-        this.filaActual;
+        this.tablaVentas;
 
         let elems = document.querySelectorAll('.datepicker');
         var instances = M.Datepicker.init(elems, {
@@ -65,7 +64,6 @@ new class Venta {
         });
     }
 
-
     /**
      * Intenta cargar la lista de productos que es posible seleccionar para la venta, si sucede 
      * algún error en esta parte, no se continúa configurando el formulario de ventas, si hay
@@ -79,14 +77,12 @@ new class Venta {
             }
         }).then(productos => {
             if (productos.ok) {
-                this.crearLineasDeVenta(productos, this.calcularLineaVenta, this.calcularTotal);
+                this.crearLineasDeVenta(productos, this.calcularLineaVenta, this.calcularTotal, this.calcularTodo);
             } else {
                 throw new Error(productos.mensaje);
             }
         });
     }
-
-
 
     /**
      * Configura una tabla en donde es posible agregar o eliminar líneas o detalles de venta.
@@ -142,7 +138,6 @@ new class Venta {
                     cellClick: (e, celda) => {
                         if (celda) {
                             celda.getRow().delete();
-                            _calcularLineaVenta(celda, productos);
                             _calcularTotal(celda.getRow().getTable().getData());
                         }
                     }
@@ -150,21 +145,43 @@ new class Venta {
             ]
         });
 
+        this.agregarLineaDeVenta();
+    }
+
+    agregarLineaDeVenta() {
         let btnAgregar = $('#venta-btnagregar');
         btnAgregar.addEventListener('click', event => {
-            // OJO si, l fila anterior no ha sido completada, NO permitir agregar  **************
-            this.operacion = 'insertar';
-            this.tablaVentas.addRow({ cantidad: 1, producto: '' }, false); // agregar una fila en blanco al final
+            let adicionar = true;
+            let lineasDeVenta = this.tablaVentas.getData();
+
+            lineasDeVenta.forEach((lineaVenta) => {
+                if (isNaN(lineaVenta.subtotal)) {
+                    adicionar = false;
+                }
+            });
+
+            if (adicionar) {
+                this.tablaVentas.addRow({ cantidad: 1, producto: '' }, false); // agregar una fila en blanco al final
+            } else {
+                M.toast({ html: 'Las líneas de venta deben estar completas para poder agregar nuevas líneas' });
+            }
         });
         btnAgregar.click();
     }
 
-    calcularTotal(data) {
-        let total = 0;
-        data.forEach(function(elemento) {
-            total += elemento.subtotal;
+    calcularTotal(lineasDeVenta) {
+        let totalFacturado = 0;
+        let totalIVA = 0;
+
+        lineasDeVenta.forEach((lineaVenta) => {
+            if (!isNaN(lineaVenta.subtotal)) {
+                totalFacturado += lineaVenta.subtotal;
+                totalIVA += lineaVenta.iva_valor;
+            }
         });
-        $('#venta-total').value = total;
+
+        $('#venta-total').value = totalFacturado;
+        $('#venta-iva').value = totalIVA;
         M.updateTextFields();
     }
 
@@ -181,10 +198,5 @@ new class Venta {
             celda.getRow().update(filaActual);
         }
     }
-
-
-
-
-
 
 }
