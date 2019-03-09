@@ -92,6 +92,11 @@ export async function fetchData(url, data = {}) {
  * @param {String} valor Nombre de la propiedad de los objetos que se mostrará en la lista
  */
 export let crearLista = (listaSeleccionable, elementos, clave, valor, primerItem = false) => {
+
+    if (elementos.length === 0) {
+        throw new Error('Fallo al crear la lista. No existen elementos.');
+    }
+
     let select = $(listaSeleccionable);
     select.innerHTML = '';
     let opciones;

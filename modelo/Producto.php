@@ -117,14 +117,15 @@ class Producto {
 
         // se ejecuta la instrucción SQL, para obtener el conjunto de resultados (si los hay) como un objeto PDOStatement
         if ($stmt = $conexion->pdo->query($sql, PDO::FETCH_OBJ)) {
-            // se obtiene el array de objetos con las posibles filas obtenidas
+            // se obtiene el array de objetos, cada uno con todos los datos de productos
             $listaCompleta = $stmt->fetchAll();
-            // si la lista tiene elementos, se envía al frontend, si no, se envía un mensaje de error
+            // si el array tiene elementos, se crea otro con sólo el ID y los datos esenciales de productos
             if (count($listaCompleta)) {
                 $listaMinima = [];
                 foreach ($listaCompleta as $fila) {
                     $listaMinima[] = $fila->id_producto .'-' . $fila->descripcion_producto;
                 }
+                // se envían las dos listas al front-end
                 echo json_encode(['ok' => TRUE, 'lista_completa' => $listaCompleta, 'lista_minima' => $listaMinima]);
             } else {
                 echo json_encode(['ok' => FALSE, 'mensaje' => 'No existen productos']);
