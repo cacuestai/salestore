@@ -143,7 +143,7 @@ new class Cliente {
             'method': 'POST',
             'body': {
                 clase: this.parametros.clase,
-                accion: actualizar,
+                accion: 'insertar',
                 data: nuevoCliente
             }
         }).then(data => {
@@ -200,7 +200,7 @@ new class Cliente {
             'method': 'POST',
             'body': {
                 clase: this.parametros.clase,
-                accion: this.parametros.accion,
+                accion: 'actualizar',
                 data: nuevosDatosCliente
             }
         }).then(data => {

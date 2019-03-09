@@ -22,8 +22,6 @@ new class Venta {
             accion: 'seleccionar'
         };
 
-
-
         util.cargarLista({ // llenar los elementos de la lista desplegable de clientes
             clase: 'Cliente',
             accion: 'listar',
@@ -56,7 +54,7 @@ new class Venta {
                             console.log(data.lista_completa);
 
                             this.tablaVentas = new Tabulator("#tabla-ventas", {
-                                height: "311px",
+                                height: "200px",
                                 movableColumns: true,
                                 resizableRows: true,
                                 layout: 'fitColumns',
@@ -80,12 +78,14 @@ new class Venta {
                                         },
                                         cellEdited: function(cell) {
                                             this.filaActual = cell.getRow().getData();
-                                            console.log(this.filaActual);
                                             let idProducto = this.filaActual.producto.split('-')[0];
-                                            console.log(idProducto);
-                                            // buscar idProducto en data.lista_completa para obtener el precio y el iva
-                                            // con base en los datos obtenidos del paso anterior calcular this.filaActual.iva_valor, this.filaActual.subtotal
-                                            // hechos los cálculos, actualizar la fila: this.tablaVentas.updateRow(idFila, nuevosDatos);
+                                            let producto = data.lista_completa.find(obj => obj.id_producto == idProducto);
+                                            this.filaActual.valor = producto.precio;
+                                            this.filaActual.iva_porcentaje = producto.porcentaje_iva;
+                                            this.filaActual.iva_valor = producto.porcentaje_iva * producto.porcentaje_iva * this.filaActual.cantidad;
+                                            this.filaActual.subtotal = this.filaActual.cantidad * producto.precio + this.filaActual.iva_valor;
+                                            console.log(this.filaActual);
+                                            cell.getRow().update(this.filaActual);
                                         },
                                     },
                                     { title: "Vr. Unitario", field: "valor", width: 100, align: "right" },
@@ -98,7 +98,7 @@ new class Venta {
                             let btnAgregar = $('#venta-btnagregar');
                             btnAgregar.addEventListener('click', event => {
                                 this.operacion = 'insertar';
-                                this.tablaVentas.addRow({}, false); // agregar una fila en blanco al final
+                                this.tablaVentas.addRow({ cantidad: 1, producto: '' }, false); // agregar una fila en blanco al final
                             });
                             btnAgregar.click();
                         } else {
