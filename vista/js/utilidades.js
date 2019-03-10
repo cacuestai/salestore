@@ -2,6 +2,12 @@
 
 var verLog = true;
 
+export const usuario = {
+    id: '',
+    nombre: '',
+    perfil: ''
+};
+
 /**
  * Muestra un mensaje de error por consola y al usuario
  * @param {String} mensajeLog el mensaje que aparece por consola

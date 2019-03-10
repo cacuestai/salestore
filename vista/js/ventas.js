@@ -3,7 +3,7 @@
 new class Venta {
 
     constructor() {
-
+        ////////////////////// BLOQUEAR LOS BOTONES HASTA QUE SE LOGRE LA INICIALIZACIÓN NECESARIA
         this.tablaVentas;
 
         let elems = document.querySelectorAll('.datepicker');
@@ -16,13 +16,24 @@ new class Venta {
         this.url = './controlador/fachada.php'; // la url del controlador de fachada
         this.filasPorPagina = 7;
 
-        $('#venta-vendedor').value = 'El vendedor autenticado';
+        $('#venta-vendedor').value = util.usuario.nombre;
+        $('#venta-fecha').value = moment(new Date()).format('YYYY-MM-DD'); // <-- observe uno de los usos que se le puede dar a moment.js
+
         this.inicializarClientes();
+
+        $('#venta-cancelar').addEventListener('click', event => {
+            this.cancelarVenta();
+        });
+
+        $('#venta-registrar').addEventListener('click', event => {
+            this.registrarVenta();
+        });
     }
 
     /**
-     * Intenta recuperar la lista de clientes y si es posible, inicia la configuración de la venta
-     * Si sucede algún error, el formulario de venta no se continúa configurando, por razones obvias.
+     * Intenta recuperar la lista de clientes y si es posible, continúa intentando recuperar el siguiente
+     * número de factura. Si también lo logra ejecuta crearListaProductos, para que continúe el proceso
+     * de inicialización de la facturación
      */
     inicializarClientes() {
         util.cargarLista({ // llenar los elementos de la lista desplegable de clientes
@@ -33,20 +44,21 @@ new class Venta {
             valor: 'nombre',
             primerItem: 'Seleccione un cliente'
         }).then(() => {
-            $('#venta-cliente').value = ''; // ES POSIBLE QUE DEBA MODIFICARSE PARA QUE REFERENCIE A UN CLIENTE ******
+            $('#venta-cliente').value = '';
             M.FormSelect.init($('#venta-cliente'));
-            this.configurarVenta();
+            this.siguienteVenta().then(data => {
+                this.crearListaProductos();
+            });
         }).catch(error => {
             util.mensaje(error);
         });
     }
 
     /**
-     * Intenta determinar el ID de la siguiente venta y si lo logra inicia la carga del listado de productos vendibles.
-     * Si no se puede determinar el número de la siguiente venta, se suspende la configuración del formulario de ventas.
+     * Si la solicitud al back-end tiene éxito, devuelve una promesa con el siguiente ID de ventas
      */
-    configurarVenta() {
-        util.fetchData(this.url, { // determinar el ID de la siguiente venta
+    siguienteVenta() {
+        return util.fetchData(this.url, { // determinar el ID de la siguiente venta
             'method': 'POST',
             'body': {
                 clase: 'Venta',
@@ -55,8 +67,7 @@ new class Venta {
         }).then(data => {
             if (data.ok) {
                 $('#venta-numero').value = data.id_venta;
-                M.updateTextFields(); // ojo con la asincronicidad
-                this.crearListaProductos();
+                M.updateTextFields();
             } else {
                 throw new Error(data.mensaje);
             }
@@ -210,6 +221,40 @@ new class Venta {
             filaActual.subtotal = filaActual.cantidad * producto.precio + filaActual.iva_valor;
             celda.getRow().update(filaActual);
         }
+    }
+
+    /**
+     * Se envían los datos del front-end al back-end para ser guardados en la base de datos
+     */
+    registrarVenta() {
+        // bloquear los botones cancelar y registrar
+        let venta = {
+            fecha: $('#venta-fecha').value,
+            cliente: $('#venta-cliente').value,
+            vendededor: util.usuario.id,
+            total: $('#venta-total').value,
+            iva: $('#venta-iva').value,
+            paga: $('#venta-paga').value,
+            adeuda: $('#venta-adeuda').value,
+            detalle: this.tablaVentas.getData()
+        };
+        // debe mostrar el siguiente número de venta si el registro es exitoso:
+        this.siguienteVenta().then(data => {
+            // desbloquear los botones cancelar y registrar
+        });
+
+    }
+
+    /**
+     * Al pulsar este botón los datos que se estén editando actualmente, se perderán.
+     */
+    cancelarVenta() {
+        this.tablaVentas.clearData();
+        $('#venta-cliente').value = '';
+        $('#venta-paga').value = '';
+        $('#venta-adeuda').value = '';
+        $('#venta-total').value = '';
+        $('#venta-iva').value = '';
     }
 
 }

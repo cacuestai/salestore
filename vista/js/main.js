@@ -8,6 +8,13 @@ window.util = util;
 
     let menuPrincipal;
 
+    // --- la siguiente asignación de usuario se hará más adelante por autenticación----
+    // --- por ahora, debe asignarse uno arbitrariamente, pero existente en la bd.
+    util.usuario.id = '001';
+    util.usuario.nombre = 'Jorge Pérez';
+    util.usuario.perfil = 'Administrador';
+    // ---------------------------------------------------------------------------------
+
     let opciones = {
         'menu-ir-a-inicio': () => window.location.href = 'index.html',
         'menu-clientes': './vista/html/clientes.html',

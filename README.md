@@ -15,15 +15,16 @@ Un simple ejemplo de ventas y adquisición de mercancía, **escrito en Javascrip
 ### Características de la versión 0.06
   - La inserción de productos se cambia por una función almacenada en la base de datos.
   - Con la nueva función de inserción es posible conocer el ID  del nuevo producto.
-  - Se agrega a Utilidades.js un objeto para traducir a español a Tabulator.
+  - Se agrega a Utilidades.js objetos para traducir a español a Tabulator y a Materialize.datePicker.
   - En main.css se modifica la clase .modal para intentar mejorar el comportamiento de los formularios.
   - Se actualizó el diagrama de la base de datos para incluir el IVA a los productos.
   - Se actualizó tdbsystem-pgscript.sql para incluir el IVA a los productos.
   - Se actualizó la vista lista_productos para incluir el iva y la columna calculada descripcion_producto.
   - Se modifica la función insertar_producto en tdbsystem-pgscript.sql.
-  - Se actualiza la gestión de la tabla productos para incorporar el olvidado IVA
-  - Se entrega un **prototipo JS** de lo que sería **venta**, el cual se espera que complemente.
-  - Queda pendiente guardar la venta lo que se hará mendiante una funcion PGSQL.
+  - Se actualiza la gestión de la tabla productos para incorporar el olvidado IVA.
+  - Se agrega [Moment], una librería de fechas JavaScript para analizar, validar, manipular y formatear fechas.
+  - Se crea el objeto 'Usuario' en Utilidades.js para mantener la referencia del usuario que se autentique.
+  - Por ahora, en main.js se asignan los datos de un usuario supuestamente autenticado.
 
 ### Características de la versión 0.05
   - Actualizado Tabulator a la versión 4.2.2
@@ -93,4 +94,5 @@ Y en él deberá asignar el nombre correcto de la base de datos y demás paráme
 Por favor tenga en cuenta que esto es una simple demostración para quienes apenas se inician en el mundo de la programación web. Siendo así son muy bienvenidas las sugerencias para mejorar este producto de demostración.
 
 [Tabulator]: <http://tabulator.info/>
-[Materialize]: <https://materializecss.com/<>
+[Materialize]: <https://materializecss.com/>
+[Moment]: <https://momentjs.com/>
