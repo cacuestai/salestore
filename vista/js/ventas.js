@@ -225,13 +225,16 @@ new class Venta {
 
     /**
      * Se envían los datos del front-end al back-end para ser guardados en la base de datos
+     * VALIDAR CLIENTE Y ADEUDA Y PAGA
      */
     registrarVenta() {
-        // bloquear los botones cancelar y registrar
+        $('#venta-registrar').disabled = true;
+        $('#venta-cancelar').disabled = true;
+
         let venta = {
             fecha: $('#venta-fecha').value,
             cliente: $('#venta-cliente').value,
-            vendededor: util.usuario.id,
+            vendedor: util.usuario.id,
             total: $('#venta-total').value,
             iva: $('#venta-iva').value,
             paga: $('#venta-paga').value,
@@ -249,7 +252,8 @@ new class Venta {
         }).then(data => {
             if (data.ok) {
                 this.siguienteVenta().then(data => {
-                    // desbloquear los botones cancelar y registrar
+                    $('#venta-registrar').disabled = false;
+                    $('#venta-cancelar').disabled = false;
                 });
             } else {
                 throw new Error(data.mensaje);

@@ -7,7 +7,7 @@ class Venta {
 
         $sql = "SELECT * FROM id_siguiente_venta()";
         $instruccion = $conexion->pdo->prepare($sql);
-        
+
         if ($instruccion) {
             if ($instruccion->execute()) {
                 $fila = $instruccion->fetch(PDO::FETCH_ASSOC);
@@ -25,5 +25,11 @@ class Venta {
 
     public function registrarVenta($param) {
         extract($param);
+        error_log(print_r($venta, 1));
+        error_log(json_encode($venta));
+        
+
+        // RETORNAR EL ID DE LA NUEVA VENTA
+        echo json_encode(['ok' => TRUE, 'mensaje']);
     }
 }

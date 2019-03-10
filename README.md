@@ -25,6 +25,7 @@ Un simple ejemplo de ventas y adquisición de mercancía, **escrito en Javascrip
   - Se agrega [Moment], una librería de fechas JavaScript para analizar, validar, manipular y formatear fechas.
   - Se crea el objeto 'Usuario' en Utilidades.js para mantener la referencia del usuario que se autentique.
   - Por ahora, en main.js se asignan los datos de un usuario supuestamente autenticado.
+  - Se agrega el tipo 'tipo_detalle' a la base de datos. Se usará para insertar detalles de ventas.
 
 ### Características de la versión 0.05
   - Actualizado Tabulator a la versión 4.2.2

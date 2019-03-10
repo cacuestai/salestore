@@ -542,3 +542,19 @@ BEGIN
 END;
 $BODY$;
 
+-- Un bloque anónimo para la creación controlada de un tipo necesario para la inserción de detalles de ventas
+
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'tipo_detalle') THEN
+        CREATE TYPE tipo_detalle AS (
+			cantidad integer, 
+			producto varchar, 
+			valor numeric, 
+			iva_porcentaje numeric, 
+			iva_valor numeric, 
+			subtotal numeric
+		);
+    END IF;
+END$$;
+
