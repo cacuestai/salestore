@@ -238,11 +238,25 @@ new class Venta {
             adeuda: $('#venta-adeuda').value,
             detalle: this.tablaVentas.getData()
         };
-        // debe mostrar el siguiente número de venta si el registro es exitoso:
-        this.siguienteVenta().then(data => {
-            // desbloquear los botones cancelar y registrar
-        });
 
+        util.fetchData(this.url, {
+            'method': 'POST',
+            'body': {
+                clase: 'Venta',
+                accion: 'registrarVenta',
+                venta: venta
+            }
+        }).then(data => {
+            if (data.ok) {
+                this.siguienteVenta().then(data => {
+                    // desbloquear los botones cancelar y registrar
+                });
+            } else {
+                throw new Error(data.mensaje);
+            }
+        }).catch(error => {
+            util.mensaje(error, 'No se pudo determinar el ID de la siguiente venta');
+        });
     }
 
     /**

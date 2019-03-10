@@ -22,4 +22,8 @@ class Venta {
             echo json_encode(['ok' => FALSE, 'mensaje' => 'Fallo al determinar el ID de la factura siguiente']);
         }
     }
+
+    public function registrarVenta($param) {
+        extract($param);
+    }
 }
