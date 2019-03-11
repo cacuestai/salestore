@@ -28,6 +28,10 @@ new class Venta {
         $('#venta-registrar').addEventListener('click', event => {
             this.registrarVenta();
         });
+
+        $('#venta-paga').addEventListener('input', event => {
+            this.calcularDeuda();
+        });
     }
 
     /**
@@ -228,6 +232,10 @@ new class Venta {
      * VALIDAR CLIENTE Y ADEUDA Y PAGA
      */
     registrarVenta() {
+        if (!this.datosValidos()) {
+
+        }
+
         $('#venta-registrar').disabled = true;
         $('#venta-cancelar').disabled = true;
 
@@ -273,6 +281,20 @@ new class Venta {
         $('#venta-adeuda').value = '';
         $('#venta-total').value = '';
         $('#venta-iva').value = '';
+    }
+
+    /**
+     * Registra la diferencia entre el total de la venta y lo que paga el cliente.
+     * Si lo que paga excede lo adeudado se informa al usuario.
+     */
+    calcularDeuda() {
+        let totalVenta = isNaN($('#venta-total').value) ? 0 : Number($('#venta-total').value);
+        let paga = isNaN($('#venta-paga').value) ? 0 : Number($('#venta-paga').value);
+        $('#venta-adeuda').value = totalVenta - paga;
+        M.updateTextFields();
+        if (paga > totalVenta) {
+            M.toast({ html: `El pago ($${paga}) excede el valor de la venta ($${totalVenta})` });
+        }
     }
 
 }

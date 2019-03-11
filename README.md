@@ -13,6 +13,7 @@ Un simple ejemplo de ventas y adquisición de mercancía, **escrito en Javascrip
 **Importante**: debe ejecutar nuevamente el script de la base de datos, luego de incorporarle sus aportes. 
 
 ### Características de la versión 0.06
+  - Se incluye una nueva versión de la base de datos en donde cambiaron nombres relacionados con la cantidad de productos.
   - La inserción de productos se cambia por una función almacenada en la base de datos.
   - Con la nueva función de inserción es posible conocer el ID  del nuevo producto.
   - Se agrega a Utilidades.js objetos para traducir a español a Tabulator y a Materialize.datePicker.
@@ -26,6 +27,7 @@ Un simple ejemplo de ventas y adquisición de mercancía, **escrito en Javascrip
   - Se crea el objeto 'Usuario' en Utilidades.js para mantener la referencia del usuario que se autentique.
   - Por ahora, en main.js se asignan los datos de un usuario supuestamente autenticado.
   - Se agrega el tipo 'tipo_detalle' a la base de datos. Se usará para insertar detalles de ventas.
+  - Se agrega al script de la base de datos la función 'insertar_venta' para insertar las ventas y sus líneas de venta.
 
 ### Características de la versión 0.05
   - Actualizado Tabulator a la versión 4.2.2

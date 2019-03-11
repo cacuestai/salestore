@@ -25,6 +25,7 @@ DROP TABLE IF EXISTS detalles_devoluciones_compras;
 
 DROP VIEW IF EXISTS lista_productos CASCADE;
 DROP FUNCTION IF EXISTS insertar_producto CASCADE;
+DROP FUNCTION IF EXISTS insertar_venta CASCADE;
 
 CREATE TABLE categorias_productos (
 	id_categoria_producto SMALLSERIAL NOT NULL,
@@ -159,7 +160,7 @@ CREATE TABLE ventas (
 
 CREATE TABLE detalles_ventas (
 	id_detalle_venta SERIAL NOT NULL,
-	cantidad_disponible int2 NOT NULL DEFAULT 0,
+	cantidad int2 NOT NULL DEFAULT 0,
 	valor_producto numeric NOT NULL DEFAULT 0,
 	descuento numeric NOT NULL DEFAULT 0,
 	iva numeric NOT NULL DEFAULT 0,
@@ -199,7 +200,7 @@ CREATE TABLE detalles_devoluciones_ventas (
 	id_detalle_devolucion_venta SERIAL NOT NULL,
 	id_devolucion_venta int4 NOT NULL,
 	id_producto int4 NOT NULL,
-	cantidad_disponible int2 NOT NULL DEFAULT 0,
+	cantidad int2 NOT NULL DEFAULT 0,
 	PRIMARY KEY(id_detalle_devolucion_venta),
 	CONSTRAINT ref_detalle_devolucion__devolucion_venta FOREIGN KEY (id_devolucion_venta)
 		REFERENCES devoluciones_ventas(id_devolucion_venta)
@@ -265,7 +266,7 @@ CREATE TABLE detalles_devoluciones_compras (
 	id_detalle_devolucion_compra SERIAL NOT NULL,
 	id_devolucion_compra int4 NOT NULL,
 	id_producto int4 NOT NULL,
-	cantidad_disponible int2 NOT NULL DEFAULT 0,
+	cantidad int2 NOT NULL DEFAULT 0,
 	PRIMARY KEY(id_detalle_devolucion_compra),
 	CONSTRAINT ref_detalle_devolucion_pedido__devolucion_pedido FOREIGN KEY (id_devolucion_compra)
 		REFERENCES devoluciones_compras(id_devolucion_compra)
@@ -557,4 +558,58 @@ BEGIN
 		);
     END IF;
 END$$;
+
+CREATE OR REPLACE FUNCTION insertar_venta(datos_venta JSON)
+    RETURNS integer
+    LANGUAGE 'plpgsql'
+AS $BODY$
+DECLARE
+	i INTEGER;
+	idventa INTEGER;
+	idproducto INTEGER;
+	fecha DATE;
+	cliente VARCHAR;
+	vendedor VARCHAR;
+	total NUMERIC;
+	iva NUMERIC;
+	paga NUMERIC;
+	credito NUMERIC;
+	linea_venta RECORD;
+BEGIN
+	idventa = 0;
+	-- transfiere a variables las propiedades del objeto JSON 'datos_venta', excepto el array 'detalle'
+	SELECT (datos_venta#>>'{fecha}')::DATE FROM json_each(datos_venta) WHERE key = 'fecha' INTO fecha;
+	SELECT (datos_venta#>>'{cliente}')::VARCHAR FROM json_each(datos_venta) WHERE key = 'cliente' INTO cliente;
+	SELECT (datos_venta#>>'{vendedor}')::VARCHAR FROM json_each(datos_venta) WHERE key = 'vendedor' INTO vendedor;
+	SELECT (datos_venta#>>'{total}')::FLOAT FROM json_each(datos_venta) WHERE key = 'total' INTO total;
+	SELECT (datos_venta#>>'{iva}')::FLOAT FROM json_each(datos_venta) WHERE key = 'iva' INTO iva;
+	SELECT (datos_venta#>>'{paga}')::FLOAT FROM json_each(datos_venta) WHERE key = 'paga' INTO paga;
+	
+	credito = total - paga;
+	
+	INSERT INTO ventas(fecha_venta, total_credito, total_contado, id_cliente, id_vendedor)
+		VALUES (fecha, credito, paga, cliente, vendedor) 
+		RETURNING id_venta INTO idventa;
+	
+	IF idventa > 0 THEN
+		-- recorre las filas correspondientes a cada detalle de venta
+		FOR linea_venta IN
+			-- expande el array de objetos 'detalle' a un conjunto de filas de tipo 'tipo_detalle'
+			SELECT * FROM json_populate_recordset(null::tipo_detalle, (
+				-- recupera el JSON correspondiente a la propiedad 'detalle'
+				SELECT value FROM json_each(datos_venta) WHERE key = 'detalle')
+			) LOOP
+			i = strpos(linea_venta.producto, '-') - 1;
+			idproducto = substr(linea_venta.producto, 1, i);
+			
+			-- por cada detalle, inserta una línea de venta. Esta versión NO maneja descuentos (0.0)
+			INSERT INTO detalles_ventas(cantidad, valor_producto, descuento, iva, id_venta, id_producto)
+				VALUES (linea_venta.cantidad, linea_venta.valor, 0.0, linea_venta.iva_valor, idventa, idproducto);
+		END LOOP;
+	END IF;
+	
+	RETURN idventa;
+END;
+$BODY$;
+
 
