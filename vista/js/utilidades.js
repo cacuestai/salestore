@@ -184,3 +184,9 @@ export let tabulatorES = {
         }
     }
 }
+
+/**
+ * Devuelve verdadero si el argumento dado es un valor
+ * @param {String} n Un dato que puede corresponder a un valor o no. 
+ */
+export let esNumero = n => !isNaN(parseFloat(n)) && isFinite(n);

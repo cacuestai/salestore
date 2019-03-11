@@ -3,7 +3,6 @@
 new class Venta {
 
     constructor() {
-        ////////////////////// BLOQUEAR LOS BOTONES HASTA QUE SE LOGRE LA INICIALIZACIÓN NECESARIA
         this.tablaVentas;
 
         let elems = document.querySelectorAll('.datepicker');
@@ -176,7 +175,7 @@ new class Venta {
             let lineasDeVenta = this.tablaVentas.getData();
 
             lineasDeVenta.forEach((lineaVenta) => {
-                if (isNaN(lineaVenta.subtotal)) {
+                if (!util.esNumero(lineaVenta.subtotal)) {
                     adicionar = false;
                 }
             });
@@ -199,7 +198,7 @@ new class Venta {
         let totalIVA = 0;
 
         lineasDeVenta.forEach((lineaVenta) => {
-            if (!isNaN(lineaVenta.subtotal)) {
+            if (util.esNumero(lineaVenta.subtotal)) {
                 totalFacturado += lineaVenta.subtotal;
                 totalIVA += lineaVenta.iva_valor;
             }
@@ -229,15 +228,17 @@ new class Venta {
 
     /**
      * Se envían los datos del front-end al back-end para ser guardados en la base de datos
-     * VALIDAR CLIENTE Y ADEUDA Y PAGA
      */
     registrarVenta() {
-        if (!this.datosValidos()) {
+        // ensayar los tiempos de espera en servidores lentos para ver si esto es necesario:
+        //      $('#venta-registrar').disabled = true;
+        //      $('#venta-cancelar').disabled = true;
 
+        let errores = this.validarDatos();
+        if (errores) { // la venta no se registra si los datos están incompletos
+            M.toast({ html: `No se puede registrar la venta:${errores}` });
+            return;
         }
-
-        $('#venta-registrar').disabled = true;
-        $('#venta-cancelar').disabled = true;
 
         let venta = {
             fecha: $('#venta-fecha').value,
@@ -258,11 +259,9 @@ new class Venta {
                 venta: venta
             }
         }).then(data => {
+            // si todo sale bien se retorna el ID de la venta registrada
             if (data.ok) {
-                this.siguienteVenta().then(data => {
-                    $('#venta-registrar').disabled = false;
-                    $('#venta-cancelar').disabled = false;
-                });
+                $('#venta-numero').value = data.id_venta + 1;
             } else {
                 throw new Error(data.mensaje);
             }
@@ -288,13 +287,50 @@ new class Venta {
      * Si lo que paga excede lo adeudado se informa al usuario.
      */
     calcularDeuda() {
-        let totalVenta = isNaN($('#venta-total').value) ? 0 : Number($('#venta-total').value);
-        let paga = isNaN($('#venta-paga').value) ? 0 : Number($('#venta-paga').value);
+        let totalVenta = util.esNumero($('#venta-total').value) ? Number($('#venta-total').value) : 0;
+        let paga = util.esNumero($('#venta-paga').value) ? Number($('#venta-paga').value) : 0;
         $('#venta-adeuda').value = totalVenta - paga;
         M.updateTextFields();
         if (paga > totalVenta) {
             M.toast({ html: `El pago ($${paga}) excede el valor de la venta ($${totalVenta})` });
         }
+    }
+
+    /**
+     * Si faltan datos en las entradas de la venta, devuelve un string informando de las inconsistencias
+     */
+    validarDatos() {
+        let errores = '';
+
+        if (!moment($('#venta-fecha').value).isValid()) {
+            errores += '<br>Fecha inválida';
+        }
+
+        if (!$('#venta-cliente').value) {
+            errores += '<br>Falta seleccionar el cliente';
+        }
+
+        let lineasDeVenta = this.tablaVentas.getData();
+        if (lineasDeVenta.length == 0) {
+            errores += '<br>La venta aún no tiene detalles de venta.';
+        } else {
+            let lineaIncompleta = false;
+            lineasDeVenta.forEach((lineaVenta) => {
+                if (!util.esNumero(lineaVenta.subtotal)) {
+                    lineaIncompleta = true;
+                }
+            });
+
+            if (lineaIncompleta) {
+                errores += '<br>Se encontró al menos un detalle de venta incompleto.';
+            }
+        }
+
+        if (!util.esNumero($('#venta-paga').value)) {
+            errores += '<br>Falta ingresar cuánto paga el cliente o cero si es preciso.';
+        }
+
+        return errores;
     }
 
 }

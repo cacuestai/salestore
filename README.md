@@ -7,12 +7,14 @@ Un simple ejemplo de ventas y adquisición de mercancía, **escrito en Javascrip
   - ECMAScript 2015 (ES6), ECMAScript2016 (ES2016) y ECMAScript2018 (ES8).
   - Uso de la librería [tabulator] para crear tablas interactivas sin usar jQuery.
   - Uso de [Materialize], un moderno front-end framework basado en Material Design y orientado al diseño adaptativo.
+  - Uso de la librería [Moment] para analizar, validar, manipular y formatear fechas.
 
 ![Screenshot](screenshot.png)
 
 **Importante**: debe ejecutar nuevamente el script de la base de datos, luego de incorporarle sus aportes. 
 
 ### Características de la versión 0.06
+  - ¡Registro de ventas _completo_!
   - Se incluye una nueva versión de la base de datos en donde cambiaron nombres relacionados con la cantidad de productos.
   - La inserción de productos se cambia por una función almacenada en la base de datos.
   - Con la nueva función de inserción es posible conocer el ID  del nuevo producto.
@@ -28,6 +30,7 @@ Un simple ejemplo de ventas y adquisición de mercancía, **escrito en Javascrip
   - Por ahora, en main.js se asignan los datos de un usuario supuestamente autenticado.
   - Se agrega el tipo 'tipo_detalle' a la base de datos. Se usará para insertar detalles de ventas.
   - Se agrega al script de la base de datos la función 'insertar_venta' para insertar las ventas y sus líneas de venta.
+  - Se agrega la función util.esNumero(n) para validar de forma segura si algo es un valor o no.
 
 ### Características de la versión 0.05
   - Actualizado Tabulator a la versión 4.2.2
