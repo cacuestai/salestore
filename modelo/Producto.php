@@ -1,6 +1,6 @@
 <?php
 
-class Producto {
+class Producto implements Persistible {
 
     /**
      * Devuelve una cadena JSON que contiene el resultado de seleccionar todos los productos guardados
@@ -123,7 +123,7 @@ class Producto {
             if (count($listaCompleta)) {
                 $listaMinima = [];
                 foreach ($listaCompleta as $fila) {
-                    $listaMinima[] = $fila->id_producto .'-' . $fila->descripcion_producto;
+                    $listaMinima[] = $fila->id_producto . '-' . $fila->descripcion_producto;
                 }
                 // se envían las dos listas al front-end
                 echo json_encode(['ok' => TRUE, 'lista_completa' => $listaCompleta, 'lista_minima' => $listaMinima]);

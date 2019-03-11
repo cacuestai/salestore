@@ -13,6 +13,9 @@ Un simple ejemplo de ventas y adquisición de mercancía, **escrito en Javascrip
 
 **Importante**: debe ejecutar nuevamente el script de la base de datos, luego de incorporarle sus aportes. 
 
+### Características de la versión 0.1.0
+  - Las clases del modelo de dominio, implementan la _interface Persistible_.
+
 ### Características de la versión 0.06
   - ¡Registro de ventas _completo_!
   - Se incluye una nueva versión de la base de datos en donde cambiaron nombres relacionados con la cantidad de productos.

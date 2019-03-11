@@ -1,6 +1,6 @@
 <?php
 
-class Personal {
+class Personal implements Persistible {
 
     /**
      * Devuelve una cadena JSON que contiene el resultado de seleccionar el personal de la tienda

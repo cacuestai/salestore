@@ -1,6 +1,6 @@
 <?php
 
-class PresentacionProducto {
+class PresentacionProducto implements Persistible {
 
     /**
      * Devuelve una cadena JSON que contiene el resultado de seleccionar todas las categorías de productos guardadas
@@ -56,6 +56,5 @@ class PresentacionProducto {
             echo json_encode(['ok' => FALSE, 'mensaje' => 'Imposible consultar las categorías de productos']);
         }
     }
-
 
 }

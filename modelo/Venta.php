@@ -1,6 +1,6 @@
 <?php
 
-class Venta {
+class Venta implements Persistible {
 
     public function idSiguienteVenta($param) {
         extract($param);
@@ -26,7 +26,7 @@ class Venta {
     public function registrarVenta($param) {
         extract($param);
         error_log(print_r($venta, 1));
-        
+
         $sql = "SELECT * FROM insertar_venta(:datos_venta)";
         $instruccion = $conexion->pdo->prepare($sql);
 

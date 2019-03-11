@@ -1,6 +1,6 @@
 <?php
 
-class CategoriaProducto {
+class CategoriaProducto implements Persistible {
 
     /**
      * Devuelve una cadena JSON que contiene el resultado de seleccionar todas las categorías de productos guardadas

@@ -1,6 +1,6 @@
 <?php
 
-class Cliente {
+class Cliente implements Persistible {
 
     /**
      * Devuelve una cadena JSON que contiene el resultado de seleccionar todos los clientes guardados
@@ -126,6 +126,5 @@ class Cliente {
             echo json_encode(['ok' => FALSE, 'mensaje' => 'Imposible consultar el listado de clientes']);
         }
     }
-
 
 }
