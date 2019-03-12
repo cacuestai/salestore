@@ -5,7 +5,7 @@ Un simple ejemplo de ventas y adquisición de mercancía, **escrito en Javascrip
   - Conexión a bases de datos Postgres mediante PDO.
   - Arquitectura por capas.
   - ECMAScript 2015 (ES6), ECMAScript2016 (ES2016) y ECMAScript2018 (ES8).
-  - Uso de la librería [tabulator] para crear tablas interactivas sin usar jQuery.
+  - Uso de la librería [Tabulator] para crear tablas interactivas sin usar jQuery.
   - Uso de [Materialize], un moderno front-end framework basado en Material Design y orientado al diseño adaptativo.
   - Uso de la librería [Moment] para analizar, validar, manipular y formatear fechas.
 
@@ -15,6 +15,7 @@ Un simple ejemplo de ventas y adquisición de mercancía, **escrito en Javascrip
 
 ### Características de la versión 0.1.0
   - Las clases del modelo de dominio, implementan la _interface Persistible_.
+  - Actualizado a [Tabulator] versión 4.2.3
 
 ### Características de la versión 0.06
   - ¡Registro de ventas _completo_!
@@ -66,7 +67,7 @@ Un simple ejemplo de ventas y adquisición de mercancía, **escrito en Javascrip
 
   - Se agrega clientes.html y clientes.js para demostrar la carga de datos desde el back-end.
   - cliente.js incluye la creación de un objeto anónimo mediante una clase anónima.
-  - Se agrega la librería [tabulator] para mostrar la información obtenida de la base de datos.
+  - Se agrega la librería [Tabulator] para mostrar la información obtenida de la base de datos.
   - Se hacen pequeños ajustes a main.js para permitir la gestión de clientes.
   - carga-scripts.js permite ahora cargar además de scripts JS, módulos JS.
 

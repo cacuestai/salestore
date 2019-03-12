@@ -1,4 +1,4 @@
-/* Tabulator v4.2.2 (c) Oliver Folkerd */
+/* Tabulator v4.2.3 (c) Oliver Folkerd */
 
 'use strict';
 
@@ -3354,14 +3354,13 @@ RowManager.prototype._virtualRenderFill = function (position, forceMove, offset)
 	if (!position) {
 		self._clearVirtualDom();
 	} else {
-		// element.children().detach();
 		while (element.firstChild) {
 			element.removeChild(element.firstChild);
 		} //check if position is too close to bottom of table
-		var heightOccpied = (self.displayRowsCount - position + 1) * self.vDomRowHeight;
+		var heightOccupied = (self.displayRowsCount - position + 1) * self.vDomRowHeight;
 
-		if (heightOccpied < self.height) {
-			position -= Math.ceil((self.height - heightOccpied) / self.vDomRowHeight);
+		if (heightOccupied < self.height) {
+			position -= Math.ceil((self.height - heightOccupied) / self.vDomRowHeight);
 
 			if (position < 0) {
 				position = 0;
@@ -4454,7 +4453,7 @@ Row.prototype.deleteActual = function (blockRedraw) {
 
 	//remove any reactive data watchers from row object
 	if (this.table.options.reactiveData && this.table.modExists("reactiveData", true)) {
-		this.table.modules.reactiveData.unwatchRow(this);
+		// this.table.modules.reactiveData.unwatchRow(this);
 	}
 
 	this.table.rowManager.deleteRow(this, blockRedraw);

@@ -1,6 +1,6 @@
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-/* Tabulator v4.2.2 (c) Oliver Folkerd */
+/* Tabulator v4.2.3 (c) Oliver Folkerd */
 
 var Download = function Download(table) {
 	this.table = table; //hold Tabulator object
@@ -779,7 +779,7 @@ Download.prototype.downloaders = {
 
 				fields.forEach(function (field) {
 					var value = self.getFieldValue(field, row);
-					rowData.push(!(i instanceof Date) && (typeof value === "undefined" ? "undefined" : _typeof(value)) === "object" ? JSON.stringify(value) : value);
+					rowData.push(!(value instanceof Date) && (typeof value === "undefined" ? "undefined" : _typeof(value)) === "object" ? JSON.stringify(value) : value);
 				});
 
 				return rowData;

@@ -20,7 +20,8 @@ window.util = util;
         'menu-clientes': './vista/html/clientes.html',
         'menu-productos': './vista/html/productos.html',
         'menu-ventas': './vista/html/ventas.html',
-        // ...,
+        'menu-categorias': './vista/html/categorias-productos.html',
+        'menu-presentaciones': './vista/html/presentaciones-productos.html',
         // ...,
         'menu-btnacercade': './vista/html/acercade.html'
     }

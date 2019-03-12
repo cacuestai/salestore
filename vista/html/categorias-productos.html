@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Gestión de categorias de productos</title>
+    <script src="./vista/js/categorias-productos.js"></script>
+</head>
+
+<body>
+    <nav>
+        <div class="nav-wrapper teal lighten-5">
+            <a class="brand-logo blue-grey-text">&nbsp;Gestión de categorías de productos</a>
+            <ul class="right">
+                <li id="categoria-btnagregar"><a class="btn-floating modal-trigger" data-target="categoria-frmedicion"><i class="material-icons">add</i></a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- especificaciones de un cuadro modal -->
+    <div id="categoria-frmedicion" class="modal">
+        <div class="modal-content">
+            <h5 id="categoria-titulo" class="teal-text center">Datos de la categoría del producto</h5>
+
+            <div class="container">
+
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input class="validate" type="text" name="categoria-txtnombre" id="categoria-txtnombre" required/>
+                        <label for="categoria-txtnombre">Nombre de la categoría del producto</label>
+                    </div>
+                </div>
+
+                <div class="row center">
+                    <a id="categoria-btncancelar" class="waves-effect waves-light btn-small"><i class="material-icons left">clear</i>Cancelar</a>
+                    <a id="categoria-btnaceptar" class="waves-effect waves-light btn-small"><i class="material-icons left">check</i>Aceptar</a>
+                </div>
+
+            </div>
+            <!-- hasta aquí el formulario de autenticación -->
+        </div>
+        <!-- hasta aquí las especificaciones de un cuadro modal -->
+    </div>
+
+    <div id="tabla-categorias"></div>
+    <br>
+    <div class=" teal lighten-4">
+        <br> &nbsp;
+    </div>
+</body>
+
+</html>

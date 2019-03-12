@@ -26,6 +26,8 @@ DROP TABLE IF EXISTS detalles_devoluciones_compras;
 DROP VIEW IF EXISTS lista_productos CASCADE;
 DROP FUNCTION IF EXISTS insertar_producto CASCADE;
 DROP FUNCTION IF EXISTS insertar_venta CASCADE;
+DROP FUNCTION IF EXISTS insertar_presentacion CASCADE;
+DROP FUNCTION IF EXISTS insertar_categoria CASCADE;
 
 CREATE TABLE categorias_productos (
 	id_categoria_producto SMALLSERIAL NOT NULL,
@@ -481,6 +483,79 @@ INSERT INTO personal(id_persona, nombre, telefono, direccion, perfil, contrasena
 	VALUES('003','Juan Bermudez Duque','8531235','Cra.1#11-23','Vendedor','827ccb0eea8a706c4c34a16891f84e7b')
 	ON CONFLICT DO NOTHING;
 
+INSERT INTO personal(id_persona, nombre, telefono, direccion, perfil, contrasena)
+	VALUES('004','Carlos Franco','3237059840','Calle 15 #30-17','Administrador','akm12')
+	ON CONFLICT DO NOTHING;
+
+INSERT INTO personal(id_persona, nombre, telefono, direccion, perfil, contrasena)
+	VALUES('005','Edgar Velez','3157059840','Calle 25 #32-17','Vendedor','bkm13')
+	ON CONFLICT DO NOTHING;
+
+INSERT INTO personal(id_persona, nombre, telefono, direccion, perfil, contrasena)
+	VALUES('006','Cristian Aristi','3183059840','Calle 95 #90-17','Vendedor','ckm14')
+	ON CONFLICT DO NOTHING;
+
+INSERT INTO personal(id_persona, nombre, telefono, direccion, perfil, contrasena)
+	VALUES('007','Jose Londoño','3111059840','Calle 65 #10-27','Vendedor','dkm15')
+	ON CONFLICT DO NOTHING;
+
+INSERT INTO personal(id_persona, nombre, telefono, direccion, perfil, contrasena)
+	VALUES('008','Juan Duran','3104059840','Calle 65 #50-57','Vendedor','ekm16')
+	ON CONFLICT DO NOTHING;
+
+INSERT INTO personal(id_persona, nombre, telefono, direccion, perfil, contrasena)
+	VALUES('009','Maria Gomez','3110059840','Calle 65 #30-10','Vendedor','fkm17')
+	ON CONFLICT DO NOTHING;
+
+INSERT INTO personal(id_persona, nombre, telefono, direccion, perfil, contrasena)
+	VALUES('010','Liliana Franco','3112059840','Calle 65 #30-40','Administrador','jkm18')
+	ON CONFLICT DO NOTHING;
+
+INSERT INTO personal(id_persona, nombre, telefono, direccion, perfil, contrasena)
+	VALUES('011','Ana Solarte','3135459840','Calle 65 #12-11','Vendedor','hkm19')
+	ON CONFLICT DO NOTHING;
+
+INSERT INTO personal(id_persona, nombre, telefono, direccion, perfil, contrasena)
+	VALUES('012','Josefa Franco','3106059840','Calle 65 #20-17','Vendedor','ikm10')
+	ON CONFLICT DO NOTHING;
+
+INSERT INTO personal(id_persona, nombre, telefono, direccion, perfil, contrasena)
+	VALUES('013','Jenny Franco','3114059840','Calle 65 #10-17','Administrador','jkm21')
+	ON CONFLICT DO NOTHING;
+
+-------------------------------------	
+
+INSERT INTO proveedores(id_proveedor, nombre, telefono, correo)
+	VALUES('PR01','Distribuidora Donde Pancho','7852212','dondepancho@gmail.com')
+	ON CONFLICT DO NOTHING;
+
+INSERT INTO proveedores(id_proveedor, nombre, telefono, correo)
+	VALUES('PR02','Distribuidora Nuevo Sol','7852546','nuevosol@gmail.com')
+	ON CONFLICT DO NOTHING;
+
+INSERT INTO proveedores(id_proveedor, nombre, telefono, correo)
+	VALUES('PR03','Lacteos Doña Vaca','7852345','vaca12@gmail.com')
+	ON CONFLICT DO NOTHING;
+
+INSERT INTO proveedores(id_proveedor, nombre, telefono, correo)
+	VALUES('PR04','Granos La Cosecha','7852897','cose@gmail.com')
+	ON CONFLICT DO NOTHING;
+
+INSERT INTO proveedores(id_proveedor, nombre, telefono, correo)
+	VALUES('PR05','Embutidos Don Chorizo','7652431','donchorizo@gmail.com')
+	ON CONFLICT DO NOTHING;
+
+INSERT INTO proveedores(id_proveedor, nombre, telefono, correo)
+	VALUES('PR06','Fruteria Su Media Naranja','7552431','mimedianaranja@gmail.com')
+	ON CONFLICT DO NOTHING;
+
+INSERT INTO proveedores(id_proveedor, nombre, telefono, correo)
+	VALUES('PR07','Productos y Productos SA','7752431','elproducto@gmail.com')
+	ON CONFLICT DO NOTHING;
+
+INSERT INTO proveedores(id_proveedor, nombre, telefono, correo)
+	VALUES('PR08','Distribuidora ComaRico','7152431','comaricobien@gmail.com')
+	ON CONFLICT DO NOTHING;
 								  
 -- A continuación algunas instrucciones DML disponibles mediante vistas o procedimientos almacenados
 								  
@@ -501,6 +576,36 @@ CREATE OR REPLACE VIEW lista_productos AS
 				INNER JOIN categorias_productos c ON p.id_categoria_producto = c.id_categoria_producto
 				INNER JOIN presentaciones_productos pp ON p.id_presentacion_producto = pp.id_presentacion_producto
 			ORDER BY p.nombre, pp.descripcion;
+
+CREATE OR REPLACE FUNCTION insertar_presentacion(descripcion_presentacion character varying)
+    RETURNS integer
+    LANGUAGE 'plpgsql'
+AS $BODY$
+   DECLARE
+      idpresentacion integer;
+BEGIN
+	idpresentacion = 0;
+	
+	INSERT INTO presentaciones_productos(descripcion) VALUES (descripcion_presentacion)
+		RETURNING id_presentacion_producto into idpresentacion;
+	RETURN idpresentacion;
+END;
+$BODY$;
+
+CREATE OR REPLACE FUNCTION insertar_categoria(nombre_categoria character varying)
+    RETURNS integer
+    LANGUAGE 'plpgsql'
+AS $BODY$
+   DECLARE
+      idcategoria integer;
+BEGIN
+	idcategoria = 0;
+	
+	INSERT INTO categorias_productos(nombre) VALUES (nombre_categoria)
+		RETURNING id_categoria_producto into idcategoria;
+	RETURN idcategoria;
+END;
+$BODY$;
 
 CREATE OR REPLACE FUNCTION insertar_producto(
 	nombre_producto character varying,
@@ -611,5 +716,4 @@ BEGIN
 	RETURN idventa;
 END;
 $BODY$;
-
 

@@ -1,4 +1,4 @@
-/* Tabulator v4.2.2 (c) Oliver Folkerd */
+/* Tabulator v4.2.3 (c) Oliver Folkerd */
 
 var ReactiveData = function ReactiveData(table) {
 	this.table = table; //hold Tabulator object
@@ -162,7 +162,9 @@ ReactiveData.prototype.unwatchData = function () {
 	if (this.data !== false) {
 		for (var key in this.origFuncs) {
 			Object.defineProperty(this.data, key, {
-				enumerable: false,
+				enumerable: true,
+				configurable: true,
+				writable: true,
 				value: this.origFuncs.key
 			});
 		}
