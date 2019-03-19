@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>compras</title>
+    <script type="text/javascript" src="./vista/js/compras.js"></script>
+</head>
+
+<body>
+
+    <div class="card-panel">
+        <div class="row">
+            <div class="input-field col s2">
+                <input id="compra-numero" type="text" class="active" readonly>
+                <label for="compra-numero" class="active">Compra N°</label>
+            </div>
+            <div class="input-field col s2">
+                <input id="compra-fecha" type="text" class="datepicker">
+                <label for="compra-fecha" class="active">Fecha compra</label>
+            </div>
+            <div class="input-field col s2">
+                <input id="compra-fecha_recibido" type="text" class="datepicker">
+                <label for="compra-fecha_recibido" class="active">Fecha recibido</label>
+            </div>
+            <div class="input-field col s6">
+                <select id="compra-proveedor"></select>
+                <label for="compra-proveedor">Proveedor</label>
+            </div>
+        </div>
+
+        <nav class="nav-wrapper teal lighten-5">
+            <a class="blue-grey-text">&nbsp;<b>Detalle de la compra</b></a>
+            <ul class="right">
+                <li id="compra-btnagregar"><a class="btn-floating"><i class="material-icons">add</i></a></li>
+            </ul>
+        </nav>
+
+        <div id="tabla-compras"></div>
+
+        <div class="row">
+            <div class="input-field col s3">
+                <input id="compra-paga" type="text" class="active">
+                <label for="compra-paga" class="active">Paga</label>
+            </div>
+            <div class="input-field col s3">
+                <input id="compra-adeuda" type="text" class="active" readonly>
+                <label for="compra-adeuda" class="active">Adeuda</label>
+            </div>
+            <div class="input-field col s3">
+                <input id="compra-total" type="text" class="active" readonly>
+                <label for="compra-total" class="active">Total de la compra</label>
+            </div>
+            <div class="input-field col s3">
+                <input id="compra-iva" type="text" class="active" readonly>
+                <label for="compra-iva" class="active">Total de IVA</label>
+            </div>
+        </div>
+
+        <nav class="nav-wrapper grey lighten-2">
+            <ul class="right">
+                <li><a id="compra-cancelar" class="waves-effect waves-light btn">Cancelar compra <i class="material-icons right">clear</i></a></li>
+                <li><a id="compra-registrar" class="waves-effect waves-light btn">Registrar compra <i class="material-icons right">send</i></a></li>
+            </ul>
+        </nav>
+    </div>
+
+</body>
+
+</html>

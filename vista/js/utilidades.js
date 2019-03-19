@@ -8,6 +8,8 @@ export const usuario = {
     perfil: ''
 };
 
+export const url = './controlador/fachada.php';
+
 /**
  * Muestra un mensaje de error por consola y al usuario
  * @param {String} mensajeLog el mensaje que aparece por consola
@@ -20,13 +22,13 @@ export const mensaje = (mensajeLog, mensajeUsuario = mensajeLog, clasesCSS = 're
     if (depurar && mensajeLog) {
         console.error(mensajeLog);
     }
-    if (mensajeUsuario !== mensajeLog) {
-        let pos = mensajeLog.indexOf('DETAIL:');
-        if (pos > -1) {
-            mensajeLog = mensajeLog.substr(pos + 8);
-            mensajeUsuario = `${mensajeUsuario}<br>${mensajeLog}`;
-        }
-    }
+    // if (mensajeUsuario !== mensajeLog) {
+    //     let pos = mensajeLog.indexOf('DETAIL:');
+    //     if (pos > -1) {
+    //         mensajeLog = mensajeLog.substr(pos + 8);
+    //         mensajeUsuario = `${mensajeUsuario}<br>${mensajeLog}`;
+    //     }
+    // }
     M.toast({
         html: mensajeUsuario,
         classes: clasesCSS
@@ -130,7 +132,7 @@ export let crearLista = (listaSeleccionable, elementos, clave, valor, primerItem
  *  primerItem: opcionalmente un elemento que se agrega al inicio de la lista
  */
 export let cargarLista = opciones => {
-    return util.fetchData('./controlador/fachada.php', {
+    return util.fetchData(util.url, {
         'body': {
             'clase': opciones.clase,
             'accion': opciones.accion
@@ -140,6 +142,21 @@ export let cargarLista = opciones => {
             crearLista(opciones.listaSeleccionable, data.lista, opciones.clave, opciones.valor, opciones.primerItem);
         } else {
             throw new Error(data.mensaje);
+        }
+    });
+}
+
+/**
+ * Si la solicitud al back-end tiene éxito, devuelve una promesa con el siguiente ID de una tabla determinada
+ */
+export let siguiente = (tabla, campo) => {
+    return util.fetchData(util.url, { // determinar el ID de la siguiente venta
+        'method': 'POST',
+        'body': {
+            clase: 'Conexion',
+            accion: 'siguiente',
+            tabla: tabla,
+            campo: campo
         }
     });
 }

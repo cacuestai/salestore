@@ -66,4 +66,25 @@ class Conexion {
         }
     }
 
+    public function siguiente($param) {
+        extract($param);
+
+        $sql = "SELECT * FROM maximo(:tabla, :campo)";
+        $instruccion = $conexion->pdo->prepare($sql);
+
+        if ($instruccion) {
+            if ($instruccion->execute(['tabla' => "$tabla", 'campo' => "$campo"])) {
+                $fila = $instruccion->fetch(PDO::FETCH_ASSOC);
+                $info = $conexion->errorInfo($instruccion, FALSE);
+                $info['siguiente'] = $fila['maximo'] + 1;
+                $info['ok'] = $info['siguiente'] > 0;
+                echo json_encode($info);
+            } else {
+                echo $conexion->errorInfo($instruccion);
+            }
+        } else {
+            echo json_encode(['ok' => FALSE, 'mensaje' => 'Fallo al determinar el consecutivo']);
+        }
+    }
+
 }

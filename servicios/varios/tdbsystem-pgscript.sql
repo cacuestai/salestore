@@ -24,10 +24,17 @@ DROP TABLE IF EXISTS devoluciones_compras CASCADE;
 DROP TABLE IF EXISTS detalles_devoluciones_compras;
 
 DROP VIEW IF EXISTS lista_productos CASCADE;
+
 DROP FUNCTION IF EXISTS insertar_producto CASCADE;
 DROP FUNCTION IF EXISTS insertar_venta CASCADE;
 DROP FUNCTION IF EXISTS insertar_presentacion CASCADE;
 DROP FUNCTION IF EXISTS insertar_categoria CASCADE;
+DROP FUNCTION IF EXISTS maximo;
+DROP FUNCTION IF EXISTS insertar_pago_cliente;
+DROP FUNCTION IF EXISTS insertar_baja_producto;
+DROP FUNCTION IF EXISTS insertar_compra;
+
+DROP TYPE IF EXISTS tipo_detalle CASCADE;
 
 CREATE TABLE categorias_productos (
 	id_categoria_producto SMALLSERIAL NOT NULL,
@@ -69,11 +76,12 @@ CREATE TABLE productos (
 CREATE TABLE bajas_productos (
 	id_baja_producto SERIAL NOT NULL,
 	tipo_baja varchar NOT NULL,
+	fecha date NOT NULL,
 	cantidad int2 NOT NULL DEFAULT 0,
 	precio numeric NOT NULL DEFAULT 0,
 	id_producto int4 NOT NULL,
 	PRIMARY KEY(id_baja_producto),
-	CONSTRAINT tipos_bajas CHECK (tipo_baja IN ('Donación', 'Daño', 'Pérdida', 'Descomposición', 'Destrucción', 'Exclusion')),
+	CONSTRAINT tipos_bajas CHECK (tipo_baja IN ('Donación', 'Daño', 'Pérdida', 'Descomposición', 'Destrucción', 'Exclusión')),
 	CONSTRAINT ref_baja_productos__producto FOREIGN KEY (id_producto)
 		REFERENCES productos(id_producto)
 	MATCH SIMPLE
@@ -234,10 +242,10 @@ CREATE TABLE detalles_compras (
 	cantidad_recibida int2 NOT NULL DEFAULT 0,
 	valor_producto numeric NOT NULL DEFAULT 0,
 	iva numeric DEFAULT 0,
-	id_pedido int4 NOT NULL,
+	id_compra int4 NOT NULL,
 	id_producto int4 NOT NULL,
 	PRIMARY KEY(id_detalle_compra),
-	CONSTRAINT ref_detalle_compra__compra FOREIGN KEY (id_pedido)
+	CONSTRAINT ref_detalle_compra__compra FOREIGN KEY (id_compra)
 		REFERENCES compras(id_compra)
 	MATCH SIMPLE
 	ON DELETE NO ACTION
@@ -390,15 +398,15 @@ INSERT INTO presentaciones_productos(descripcion) VALUES ('Caja') ON CONFLICT DO
 -------------------------------------	
 
 INSERT INTO productos(nombre, precio, cantidad_disponible, cantidad_minima, cantidad_maxima, id_presentacion_producto, id_categoria_producto)
-	VALUES('Leche Colanta', 2000, 1, 3, 20, 1, 1) 
+	VALUES('Leche Colanta', 2000, 19, 3, 20, 1, 1) 
 	ON CONFLICT DO NOTHING;
 
 INSERT INTO productos(nombre, precio, cantidad_disponible, cantidad_minima, cantidad_maxima, id_presentacion_producto, id_categoria_producto)
-	VALUES('Lecha entera Celema', 1900, 4, 2, 15, 1, 1)
+	VALUES('Lecha entera Celema', 1900, 49, 2, 15, 1, 1)
 	 ON CONFLICT DO NOTHING;
 
 INSERT INTO productos(nombre, precio, cantidad_disponible, cantidad_minima, cantidad_maxima, id_presentacion_producto, id_categoria_producto)
-	VALUES('Mandarinas', 3000, 5, 3, 10, 2, 3)
+	VALUES('Mandarinas', 3000, 59, 3, 10, 2, 3)
 	 ON CONFLICT DO NOTHING;
 
 INSERT INTO productos(nombre, precio, cantidad_disponible, cantidad_minima, cantidad_maxima, id_presentacion_producto, id_categoria_producto)
@@ -406,23 +414,23 @@ INSERT INTO productos(nombre, precio, cantidad_disponible, cantidad_minima, cant
 	ON CONFLICT DO NOTHING;
 	
 INSERT INTO productos(nombre, precio, cantidad_disponible, cantidad_minima, cantidad_maxima, id_presentacion_producto, id_categoria_producto)
-	VALUES('Arroz Doña Pepa', 1200, 3, 5, 25, 3, 5)
+	VALUES('Arroz Doña Pepa', 1200, 39, 5, 25, 3, 5)
 	ON CONFLICT DO NOTHING;
 
 INSERT INTO productos(nombre, precio, cantidad_disponible, cantidad_minima, cantidad_maxima, id_presentacion_producto, id_categoria_producto)
-	VALUES('Maíz trillado', 900, 6, 3, 10, 4, 5)
+	VALUES('Maíz trillado', 900, 69, 3, 10, 4, 5)
 	ON CONFLICT DO NOTHING;
 	
 INSERT INTO productos(nombre, precio, cantidad_disponible, cantidad_minima, cantidad_maxima, id_presentacion_producto, id_categoria_producto)
-	VALUES('Lechuga', 1500, 7, 3, 10, 3, 4)
+	VALUES('Lechuga', 1500, 79, 3, 10, 3, 4)
 	ON CONFLICT DO NOTHING;
 	
 INSERT INTO productos(nombre, precio, cantidad_disponible, cantidad_minima, cantidad_maxima, id_presentacion_producto, id_categoria_producto)
-	VALUES('Kiwi', 2000, 3, 2, 9, 12, 3)
+	VALUES('Kiwi', 2000, 39, 2, 9, 12, 3)
 	ON CONFLICT DO NOTHING;
 
 INSERT INTO productos(nombre, precio, cantidad_disponible, cantidad_minima, cantidad_maxima, id_presentacion_producto, id_categoria_producto)
-	VALUES('Maracuya', 3000, 3, 3, 10, 12, 3)
+	VALUES('Maracuya', 3000, 39, 3, 10, 12, 3)
 	ON CONFLICT DO NOTHING;
 								  
 INSERT INTO productos(nombre, precio, cantidad_disponible, cantidad_minima, cantidad_maxima, id_presentacion_producto, id_categoria_producto)
@@ -430,43 +438,43 @@ INSERT INTO productos(nombre, precio, cantidad_disponible, cantidad_minima, cant
 	ON CONFLICT DO NOTHING;
 
 INSERT INTO productos(nombre, precio, cantidad_disponible, cantidad_minima, cantidad_maxima, id_presentacion_producto, id_categoria_producto)
-	VALUES('Cafe Monumental', 4500, 2, 5, 10, 3, 4)
+	VALUES('Cafe Monumental', 4500, 29, 5, 10, 3, 4)
 	ON CONFLICT DO NOTHING;
 
 INSERT INTO productos(nombre, precio, cantidad_disponible, cantidad_minima, cantidad_maxima, id_presentacion_producto, id_categoria_producto)
-	VALUES('Mantequilla Colanta', 3800, 2, 3, 10, 9, 4)
+	VALUES('Mantequilla Colanta', 3800, 29, 3, 10, 9, 4)
 	ON CONFLICT DO NOTHING;
 	
 INSERT INTO productos(nombre, precio, cantidad_disponible, cantidad_minima, cantidad_maxima, id_presentacion_producto, id_categoria_producto)
-	VALUES('Jabon Ariel', 7800, 1, 3, 15, 4, 7)
+	VALUES('Jabon Ariel', 7800, 19, 3, 15, 4, 7)
 	ON CONFLICT DO NOTHING;
 
 INSERT INTO productos(nombre, precio, cantidad_disponible, cantidad_minima, cantidad_maxima, id_presentacion_producto, id_categoria_producto)
-	VALUES('Manzanas', 4500, 3, 3, 15, 12, 3)
+	VALUES('Manzanas', 4500, 39, 3, 15, 12, 3)
 	ON CONFLICT DO NOTHING;
 
 INSERT INTO productos(nombre, precio, cantidad_disponible, cantidad_minima, cantidad_maxima, id_presentacion_producto, id_categoria_producto)
-	VALUES('Arroz Buen Dia', 1500, 1, 10, 30, 3, 5)
+	VALUES('Arroz Buen Dia', 1500, 19, 10, 30, 3, 5)
 	ON CONFLICT DO NOTHING;
 	
 INSERT INTO productos(nombre, precio, cantidad_disponible, cantidad_minima, cantidad_maxima, id_presentacion_producto, id_categoria_producto)
-	VALUES('Frijol del Costal', 1500, 2, 5, 20, 3, 5)
+	VALUES('Frijol del Costal', 1500, 29, 5, 20, 3, 5)
 	ON CONFLICT DO NOTHING;
 	
 INSERT INTO productos(nombre, precio, cantidad_disponible, cantidad_minima, cantidad_maxima, id_presentacion_producto, id_categoria_producto)
-	VALUES('Mantequilla Don Oleo', 3500, 1, 10, 20, 9, 4)
+	VALUES('Mantequilla Don Oleo', 3500, 19, 10, 20, 9, 4)
 	ON CONFLICT DO NOTHING;
 	
 INSERT INTO productos(nombre, precio, cantidad_disponible, cantidad_minima, cantidad_maxima, id_presentacion_producto, id_categoria_producto)
-	VALUES('Crema de leche Colanta', 2200, 1, 10, 40, 3, 1)
+	VALUES('Crema de leche Colanta', 2200, 19, 10, 40, 3, 1)
 	ON CONFLICT DO NOTHING;
 	
 INSERT INTO productos(nombre, precio, cantidad_disponible, cantidad_minima, cantidad_maxima, id_presentacion_producto, id_categoria_producto)
-	VALUES('Jabon en polvo Josefina', 4000, 1, 5, 20, 4, 7)
+	VALUES('Jabon en polvo Josefina', 4000, 19, 5, 20, 4, 7)
 	ON CONFLICT DO NOTHING;
 
 INSERT INTO productos(nombre, precio, cantidad_disponible, cantidad_minima, cantidad_maxima, id_presentacion_producto, id_categoria_producto)
-	VALUES('Crema dental Colgate', 1800, 1, 10, 20, 9, 6)
+	VALUES('Crema dental Colgate', 1800, 19, 10, 20, 9, 6)
 	ON CONFLICT DO NOTHING;
 	
 -------------------------------------	
@@ -561,7 +569,7 @@ INSERT INTO proveedores(id_proveedor, nombre, telefono, correo)
 								  
 CREATE OR REPLACE VIEW lista_productos AS										  
 	SELECT 	c.id_categoria_producto,
-				c. nombre categoria,
+				c.nombre categoria,
 				pp.id_presentacion_producto,
 				pp.descripcion presentacion,
 				p.id_producto,
@@ -632,29 +640,41 @@ BEGIN
 END;
 $BODY$;
 
-CREATE OR REPLACE FUNCTION id_siguiente_venta()
-    RETURNS integer
+-- determina cuál es el máximo valor de una columna de tipo entero en cualquier tabla
+CREATE OR REPLACE FUNCTION maximo(
+	tabla character varying,
+	columna character varying) RETURNS integer
     LANGUAGE 'plpgsql'
 AS $BODY$
    DECLARE
-      idventa integer;
+      existe boolean;
+	  ultimo integer;
+	  sql varchar;
 BEGIN
-	SELECT MAX(id_venta) INTO idventa FROM ventas;
-	IF idventa IS NULL THEN
-		idventa = 1;
+    -- https://www.postgresql.org/docs/current/functions-string.html#FUNCTIONS-STRING-FORMAT
+	EXECUTE format('SELECT COUNT(*) > 0 FROM information_schema.columns WHERE table_name = %L and column_name = %L',
+				   tabla, columna) INTO existe;
+	IF existe THEN
+		EXECUTE format('SELECT MAX(%s) FROM %s', columna, tabla) INTO ultimo;
+		IF ultimo IS NULL THEN
+			ultimo = 1;
+		END IF;
+		RETURN ultimo;
+	ELSE
+		RAISE EXCEPTION 'Tabla o columna errónea: % | %', tabla, columna;
 	END IF;
-	
-	RETURN idventa;
 END;
 $BODY$;
 
--- Un bloque anónimo para la creación controlada de un tipo necesario para la inserción de detalles de ventas
+-- Un bloque anónimo para la creación controlada de un tipo necesario para la inserción de detalles de ventas/compras
 
 DO $$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'tipo_detalle') THEN
         CREATE TYPE tipo_detalle AS (
 			cantidad integer, 
+			cantidad_pedida integer, 
+			cantidad_recibida integer, 
 			producto varchar, 
 			valor numeric, 
 			iva_porcentaje numeric, 
@@ -663,6 +683,8 @@ BEGIN
 		);
     END IF;
 END$$;
+
+-- la función que registra la venta, los detalles de venta y afecta el stock de productos
 
 CREATE OR REPLACE FUNCTION insertar_venta(datos_venta JSON)
     RETURNS integer
@@ -704,12 +726,17 @@ BEGIN
 				-- recupera el JSON correspondiente a la propiedad 'detalle'
 				SELECT value FROM json_each(datos_venta) WHERE key = 'detalle')
 			) LOOP
+			
 			i = strpos(linea_venta.producto, '-') - 1;
 			idproducto = substr(linea_venta.producto, 1, i);
 			
 			-- por cada detalle, inserta una línea de venta. Esta versión NO maneja descuentos (0.0)
 			INSERT INTO detalles_ventas(cantidad, valor_producto, descuento, iva, id_venta, id_producto)
 				VALUES (linea_venta.cantidad, linea_venta.valor, 0.0, linea_venta.iva_valor, idventa, idproducto);
+			
+			-- en productos, sustraer la cantidad vendida de la cantidad_disponible 
+			UPDATE productos SET cantidad_disponible = cantidad_disponible - linea_venta.cantidad 
+				WHERE id_producto = idproducto;
 		END LOOP;
 	END IF;
 	
@@ -717,3 +744,99 @@ BEGIN
 END;
 $BODY$;
 
+-- la función que registra la compra, los detalles de compra y afecta el stock de productos
+
+CREATE OR REPLACE FUNCTION insertar_compra(datos_compra JSON)
+    RETURNS integer
+    LANGUAGE 'plpgsql'
+AS $BODY$
+DECLARE
+	i INTEGER;
+	idcompra INTEGER;
+	idproducto INTEGER;
+	fechacompra DATE;
+	fecharecibido DATE;
+	proveedor VARCHAR;
+	total NUMERIC;
+	iva NUMERIC;
+	paga NUMERIC;
+	credito NUMERIC;
+	linea_compra RECORD;
+BEGIN
+	idcompra = 0;
+	-- transfiere a variables las propiedades del objeto JSON 'datos_compra', excepto el array 'detalle'
+	SELECT (datos_compra#>>'{fecha_compra}')::DATE FROM json_each(datos_compra) WHERE key = 'fecha_compra' INTO fechacompra;
+	SELECT (datos_compra#>>'{fecha_recibido}')::DATE FROM json_each(datos_compra) WHERE key = 'fecha_recibido' INTO fecharecibido;
+	SELECT (datos_compra#>>'{proveedor}')::VARCHAR FROM json_each(datos_compra) WHERE key = 'proveedor' INTO proveedor;
+	SELECT (datos_compra#>>'{total}')::FLOAT FROM json_each(datos_compra) WHERE key = 'total' INTO total;
+	SELECT (datos_compra#>>'{iva}')::FLOAT FROM json_each(datos_compra) WHERE key = 'iva' INTO iva;
+	SELECT (datos_compra#>>'{paga}')::FLOAT FROM json_each(datos_compra) WHERE key = 'paga' INTO paga;
+	
+	credito = total - paga;
+	
+	INSERT INTO compras(fecha_compra, fecha_recibido, total_credito, total_contado, id_proveedor)
+		VALUES (fechacompra, fecharecibido, credito, paga, proveedor)
+		RETURNING id_compra INTO idcompra;
+	
+	IF idcompra > 0 THEN
+		-- recorre las filas correspondientes a cada detalle de compra
+		FOR linea_compra IN
+			-- expande el array de objetos 'detalle' a un conjunto de filas de tipo 'tipo_detalle'
+			SELECT * FROM json_populate_recordset(null::tipo_detalle, (
+				-- recupera el JSON correspondiente a la propiedad 'detalle'
+				SELECT value FROM json_each(datos_compra) WHERE key = 'detalle')
+			) LOOP
+			
+			i = strpos(linea_compra.producto, '-') - 1;
+			idproducto = substr(linea_compra.producto, 1, i);
+			
+			-- por cada detalle, inserta una línea de compra. Esta versión NO maneja descuentos (0.0)
+			INSERT INTO detalles_compras(cantidad_pedida, cantidad_recibida, valor_producto, iva, id_compra, id_producto)
+				VALUES (linea_compra.cantidad_pedida, linea_compra.cantidad_recibida, linea_compra.valor, linea_compra.iva_valor, idcompra, idproducto);
+			
+			-- en productos, aumentar la cantidad comprada a la cantidad_disponible 
+			UPDATE productos SET cantidad_disponible = cantidad_disponible + linea_compra.cantidad_recibida
+				WHERE id_producto = idproducto;
+		END LOOP;
+	END IF;
+	
+	RETURN idcompra;
+END;
+$BODY$;
+
+CREATE OR REPLACE FUNCTION insertar_pago_cliente(cliente character varying, valor numeric, fecha date) RETURNS integer
+    LANGUAGE 'plpgsql'
+AS $BODY$
+   DECLARE
+      idpago integer;
+BEGIN
+	idpago = 0;
+	INSERT INTO pagos_clientes(id_cliente, valor_pago, fecha_pago) VALUES (cliente, valor, fecha)
+		RETURNING id_pago_cliente into idpago;
+	RETURN idpago;
+END;
+$BODY$;
+
+CREATE OR REPLACE FUNCTION insertar_baja_producto(
+	tipobaja character varying,
+	fechabaja date,
+	idproducto integer,
+	cantidadbaja integer,
+	precioproducto numeric) RETURNS integer
+    LANGUAGE 'plpgsql'
+AS $BODY$
+   DECLARE
+      idbaja integer;
+BEGIN
+	idbaja = 0;
+
+	-- >> agregue aquí una instrucción SQL que permita insertar en la tabla de bajas
+	-- >> la baja que se recibe según los argumentos de la función y
+	-- >> guarde en idbaja el ID asignado a dicha baja
+	
+	-- >> actualice la tabla productos de tal manera que se sustraiga 
+	-- >> la cantidad dada de baja, de la cantidad_disponible 
+		
+	RETURN idbaja;
+END;
+$BODY$;

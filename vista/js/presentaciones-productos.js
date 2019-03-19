@@ -8,7 +8,6 @@ new class PresentacionProducto {
     constructor() {
 
         this.contenedor = '#tabla-presentaciones'; // el div que contendrá la tabla de datos de presentaciones
-        this.url = './controlador/fachada.php'; // la url del controlador de fachada
         this.filasPorPagina = 7;
 
         this.parametros = { // parámetros que se envían al servidor para mostrar la tabla
@@ -39,7 +38,7 @@ new class PresentacionProducto {
                     }
                 }
             },
-            { field: 'id_presentacion_producto', visible: false },
+            { title: 'ID', field: 'id_presentacion_producto', align: 'center', visible: false },
             { title: 'Presentaciones de productos', field: 'descripcion' }
         ];
 
@@ -61,7 +60,7 @@ new class PresentacionProducto {
 
     generarTabla() {
         return new Tabulator(this.contenedor, {
-            ajaxURL: this.url,
+            ajaxURL: util.url,
             ajaxParams: this.parametros,
             ajaxConfig: 'POST', // tipo de solicitud HTTP ajax
             ajaxContentType: 'json', // enviar parámetros al servidor como una cadena JSON
@@ -113,11 +112,14 @@ new class PresentacionProducto {
             } else if (this.operacion == 'actualizar') {
                 this.actualizarRegistro();
             }
-            this.frmEdicionPresentacion.close();
         });
 
         $('#presentacion-btncancelar').addEventListener('click', event => {
             this.frmEdicionPresentacion.close();
+        });
+
+        $('#presentacion-chkid').addEventListener("click", event => {
+            this.tabla.toggleColumn("id_presentacion_producto");
         });
     }
 
@@ -125,26 +127,24 @@ new class PresentacionProducto {
      * Envía un nuevo registro al back-end para ser insertado en la tabla productos
      */
     insertarRegistro() {
-        // se creas un objeto con los datos del formulario
-
-        let nuevaPresentacion = {
-            descripcion: $('#presentacion-txtdescripcion').value
-        };
-
         // se envían los datos del nuevo producto al back-end y se nuestra la nueva fila en la tabla
-        util.fetchData('./controlador/fachada.php', {
+        util.fetchData(util.url, {
             'method': 'POST',
             'body': {
                 clase: this.parametros.clase,
                 accion: 'insertar',
-                data: nuevaPresentacion
+                presentacion: $('#presentacion-txtdescripcion').value
             }
         }).then(data => {
             if (data.ok) {
                 util.mensaje('', '<i class="material-icons">done</i>', 'teal darken');
-                nuevaPresentacion['id_presentacion_producto'] = data.id_presentacion;
+
+                this.tabla.addData([{
+                    id_presentacion_producto: data.id_presentacion,
+                    descripcion: $('#presentacion-txtdescripcion').value
+                }]);
                 $('#presentacion-txtdescripcion').value = '';
-                this.tabla.addData([nuevaPresentacion]);
+                this.frmEdicionPresentacion.close();
             } else {
                 throw new Error(data.mensaje);
             }
@@ -178,7 +178,7 @@ new class PresentacionProducto {
         };
 
         // se envían los datos del nuevo producto al back-end y se nuestra la nueva fila en la tabla
-        util.fetchData('./controlador/fachada.php', {
+        util.fetchData(util.url, {
             'method': 'POST',
             'body': {
                 clase: this.parametros.clase,
@@ -190,6 +190,7 @@ new class PresentacionProducto {
                 util.mensaje('', '<i class="material-icons">done</i>', 'teal darken');
                 delete nuevosDatosPresentacion.id_actual; // elimina esta propiedad del objeto, ya no se requiere
                 this.tabla.updateRow(idPresentacionActual, nuevosDatosPresentacion);
+                this.frmEdicionPresentacion.close();
             } else {
                 throw new Error(data.mensaje);
             }
@@ -203,26 +204,44 @@ new class PresentacionProducto {
      * @param {Row} filaActual Una fila Tabulator con los datos de la fila actual
      */
     eliminarRegistro() {
-        let idFila = this.filaActual.getData().id_presentacion_producto;
+        let filaActual = this.filaActual;
+        let idFila = filaActual.getData().id_presentacion_producto;
 
-        // se envía el ID del producto al back-end para el eliminado y se actualiza la tabla
-        util.fetchData('./controlador/fachada.php', {
-            'method': 'POST',
-            'body': {
-                clase: this.parametros.clase,
-                accion: 'eliminar',
-                id_presentacion: idFila
+        MaterialDialog.dialog( // ver https://github.com/rudmanmrrod/material-dialog
+            "Va a eliminar una presentación de producto. Por favor confirme la acción:", {
+                title: "Cuidado",
+                dismissible: false,
+                buttons: {
+                    close: {
+                        className: "red",
+                        text: "Cancelar",
+                    },
+                    confirm: {
+                        className: "blue",
+                        text: "Confirmar",
+                        callback: () => {
+                            // se envía el ID del producto al back-end para el eliminado y se actualiza la tabla
+                            util.fetchData(util.url, {
+                                'method': 'POST',
+                                'body': {
+                                    clase: 'PresentacionProducto',
+                                    accion: 'eliminar',
+                                    id_presentacion: idFila
+                                }
+                            }).then(data => {
+                                if (data.ok) {
+                                    filaActual.delete();
+                                    util.mensaje('', '<i class="material-icons">done</i>', 'teal darken');
+                                } else {
+                                    throw new Error(data.mensaje);
+                                }
+                            }).catch(error => {
+                                util.mensaje(error, `No se pudo eliminar el producto con ID ${idFila}`);
+                            });
+                        }
+                    }
+                }
             }
-        }).then(data => {
-            if (data.ok) {
-                this.filaActual.delete();
-                util.mensaje('', '<i class="material-icons">done</i>', 'teal darken');
-            } else {
-                throw new Error(data.mensaje);
-            }
-        }).catch(error => {
-            util.mensaje(error, `No se pudo eliminar el producto con ID ${idFila}`);
-        });
+        );
     }
-
 }

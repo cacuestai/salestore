@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Pagos de clientes</title>
+    <script type="text/javascript" src="./vista/js/pagos-clientes.js"></script>
+</head>
+
+<body>
+    <section>
+        <div class="row teal lighten-5">
+            <div class="grid-example col s12"><span class="flow-text">Pagos de clientes</span></div>
+        </div>
+
+        <div class="row col s12">
+
+            <div class="input-field col s2">
+                <input id="pago_cliente-id" type="text" readonly>
+                <label for="pago_cliente-id">ID Pago</label>
+            </div>
+
+            <div class="input-field col s7">
+                <select id="pago_cliente-cliente"></select>
+                <label for="pago_cliente-cliente">Cliente</label>
+            </div>
+
+            <div class="input-field col s3">
+                <input id="pago_cliente-fecha" type="text" class="datepicker">
+                <label for="pago_cliente-fecha" class="active">Fecha</label>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="col s6">
+                <b>Créditos</b>
+                <div id="tabla-creditos"></div>
+            </div>
+            <div class="col s6">
+                <b>Pagos</b>
+                <div id="tabla-pagos"></div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="input-field col s4">
+                <input id="pago_cliente-abono" type="text">
+                <label for="pago_cliente-abono">Abono actual</label>
+            </div>
+
+            <div class="input-field col s4">
+                <input id="pago_cliente-saldo" type="text" readonly>
+                <label for="pago_cliente-saldo">Saldo</label>
+            </div>
+
+            <div class="col s4 right-align">
+                <br>
+                <a id="pago_cliente-registrar" class="waves-effect waves-light btn-small"><i class="material-icons left">monetization_on</i>Registrar abono</a>
+            </div>
+        </div>
+
+    </section>
+
+</body>
+
+</html>

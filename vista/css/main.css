@@ -17,7 +17,8 @@ main {
         overflow-y: hidden !important;
       pero no funcionó muy bien que digamos...
       Se intenta el siguiente cambio para ver resultados
-    */
+    
     height: auto !important;
     max-height: calc(100vh - 100px) !important;
+    */
 }

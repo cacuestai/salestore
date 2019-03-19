@@ -8,7 +8,6 @@ new class Producto {
     constructor() {
 
         this.contenedor = '#tabla-productos'; // el div que contendrá la tabla de datos de productos
-        this.url = './controlador/fachada.php'; // la url del controlador de fachada
         this.filasPorPagina = 7;
 
         this.parametros = { // parámetros que se envían al servidor para mostrar la tabla
@@ -39,9 +38,9 @@ new class Producto {
                     }
                 }
             },
-            { title: 'ID', field: 'id_producto', visible: false },
-            { title: 'ID', field: 'id_presentacion_producto', visible: false },
-            { title: 'ID', field: 'id_categoria_producto', visible: false },
+            { title: 'ID', field: 'id_producto', align: 'center', visible: false },
+            { field: 'id_presentacion_producto', visible: false },
+            { field: 'id_categoria_producto', visible: false },
             { title: 'Categoría', field: 'categoria', width: 100 },
             { title: 'Presentación', field: 'presentacion', width: 100 },
             { title: 'Nombre', field: 'nombre', width: 200 },
@@ -110,7 +109,7 @@ new class Producto {
 
     generarTabla() {
         return new Tabulator(this.contenedor, {
-            ajaxURL: this.url,
+            ajaxURL: util.url,
             ajaxParams: this.parametros,
             ajaxConfig: 'POST', // tipo de solicitud HTTP ajax
             ajaxContentType: 'json', // enviar parámetros al servidor como una cadena JSON
@@ -168,6 +167,10 @@ new class Producto {
         $('#producto-btncancelar').addEventListener('click', event => {
             this.frmEdicionProducto.close();
         });
+
+        $('#producto-chkid').addEventListener("click", event => {
+            this.tabla.toggleColumn("id_producto");
+        });
     }
 
     /**
@@ -192,7 +195,7 @@ new class Producto {
         };
 
         // se envían los datos del nuevo producto al back-end y se nuestra la nueva fila en la tabla
-        util.fetchData('./controlador/fachada.php', {
+        util.fetchData(util.url, {
             'method': 'POST',
             'body': {
                 clase: this.parametros.clase,
@@ -263,7 +266,7 @@ new class Producto {
         };
 
         // se envían los datos del nuevo producto al back-end y se nuestra la nueva fila en la tabla
-        util.fetchData('./controlador/fachada.php', {
+        util.fetchData(util.url, {
             'method': 'POST',
             'body': {
                 clase: this.parametros.clase,
@@ -288,26 +291,45 @@ new class Producto {
      * @param {Row} filaActual Una fila Tabulator con los datos de la fila actual
      */
     eliminarRegistro() {
-        let idFila = this.filaActual.getData().id_producto;
+        let filaActual = this.filaActual;
 
-        // se envía el ID del producto al back-end para el eliminado y se actualiza la tabla
-        util.fetchData('./controlador/fachada.php', {
-            'method': 'POST',
-            'body': {
-                clase: this.parametros.clase,
-                accion: 'eliminar',
-                id_producto: idFila
+        MaterialDialog.dialog( // ver https://github.com/rudmanmrrod/material-dialog
+            "Va a eliminar un producto. Por favor confirme la acción:", {
+                title: "Cuidado",
+                dismissible: false,
+                buttons: {
+                    close: {
+                        className: "red",
+                        text: "Cancelar",
+                    },
+                    confirm: {
+                        className: "blue",
+                        text: "Confirmar",
+                        callback: () => {
+                            let idFila = filaActual.getData().id_producto;
+
+                            // se envía el ID del producto al back-end para el eliminado y se actualiza la tabla
+                            util.fetchData(util.url, {
+                                'method': 'POST',
+                                'body': {
+                                    clase: 'Producto',
+                                    accion: 'eliminar',
+                                    id_producto: idFila
+                                }
+                            }).then(data => {
+                                if (data.ok) {
+                                    filaActual.delete();
+                                    util.mensaje('', '<i class="material-icons">done</i>', 'teal darken');
+                                } else {
+                                    throw new Error(data.mensaje);
+                                }
+                            }).catch(error => {
+                                util.mensaje(error, `No se pudo eliminar el producto con ID ${idFila}`);
+                            });
+                        }
+                    }
+                }
             }
-        }).then(data => {
-            if (data.ok) {
-                this.filaActual.delete();
-                util.mensaje('', '<i class="material-icons">done</i>', 'teal darken');
-            } else {
-                throw new Error(data.mensaje);
-            }
-        }).catch(error => {
-            util.mensaje(error, `No se pudo eliminar el producto con ID ${idFila}`);
-        });
+        );
     }
-
 }

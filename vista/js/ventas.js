@@ -5,14 +5,12 @@ new class Venta {
     constructor() {
         this.tablaVentas;
 
-        let elems = document.querySelectorAll('.datepicker');
-        var instances = M.Datepicker.init(elems, {
+        let instances = M.Datepicker.init($('#venta-fecha'), {
             format: 'yyyy-mm-dd',
             i18n: util.datePickerES,
             defaultDate: new Date()
         });
 
-        this.url = './controlador/fachada.php'; // la url del controlador de fachada
         this.filasPorPagina = 7;
 
         $('#venta-vendedor').value = util.usuario.nombre;
@@ -49,33 +47,20 @@ new class Venta {
         }).then(() => {
             $('#venta-cliente').value = '';
             M.FormSelect.init($('#venta-cliente'));
-            this.siguienteVenta().then(data => {
-                this.crearListaProductos();
+
+            util.siguiente('ventas', 'id_venta').then(data => {
+                if (data.ok) {
+                    $('#venta-numero').value = data.siguiente;
+                    M.updateTextFields();
+                    this.crearListaProductos();
+                } else {
+                    throw new Error(data.mensaje);
+                }
+            }).catch(error => {
+                util.mensaje(error, 'ID de pagos de ventas indeterminado');
             });
         }).catch(error => {
-            util.mensaje(error);
-        });
-    }
-
-    /**
-     * Si la solicitud al back-end tiene éxito, devuelve una promesa con el siguiente ID de ventas
-     */
-    siguienteVenta() {
-        return util.fetchData(this.url, { // determinar el ID de la siguiente venta
-            'method': 'POST',
-            'body': {
-                clase: 'Venta',
-                accion: 'idSiguienteVenta'
-            }
-        }).then(data => {
-            if (data.ok) {
-                $('#venta-numero').value = data.id_venta;
-                M.updateTextFields();
-            } else {
-                throw new Error(data.mensaje);
-            }
-        }).catch(error => {
-            util.mensaje(error, 'No se pudo determinar el ID de la siguiente venta');
+            util.mensaje(error, 'Sin acceso a la lista de clientes');
         });
     }
 
@@ -85,7 +70,7 @@ new class Venta {
      * éxito, se inicia la creación de una tabla para ingresar las líneas de venta (detalles de venta).
      */
     crearListaProductos() {
-        util.fetchData(this.url, {
+        util.fetchData(util.url, {
             'body': {
                 'clase': 'Producto',
                 'accion': 'listar'
@@ -251,22 +236,26 @@ new class Venta {
             detalle: this.tablaVentas.getData()
         };
 
-        util.fetchData(this.url, {
+        util.fetchData(util.url, {
             'method': 'POST',
             'body': {
                 clase: 'Venta',
-                accion: 'registrarVenta',
+                accion: 'insertar',
                 venta: venta
             }
         }).then(data => {
             // si todo sale bien se retorna el ID de la venta registrada
             if (data.ok) {
-                $('#venta-numero').value = data.id_venta + 1;
+                $('#venta-numero').value = data.id_venta;
+                M.toast({ html: `Venta insertada con éxito. Seguimos con la ${data.id_venta}` });
+                $('#venta-paga').value = '';
+                $('#venta-cliente').selectedIndex = 0;
+                M.FormSelect.init($('#venta-cliente'));
             } else {
                 throw new Error(data.mensaje);
             }
         }).catch(error => {
-            util.mensaje(error, 'No se pudo determinar el ID de la siguiente venta');
+            util.mensaje(error, 'Fallo al intentar registrar una nueva venta');
         });
     }
 

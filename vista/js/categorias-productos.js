@@ -8,7 +8,6 @@ new class CategoriaProducto {
     constructor() {
 
         this.contenedor = '#tabla-categorias'; // el div que contendrá la tabla de datos de categorias
-        this.url = './controlador/fachada.php'; // la url del controlador de fachada
         this.filasPorPagina = 7;
 
         this.parametros = { // parámetros que se envían al servidor para mostrar la tabla
@@ -39,7 +38,7 @@ new class CategoriaProducto {
                     }
                 }
             },
-            { field: 'id_categoria_producto', visible: false },
+            { title: 'ID', field: 'id_categoria_producto', align: 'center', visible: false },
             { title: 'Nombre de la categoria', field: 'nombre' }
         ];
 
@@ -54,12 +53,6 @@ new class CategoriaProducto {
 
         this.frmEdicionCategoria = M.Modal.init($('#categoria-frmedicion'), {
             dismissible: false, // impedir el acceso a la aplicación durante la edición
-            onOpenStart: () => {
-                // ... es posible que desee limpiar los campos aquí y no en insertarRegistro() como está actualmente ...
-                if (this.operacion === 'actualizar') {
-                    ////////////////////////////////////////////////////////
-                }
-            }
         });
 
         this.gestionarEventos();
@@ -67,7 +60,7 @@ new class CategoriaProducto {
 
     generarTabla() {
         return new Tabulator(this.contenedor, {
-            ajaxURL: this.url,
+            ajaxURL: util.url,
             ajaxParams: this.parametros,
             ajaxConfig: 'POST', // tipo de solicitud HTTP ajax
             ajaxContentType: 'json', // enviar parámetros al servidor como una cadena JSON
@@ -119,11 +112,14 @@ new class CategoriaProducto {
             } else if (this.operacion == 'actualizar') {
                 this.actualizarRegistro();
             }
-            this.frmEdicionCategoria.close();
         });
 
         $('#categoria-btncancelar').addEventListener('click', event => {
             this.frmEdicionCategoria.close();
+        });
+
+        $('#categoria-chkid').addEventListener("click", event => {
+            this.tabla.toggleColumn("id_categoria_producto");
         });
     }
 
@@ -131,26 +127,28 @@ new class CategoriaProducto {
      * Envía un nuevo registro al back-end para ser insertado en la tabla productos
      */
     insertarRegistro() {
-        // se creas un objeto con los datos del formulario
-
-        let nuevaCategoria = {
-            nombre: $('#categoria-txtnombre').value
-        };
-
+        let categoria = $('#categoria-txtnombre').value.trim();
+        if (!categoria) {
+            M.toast({ html: 'Falta la descripción de la categoría' });
+            return;
+        }
         // se envían los datos del nuevo producto al back-end y se nuestra la nueva fila en la tabla
-        util.fetchData('./controlador/fachada.php', {
+        util.fetchData(util.url, {
             'method': 'POST',
             'body': {
                 clase: this.parametros.clase,
                 accion: 'insertar',
-                data: nuevaCategoria
+                categoria: categoria
             }
         }).then(data => {
             if (data.ok) {
                 util.mensaje('', '<i class="material-icons">done</i>', 'teal darken');
-                nuevaCategoria['id_categoria_producto'] = data.id_categoria;
+                this.tabla.addData([{
+                    id_categoria_producto: data.id_categoria,
+                    nombre: categoria
+                }]);
                 $('#categoria-txtnombre').value = '';
-                this.tabla.addData([nuevaCategoria]);
+                this.frmEdicionCategoria.close();
             } else {
                 throw new Error(data.mensaje);
             }
@@ -175,16 +173,21 @@ new class CategoriaProducto {
      * también actualizados en la base de datos.
      */
     actualizarRegistro() {
+        let categoria = $('#categoria-txtnombre').value.trim();
+        if (!categoria) {
+            M.toast({ html: 'Falta la descripción de la categoría' });
+            return;
+        }
         let idCategoriaActual = this.filaActual.getData().id_categoria_producto;
 
         // se crea un objeto con los nuevos datos de la fila modificada
         let nuevosDatosCategoria = {
             id_actual: idCategoriaActual,
-            nombre: $('#categoria-txtnombre').value,
+            nombre: categoria,
         };
 
         // se envían los datos del nuevo producto al back-end y se nuestra la nueva fila en la tabla
-        util.fetchData('./controlador/fachada.php', {
+        util.fetchData(util.url, {
             'method': 'POST',
             'body': {
                 clase: this.parametros.clase,
@@ -196,6 +199,7 @@ new class CategoriaProducto {
                 util.mensaje('', '<i class="material-icons">done</i>', 'teal darken');
                 delete nuevosDatosCategoria.id_actual; // elimina esta propiedad del objeto, ya no se requiere
                 this.tabla.updateRow(idCategoriaActual, nuevosDatosCategoria);
+                this.frmEdicionCategoria.close();
             } else {
                 throw new Error(data.mensaje);
             }
@@ -209,26 +213,45 @@ new class CategoriaProducto {
      * @param {Row} filaActual Una fila Tabulator con los datos de la fila actual
      */
     eliminarRegistro() {
-        let idFila = this.filaActual.getData().id_categoria_producto;
+        let filaActual = this.filaActual;
+        let idFila = filaActual.getData().id_categoria_producto;
 
-        // se envía el ID del producto al back-end para el eliminado y se actualiza la tabla
-        util.fetchData('./controlador/fachada.php', {
-            'method': 'POST',
-            'body': {
-                clase: this.parametros.clase,
-                accion: 'eliminar',
-                id_categoria: idFila
+        MaterialDialog.dialog( // ver https://github.com/rudmanmrrod/material-dialog
+            "Va a eliminar una categoría de producto. Por favor confirme la acción:", {
+                title: "Cuidado",
+                dismissible: false,
+                buttons: {
+                    close: {
+                        className: "red",
+                        text: "Cancelar",
+                    },
+                    confirm: {
+                        className: "blue",
+                        text: "Confirmar",
+                        callback: () => {
+                            // se envía el ID del producto al back-end para el eliminado y se actualiza la tabla
+                            util.fetchData(util.url, {
+                                'method': 'POST',
+                                'body': {
+                                    clase: 'CategoriaProducto',
+                                    accion: 'eliminar',
+                                    id_categoria: idFila
+                                }
+                            }).then(data => {
+                                if (data.ok) {
+                                    filaActual.delete();
+                                    util.mensaje('', '<i class="material-icons">done</i>', 'teal darken');
+                                } else {
+                                    throw new Error(data.mensaje);
+                                }
+                            }).catch(error => {
+                                util.mensaje(error, `No se pudo eliminar el producto con ID ${idFila}`);
+                            });
+                        }
+                    }
+                }
             }
-        }).then(data => {
-            if (data.ok) {
-                this.filaActual.delete();
-                util.mensaje('', '<i class="material-icons">done</i>', 'teal darken');
-            } else {
-                throw new Error(data.mensaje);
-            }
-        }).catch(error => {
-            util.mensaje(error, `No se pudo eliminar el producto con ID ${idFila}`);
-        });
+        );
     }
 
 }

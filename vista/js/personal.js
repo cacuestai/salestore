@@ -1,17 +1,17 @@
 'use strict';
 
 // se crea un nuevo objeto anónimo a partir de una clase anónima
-// dicho objeto define la gestión de clientes, utilizando el componente 'Tabulator' (http://tabulator.info/)
+// dicho objeto define la gestión de personal, utilizando el componente 'Tabulator' (http://tabulator.info/)
 
-new class Cliente {
+new class Personal {
 
     constructor() {
 
-        this.contenedor = '#tabla-clientes'; // el div que contendrá la tabla de datos de clientes
+        this.contenedor = '#tabla-personal'; // el div que contendrá la tabla de datos de personal
         this.filasPorPagina = 7;
 
         this.parametros = { // parámetros que se envían al servidor para mostrar la tabla
-            clase: 'Cliente',
+            clase: 'Personal',
             accion: 'seleccionar'
         };
 
@@ -23,12 +23,12 @@ new class Cliente {
                 align: "center",
                 formatter: (cell, formatterParams) => {
                     // en cada fila, en la primera columna, se asignan los botones de editar y actualizar 
-                    return `<i id="cliente-btnactualizar" class="material-icons teal-text">edit</i>
+                    return `<i id="tabulator-btnactualizar" class="material-icons teal-text">edit</i>
                             <i id="tabulator-btneliminar" class="material-icons deep-orange-text">delete</i>`;
                 },
                 cellClick: (e, cell) => {
                     // define qué hacer si se pulsan los botones de actualizar o eliminar
-                    this.operacion = e.target.id === 'cliente-btnactualizar' ? 'actualizar' : 'eliminar';
+                    this.operacion = e.target.id === 'tabulator-btnactualizar' ? 'actualizar' : 'eliminar';
                     this.filaActual = cell.getRow();
                     if (this.operacion === 'actualizar') {
                         this.editarRegistro();
@@ -37,37 +37,42 @@ new class Cliente {
                     }
                 }
             },
-            { title: 'ID Cliente', field: 'id_cliente', width: 100, align: 'center' },
+            { title: 'ID Persona', field: 'id_persona' },
             { title: 'Nombre', field: 'nombre', width: 270 },
+            { title: 'Teléfono', field: 'telefono' },
             { title: 'Dirección', field: 'direccion' },
-            { title: 'Teléfonos', field: 'telefonos', align: 'center' },
-            { title: 'Crédito', field: 'con_credito', align: 'center', width: 90, formatter: 'tickCross', cellClick: this.conmutar }
+            { title: 'Perfil', field: 'perfil' },
+            { title: 'Contraseña', field: 'contrasena', visible: false }
         ];
 
         this.ordenInicial = [ // establece el orden inicial de los datos
             { column: 'nombre', dir: 'asc' }
         ]
 
-        this.indice = 'id_cliente'; // estable la PK como índice único para cada fila de la tabla visualizada
+        this.indice = 'id_persona'; // estable la PK como índice único para cada fila de la tabla visualizada
         this.tabla = this.generarTabla();
         this.filaActual; // guarda el objeto "fila actual" cuando se elige actualizar o eliminar sobre una fila
         this.operacion; // insertar | actualizar | eliminar
 
-        this.frmEdicionCliente = M.Modal.init($('#cliente-frmedicion'), {
-            dismissible: false, // impedir el acceso a la aplicación durante la edición
+        this.frmEdicionPersonal = M.Modal.init($('#personal-frmedicion'), {
+            dismissible: false // impedir el acceso a la aplicación durante la edición
         });
+
+        let listas = document.querySelectorAll('select');
+        let objListas = M.FormSelect.init(listas);
 
         this.gestionarEventos();
     }
 
     generarTabla() {
+        console.log(this.indice);
         return new Tabulator(this.contenedor, {
             ajaxURL: util.url,
             ajaxParams: this.parametros,
             ajaxConfig: 'POST', // tipo de solicitud HTTP ajax
             ajaxContentType: 'json', // enviar parámetros al servidor como una cadena JSON
             layout: 'fitColumns', // ajustar columnas al ancho de la tabla
-            responsiveLayout: 'hide', // ocultar columnas que no caben en el espacio de la trabajo tabla
+            responsiveLayout: 'hide', // ocultar columnas que no caben en el espacio de trabajola tabla
             tooltips: true, // mostrar mensajes sobre las celdas.
             addRowPos: 'top', // al agregar una nueva fila, agréguela en la parte superior de la tabla
             history: true, // permite deshacer y rehacer acciones sobre la tabla.
@@ -80,9 +85,7 @@ new class Cliente {
             // addRowPos: 'top', // no se usa aquí. Aquí se usa un formulario de edición personalizado
             index: this.indice, // indice único de cada fila
             // locale: true, // se supone que debería utilizar el idioma local
-            rowAdded: (row) => this.filaActual = row,
-            locale: "es", // idioma. Ver script de utilidades
-            langs: util.tabulatorES // ver script de utilidades
+            rowAdded: (row) => this.filaActual = row
         });
     }
 
@@ -99,16 +102,16 @@ new class Cliente {
     }
 
     /**
-     * Se asignan los eventos a los botones principales para la gestión de clientes
+     * Se asignan los eventos a los botones principales para la gestión de personal
      */
     gestionarEventos() {
-        $('#cliente-btnagregar').addEventListener('click', event => {
+        $('#personal-btnagregar').addEventListener('click', event => {
             this.operacion = 'insertar';
-            // despliega el formulario para editar clientes. Ir a la definición del boton 
-            // 'cliente-btnagregar' en clientes.html para ver cómo se dispara este evento
+            // despliega el formulario para editar personal. Ir a la definición del boton 
+            // 'personal-btnagregar' en personal.html para ver cómo se dispara este evento
         });
 
-        $('#cliente-btnaceptar').addEventListener('click', event => {
+        $('#personal-btnaceptar').addEventListener('click', event => {
             // dependiendo de la operación elegida cuando se abre el formulario de
             // edición y luego se pulsa en 'Aceptar', se inserta o actualiza un registro.
             if (this.operacion == 'insertar') {
@@ -116,48 +119,57 @@ new class Cliente {
             } else if (this.operacion == 'actualizar') {
                 this.actualizarRegistro();
             }
-            this.frmEdicionCliente.close();
         });
 
-        $('#cliente-btncancelar').addEventListener('click', event => {
-            this.frmEdicionCliente.close();
+        $('#personal-btncancelar').addEventListener('click', event => {
+            this.frmEdicionPersonal.close();
         });
     }
 
     /**
-     * Envía un nuevo registro al back-end para ser insertado en la tabla clientes
+     * Envía un nuevo registro al back-end para ser insertado en la tabla personal
      */
     insertarRegistro() {
+        if (!this.contrasenaOk()) {
+            M.toast({ html: 'las contraseñas difieren. Inténtelo de nuevo.' });
+            return;
+        }
+        let lstPerfil = $('#personal-lstperfil');
         // se creas un objeto con los datos del formulario
-        let nuevoCliente = {
-            id_cliente: $('#cliente-txtid').value,
-            nombre: $('#cliente-txtnombre').value,
-            direccion: $('#cliente-txtdireccion').value,
-            telefonos: $('#cliente-txttelefonos').value,
-            con_credito: $('#cliente-chkcredito').checked
+
+        let nuevoPersonal = {
+            id_persona: $('#personal-txtid_persona').value,
+            nombre: $('#personal-txtnombre').value,
+            direccion: $('#personal-txtdireccion').value,
+            telefono: $('#personal-txttelefono').value,
+            perfil: lstPerfil.value,
+            contrasena: $('#personal-txtcontrasena1').value,
         };
 
-        // se envían los datos del nuevo cliente al back-end y se nuestra la nueva fila en la tabla
+        // se envían los datos del nuevo personal al back-end y se nuestra la nueva fila en la tabla
         util.fetchData(util.url, {
             'method': 'POST',
             'body': {
-                clase: this.parametros.clase,
+                clase: 'Personal',
                 accion: 'insertar',
-                data: nuevoCliente
+                data: nuevoPersonal
             }
         }).then(data => {
             if (data.ok) {
                 util.mensaje('', '<i class="material-icons">done</i>', 'teal darken');
-                this.tabla.addData([nuevoCliente]);
-                $('#cliente-txtid').value = '';
-                $('#cliente-txtnombre').value = '';
-                $('#cliente-txtdireccion').value = '';
-                $('#cliente-txttelefonos').value = '';
+                this.tabla.addData([nuevoPersonal]);
+                $('#personal-txtid_persona').value = '';
+                $('#personal-txtnombre').value = '';
+                $('#personal-txtdireccion').value = '';
+                $('#personal-txttelefono').value = '';
+                lstPerfil.value = '';
+                $('#personal-txtcontrasena1').value = '';
+                this.frmEdicionPersonal.close();
             } else {
                 throw new Error(data.mensaje);
             }
         }).catch(error => {
-            util.mensaje(error, 'No se pudo insertar el cliente');
+            util.mensaje(error, 'Problemas añ insertar el cliente');
         });
     }
 
@@ -167,14 +179,17 @@ new class Cliente {
      * @param {Row} filaActual Una fila Tabulator con los datos de la fila actual
      */
     editarRegistro() {
-        this.frmEdicionCliente.open();
+        this.frmEdicionPersonal.open();
         // se muestran en el formulario los datos de la fila a editar
         let filaActual = this.filaActual.getData();
-        $('#cliente-txtid').value = filaActual.id_cliente;
-        $('#cliente-txtnombre').value = filaActual.nombre;
-        $('#cliente-txtdireccion').value = filaActual.direccion;
-        $('#cliente-txttelefonos').value = filaActual.telefonos;
-        $('#cliente-chkcredito').checked = filaActual.con_credito;
+        $('#personal-txtid_persona').value = filaActual.id_persona;
+        $('#personal-txtnombre').value = filaActual.nombre;
+        $('#personal-txtdireccion').value = filaActual.direccion;
+        $('#personal-txttelefono').value = filaActual.telefono;
+        $('#personal-lstperfil').value = filaActual.perfil;
+        $('#personal-txtcontrasena1').value = filaActual.contrasena;
+        $('#personal-txtcontrasena2').value = filaActual.contrasena;
+
         M.updateTextFields();
     }
 
@@ -183,37 +198,50 @@ new class Cliente {
      * también actualizados en la base de datos.
      */
     actualizarRegistro() {
+        if (!this.contrasenaOk()) {
+            M.toast({ html: 'las contraseñas difieren. Inténtelo de nuevo.' });
+            return;
+        }
         // se crea un objeto con los nuevos datos de la fila modificada
-        let idClienteActual = this.filaActual.getData().id_cliente;
-        let nuevosDatosCliente = {
-            id_actual: idClienteActual,
-            id_cliente: $('#cliente-txtid').value, // el posible nuevo ID
-            nombre: $('#cliente-txtnombre').value,
-            direccion: $('#cliente-txtdireccion').value,
-            telefonos: $('#cliente-txttelefonos').value,
-            con_credito: $('#cliente-chkcredito').checked
+        let idPersonalActual = this.filaActual.getData().id_persona;
+        let nuevosDatosPersonal = {
+            id_actual: idPersonalActual,
+            id_persona: $('#personal-txtid_persona').value, // el posible nuevo ID
+            nombre: $('#personal-txtnombre').value,
+            direccion: $('#personal-txtdireccion').value,
+            telefono: $('#personal-txttelefono').value,
+            perfil: $('#personal-lstperfil').value,
+            contrasena: $('#personal-txtcontrasena1').value,
         };
 
         // se envían los datos del nuevo cliente al back-end y se nuestra la nueva fila en la tabla
         util.fetchData(util.url, {
             'method': 'POST',
             'body': {
-                clase: this.parametros.clase,
+                clase: 'Personal',
                 accion: 'actualizar',
-                data: nuevosDatosCliente
+                data: nuevosDatosPersonal
             }
         }).then(data => {
             if (data.ok) {
                 util.mensaje('', '<i class="material-icons">done</i>', 'teal darken');
-                delete nuevosDatosCliente.id_actual; // elimina esta propiedad del objeto, ya no se requiere
-                this.tabla.updateRow(idClienteActual, nuevosDatosCliente);
+                delete nuevosDatosPersonal.id_actual; // elimina esta propiedad del objeto, ya no se requiere
+                this.tabla.updateRow(idPersonalActual, nuevosDatosPersonal);
+                this.frmEdicionPersonal.close();
             } else {
                 throw new Error(data.mensaje);
             }
         }).catch(error => {
-            util.mensaje(error, 'No se pudo actualizar el cliente');
+            util.mensaje(error, 'No se pudo insertar el cliente');
         });
+    }
 
+    contrasenaOk() {
+        if ($('#personal-txtcontrasena1').value.trim()) {
+            return $('#personal-txtcontrasena1').value === $('#personal-txtcontrasena2').value;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -222,10 +250,10 @@ new class Cliente {
      */
     eliminarRegistro() {
         let filaActual = this.filaActual;
-        let idFila = filaActual.getData().id_cliente;
+        let idFila = filaActual.getData().id_persona;
 
         MaterialDialog.dialog( // ver https://github.com/rudmanmrrod/material-dialog
-            "Va a eliminar un cliente. Por favor confirme la acción:", {
+            "Va a eliminar personal de ventas o administrativo. Por favor confirme la acción:", {
                 title: "Cuidado",
                 dismissible: false,
                 buttons: {
@@ -241,9 +269,9 @@ new class Cliente {
                             util.fetchData(util.url, {
                                 'method': 'POST',
                                 'body': {
-                                    clase: 'Cliente',
+                                    clase: 'Personal',
                                     accion: 'eliminar',
-                                    id_cliente: idFila
+                                    id_persona: idFila
                                 }
                             }).then(data => {
                                 if (data.ok) {

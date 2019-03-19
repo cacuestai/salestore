@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Gestión de proveedores</title>
+    <script src="./vista/js/proveedores.js"></script>
+</head>
+
+<body>
+    <nav>
+        <div class="nav-wrapper teal lighten-5">
+            <a class="brand-logo blue-grey-text">&nbsp;Gestión de proveedores</a>
+            <ul class="right hide-on-med-and-down">
+                <li id="proveedor-btnagregar"><a class="btn-floating modal-trigger" data-target="proveedor-frmedicion"><i class="material-icons">add</i></a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- especificaciones de un cuadro modal -->
+    <div id="proveedor-frmedicion" class="modal">
+        <div class="modal-content">
+            <h5 id="proveedor-titulo" class="teal-text center">Datos del proveedor</h5>
+            <div class="section">
+                <!-- se fuerza una espacio vertical -->
+            </div>
+
+            <div class="container">
+
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input class="validate" type="text" name="proveedor-txtid_proveedor" id="proveedor-txtid_proveedor" required/>
+                        <label for="proveedor-txtid_proveedor">Identificación del proveedor</label>
+                    </div>
+                </div>
+
+
+
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input class="validate" type="text" name="proveedor-txtnombre" id="proveedor-txtnombre" required/>
+                        <label for="proveedor-txtnombre">Nombres y apellidos</label>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input class="validate" type="text" name="proveedor-txttelefono" id="proveedor-txttelefono" required/>
+                        <label for="proveedor-txttelefono">Teléfonos</label>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input class="validate" type="email" name="proveedor-txtcorreo" id="proveedor-txtcorreo" required/>
+                        <label for="proveedor-txtcorreo">Correo</label>
+                    </div>
+                </div>
+
+                <div class="row center">
+                    <a id="proveedor-btncancelar" class="waves-effect waves-light btn-small"><i class="material-icons left">clear</i>Cancelar</a>
+                    <a id="proveedor-btnaceptar" class="waves-effect waves-light btn-small"><i class="material-icons left">check</i>Aceptar</a>
+                </div>
+
+            </div>
+            <!-- hasta aquí el formulario de autenticación -->
+        </div>
+        <!-- hasta aquí las especificaciones de un cuadro modal -->
+    </div>
+
+    <div id="tabla-proveedores"></div>
+    <br>
+    <div class=" teal lighten-4">
+        &nbsp;Pulse clic sobre la columna "crédito" para establecer o no que un cliente tiene crédito.
+        <br> &nbsp;Para editar otras celdas, pulse doble clic sobre ellas.
+    </div>
+</body>
+
+</html>

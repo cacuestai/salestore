@@ -23,14 +23,14 @@ class PresentacionProducto implements Persistible {
         extract($param);
         // error_log(print_r($param, TRUE)); // quitar comentario para ver lo que se recibe del front-end
 
-        $sql = "SELECT * FROM insertar_presentacion(:descripcion)";
+        $sql = "SELECT * FROM insertar_presentacion(:presentacion)";
 
         // Prepara la instrucción SQL para ejecutarla luego de recibir los parámetros de inserción
         $instruccion = $conexion->pdo->prepare($sql);
 
         if ($instruccion) {
             //Vincular variables a parametros de la consulta
-            $instruccion->bindParam(':descripcion', $data['descripcion']);
+            $instruccion->bindParam(':presentacion', $presentacion);
 
             if ($instruccion->execute()) {
                 $fila = $instruccion->fetch(PDO::FETCH_ASSOC); // si la inserción fue exitosa, recuperar el ID retornado
@@ -51,7 +51,7 @@ class PresentacionProducto implements Persistible {
      */
     public function actualizar($param) {
         extract($param);
-        error_log(print_r($param, TRUE)); // quitar comentario para ver lo que se recibe del front-end
+        // error_log(print_r($param, TRUE)); // quitar comentario para ver lo que se recibe del front-end
 
         $sql = "UPDATE presentaciones_productos SET descripcion=:descripcion WHERE id_presentacion_producto = :id_actual";
 

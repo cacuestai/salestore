@@ -21,7 +21,7 @@ class Producto implements Persistible {
      */
     public function insertar($param) {
         extract($param);
-        error_log(print_r($param, TRUE)); // quitar comentario para ver lo que se recibe del front-end
+        // error_log(print_r($param, TRUE)); // quitar comentario para ver lo que se recibe del front-end
 
         $sql = "SELECT * FROM insertar_producto(:nombre, :precio, :iva, :cantidad_disponible, :cantidad_minima, :cantidad_maxima, :id_presentacion_producto, :id_categoria_producto)";
         // Prepara la instrucción SQL para ejecutarla luego de recibir los parámetros de inserción

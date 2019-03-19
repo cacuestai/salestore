@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Bajas</title>
+    <script src="./vista/js/bajas-productos.js"></script>
+</head>
+
+<body>
+    <section>
+        <div class="row teal lighten-5">
+            <div class="grid-example col s12"><span class="flow-text">Bajas de productos</span></div>
+        </div>
+
+        <div class="row">
+            <div class="input-field col s2">
+                <input id="baja-id" type="text">
+                <label for="baja-id" class="active">ID Baja</label>
+            </div>
+
+            <div class="input-field col s2">
+                <input id="baja-fecha" type="text" class="datepicker">
+                <label for="baja-fecha" class="active">Fecha</label>
+            </div>
+
+            <div class="input-field col s8">
+                <input type="text" id="baja-producto" class="autocomplete">
+                <label for="baja-producto">Digite el producto a dar de baja</label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="input-field col s4">
+                <input id="baja-disponible" type="text" readonly>
+                <label for="baja-disponible">Disponible</label>
+            </div>
+            <div class="input-field col s4">
+                <input id="baja-minimo" type="text" readonly>
+                <label for="baja-minimo">Mínimo</label>
+            </div>
+            <div class="input-field col s4">
+                <input id="baja-maximo" type="text" readonly>
+                <label for="baja-maximo">Máximo</label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="input-field col s3">
+                <input id="baja-cantidad" type="text">
+                <label for="baja-cantidad">Cantidad a disminuir</label>
+            </div>
+
+            <div class="input-field col s5">
+                <select id="baja-motivo">
+                      <option value="" disabled selected>Seleccione el motivo de la baja</option>
+                      <option value="Donación">Donación</option>
+                      <option value="Daño">Daño</option>
+                      <option value="Pérdida">Pérdida</option>
+                      <option value="Descomposición">Descomposición</option>
+                      <option value="Destrucción">Destrucción</option>
+                      <option value="Exclusión">Exclusión</option>
+                    </select>
+                <label>Motivo de la baja</label>
+            </div>
+
+            <div class="col s4 right-align">
+                <br>
+                <a id="baja-registrar" class="waves-effect waves-light btn-small"><i class="material-icons left">clear</i>Registrar baja</a>
+            </div>
+        </div>
+
+    </section>
+
+</body>
+
+</html>

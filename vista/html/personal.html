@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Gestión de personal</title>
+    <script src="./vista/js/personal.js"></script>
+</head>
+
+<body>
+    <nav>
+        <div class="nav-wrapper teal lighten-5">
+            <a class="brand-logo blue-grey-text">&nbsp;Gestión de personal</a>
+            <ul class="right hide-on-med-and-down">
+                <li id="personal-btnagregar"><a class="btn-floating modal-trigger" data-target="personal-frmedicion"><i class="material-icons">add</i></a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- especificaciones de un cuadro modal -->
+    <div id="personal-frmedicion" class="modal modal-fixed-footer">
+
+        <div class="modal-content">
+            <h5 id="personal-titulo" class="teal-text center">Datos del personal</h5>
+
+            <div class="section">
+                <!-- se fuerza una espacio vertical -->
+            </div>
+
+            <div class="container">
+                <div class="row">
+                    <div class="input-field col s4">
+                        <input class="validate" type="text" name="personal-txtid_persona" id="personal-txtid_persona" required/>
+                        <label for="personal-txtid_persona">Identificación</label>
+                    </div>
+
+                    <div class="input-field col s8">
+                        <input class="validate" type="text" name="persona.-txtnombre" id="personal-txtnombre" required/>
+                        <label for="personal-txtnombre">Nombres y apellidos</label>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input class="validate" type="text" name="personal-txtdireccion" id="personal-txtdireccion" required/>
+                        <label for="personal-txtdireccion">Dirección</label>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="input-field col s6">
+                        <input class="validate" type="text" name="personal-txttelefono" id="personal-txttelefono" required/>
+                        <label for="personal-txttelefono">Teléfonos</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <select id="personal-lstperfil">
+                          <option value="" disabled selected>Seleccione un perfil</option>
+                          <option value="Administrador">Administrador</option>
+                          <option value="Vendedor">Vendedor</option>
+                        </select>
+                        <label>Perfil</label>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="input-field col s6">
+                        <input class="validate" type="password" name="personal-txtcontrasena1" id="personal-txtcontrasena1" required/>
+                        <label for="personal-txtcontrasena1">Contraseña</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <input class="validate" type="password" name="personal-txtcontrasena2" id="personal-txtcontrasena2" required/>
+                        <label for="personal-txtcontrasena2">Repetir contraseña</label>
+                    </div>
+                </div>
+
+                <div class="row center">
+                    <a id="personal-btncancelar" class="waves-effect waves-light btn-small"><i class="material-icons left">clear</i>Cancelar</a>
+                    <a id="personal-btnaceptar" class="waves-effect waves-light btn-small"><i class="material-icons left">check</i>Aceptar</a>
+                </div>
+
+            </div>
+            <!-- hasta aquí el formulario de autenticación -->
+        </div>
+        <!-- hasta aquí las especificaciones de un cuadro modal -->
+    </div>
+
+    <div id="tabla-personal"></div>
+    <br>
+
+    <div class=" teal lighten-4">
+
+    </div>
+</body>
+
+</html>

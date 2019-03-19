@@ -16,6 +16,15 @@ Un simple ejemplo de ventas y adquisición de mercancía, **escrito en Javascrip
 ### Características de la versión 0.1.0
   - Las clases del modelo de dominio, implementan la _interface Persistible_.
   - Actualizado a [Tabulator] versión 4.2.3
+  - Se agrega [Materialize Dialog] una sencilla librería diseñada para crear diálogos modales.
+  - Ahora el sistema pide confirmación cada que se va a eliminar un registro.
+  - Se agrega la columna fecha a la tabla bajas_productos.
+  - Se eliminan de la base de datos las funciones id_siguiente_xxxx() para usar en su defecto maximo(tabla, columna)
+  - Se eliminan del back-end las funciones idSiguienteXxxx() para usar Conexion.siguiente()
+  - Define en utilidades.js una constante para referenciar la URL del controlador de dominio
+  - Se cambia en detalles_compras, id_pedido por id_compra y se actualiza ./vista/images/db-modelo-tdb.jpg
+  - Se agregan columnas a tipo 'tipo_detalle' de la base de datos para usarlo con ventas y compras
+  - Se agrega al script de la base de datos la función 'insertar_compra' para insertar las compras y sus líneas de compra.
 
 ### Características de la versión 0.06
   - ¡Registro de ventas _completo_!
@@ -106,3 +115,4 @@ Por favor tenga en cuenta que esto es una simple demostración para quienes apen
 [Tabulator]: <http://tabulator.info/>
 [Materialize]: <https://materializecss.com/>
 [Moment]: <https://momentjs.com/>
+[Materialize Dialog]: <https://rudmanmrrod.github.io/material-dialog/>

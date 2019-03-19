@@ -15,14 +15,21 @@ window.util = util;
     util.usuario.perfil = 'Administrador';
     // ---------------------------------------------------------------------------------
 
+    // cada clave de las propiedades de este objeto, está asociada a un elemento de lista en menu.html y
+    // cada valor asociado a una clave corresponde a una página que debe cargarse o a una función que 
+    // debe ejecutarse en las instrucciones de la función util.gestionarOpciones()
     let opciones = {
         'menu-ir-a-inicio': () => window.location.href = 'index.html',
         'menu-clientes': './vista/html/clientes.html',
-        'menu-productos': './vista/html/productos.html',
-        'menu-ventas': './vista/html/ventas.html',
+        'menu-personal': './vista/html/personal.html',
+        'menu-proveedores': './vista/html/proveedores.html',
         'menu-categorias': './vista/html/categorias-productos.html',
         'menu-presentaciones': './vista/html/presentaciones-productos.html',
-        // ...,
+        'menu-productos': './vista/html/productos.html',
+        'menu-bajas': './vista/html/bajas-productos.html',
+        'menu-ventas': './vista/html/ventas.html',
+        'menu-compras': './vista/html/compras.html',
+        'menu-pago-clientes': './vista/html/pagos-clientes.html',
         'menu-btnacercade': './vista/html/acercade.html'
     }
 
