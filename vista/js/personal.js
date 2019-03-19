@@ -67,7 +67,7 @@ new class Personal {
     generarTabla() {
         console.log(this.indice);
         return new Tabulator(this.contenedor, {
-            ajaxURL: util.url,
+            ajaxURL: util.URL,
             ajaxParams: this.parametros,
             ajaxConfig: 'POST', // tipo de solicitud HTTP ajax
             ajaxContentType: 'json', // enviar parámetros al servidor como una cadena JSON
@@ -147,7 +147,7 @@ new class Personal {
         };
 
         // se envían los datos del nuevo personal al back-end y se nuestra la nueva fila en la tabla
-        util.fetchData(util.url, {
+        util.fetchData(util.URL, {
             'method': 'POST',
             'body': {
                 clase: 'Personal',
@@ -215,7 +215,7 @@ new class Personal {
         };
 
         // se envían los datos del nuevo cliente al back-end y se nuestra la nueva fila en la tabla
-        util.fetchData(util.url, {
+        util.fetchData(util.URL, {
             'method': 'POST',
             'body': {
                 clase: 'Personal',
@@ -266,7 +266,7 @@ new class Personal {
                         text: "Confirmar",
                         callback: () => {
                             // se envía el ID del cliente al back-end para el eliminado y se actualiza la tabla
-                            util.fetchData(util.url, {
+                            util.fetchData(util.URL, {
                                 'method': 'POST',
                                 'body': {
                                     clase: 'Personal',

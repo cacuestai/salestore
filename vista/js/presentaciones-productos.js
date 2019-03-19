@@ -60,7 +60,7 @@ new class PresentacionProducto {
 
     generarTabla() {
         return new Tabulator(this.contenedor, {
-            ajaxURL: util.url,
+            ajaxURL: util.URL,
             ajaxParams: this.parametros,
             ajaxConfig: 'POST', // tipo de solicitud HTTP ajax
             ajaxContentType: 'json', // enviar parámetros al servidor como una cadena JSON
@@ -128,7 +128,7 @@ new class PresentacionProducto {
      */
     insertarRegistro() {
         // se envían los datos del nuevo producto al back-end y se nuestra la nueva fila en la tabla
-        util.fetchData(util.url, {
+        util.fetchData(util.URL, {
             'method': 'POST',
             'body': {
                 clase: this.parametros.clase,
@@ -178,7 +178,7 @@ new class PresentacionProducto {
         };
 
         // se envían los datos del nuevo producto al back-end y se nuestra la nueva fila en la tabla
-        util.fetchData(util.url, {
+        util.fetchData(util.URL, {
             'method': 'POST',
             'body': {
                 clase: this.parametros.clase,
@@ -221,7 +221,7 @@ new class PresentacionProducto {
                         text: "Confirmar",
                         callback: () => {
                             // se envía el ID del producto al back-end para el eliminado y se actualiza la tabla
-                            util.fetchData(util.url, {
+                            util.fetchData(util.URL, {
                                 'method': 'POST',
                                 'body': {
                                     clase: 'PresentacionProducto',

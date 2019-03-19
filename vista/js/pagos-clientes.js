@@ -58,7 +58,7 @@ new class PagoCliente {
      * Consulta al back-end el número de pago siguiente y lo muestra.
      */
     siguientePago() {
-        return util.fetchData(util.url, { // determinar el ID del siguiente pago
+        return util.fetchData(util.URL, { // determinar el ID del siguiente pago
             'method': 'POST',
             'body': {
                 clase: 'Conexion',
@@ -85,7 +85,7 @@ new class PagoCliente {
 
         this.tablaCreditos = new Tabulator('#tabla-creditos', {
             height: "200px",
-            ajaxURL: util.url,
+            ajaxURL: util.URL,
             ajaxParams: { // parámetros que se envían al servidor para mostrar la tabla
                 clase: 'Venta',
                 accion: 'seleccionar',
@@ -121,7 +121,7 @@ new class PagoCliente {
         console.log('cargando pagos');
         this.tablaPagos = new Tabulator('#tabla-pagos', {
             height: "200px",
-            ajaxURL: util.url,
+            ajaxURL: util.URL,
             ajaxParams: { // parámetros que se envían al servidor para mostrar la tabla
                 clase: 'PagoCliente',
                 accion: 'seleccionar',
@@ -163,13 +163,13 @@ new class PagoCliente {
 
         $('#pago_cliente-cliente').addEventListener('change', event => {
             // mostrar la lista de créditos de cliente actual
-            tablaCreditos.setData(util.url, {
+            tablaCreditos.setData(util.URL, {
                 clase: 'Venta',
                 accion: 'seleccionar',
                 cliente: $('#pago_cliente-cliente').value
             }).then(() => {
                 // mostrar la lista de pagos del cliente actual
-                tablaPagos.setData(util.url, {
+                tablaPagos.setData(util.URL, {
                     clase: 'PagoCliente',
                     accion: 'seleccionar',
                     cliente: $('#pago_cliente-cliente').value
@@ -195,7 +195,7 @@ new class PagoCliente {
                     valor: abonoActual,
                     fecha: $('#pago_cliente-fecha').value
                 }
-                util.fetchData(util.url, {
+                util.fetchData(util.URL, {
                     'method': 'POST',
                     'body': {
                         clase: 'PagoCliente',

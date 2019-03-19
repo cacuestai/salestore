@@ -70,7 +70,7 @@ new class Venta {
      * éxito, se inicia la creación de una tabla para ingresar las líneas de venta (detalles de venta).
      */
     crearListaProductos() {
-        util.fetchData(util.url, {
+        util.fetchData(util.URL, {
             'body': {
                 'clase': 'Producto',
                 'accion': 'listar'
@@ -236,7 +236,7 @@ new class Venta {
             detalle: this.tablaVentas.getData()
         };
 
-        util.fetchData(util.url, {
+        util.fetchData(util.URL, {
             'method': 'POST',
             'body': {
                 clase: 'Venta',

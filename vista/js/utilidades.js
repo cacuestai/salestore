@@ -8,7 +8,7 @@ export const usuario = {
     perfil: ''
 };
 
-export const url = './controlador/fachada.php';
+export const URL = './controlador/fachada.php';
 
 /**
  * Muestra un mensaje de error por consola y al usuario
@@ -132,7 +132,7 @@ export let crearLista = (listaSeleccionable, elementos, clave, valor, primerItem
  *  primerItem: opcionalmente un elemento que se agrega al inicio de la lista
  */
 export let cargarLista = opciones => {
-    return util.fetchData(util.url, {
+    return util.fetchData(util.URL, {
         'body': {
             'clase': opciones.clase,
             'accion': opciones.accion
@@ -150,7 +150,7 @@ export let cargarLista = opciones => {
  * Si la solicitud al back-end tiene éxito, devuelve una promesa con el siguiente ID de una tabla determinada
  */
 export let siguiente = (tabla, campo) => {
-    return util.fetchData(util.url, { // determinar el ID de la siguiente venta
+    return util.fetchData(util.URL, { // determinar el ID de la siguiente venta
         'method': 'POST',
         'body': {
             clase: 'Conexion',

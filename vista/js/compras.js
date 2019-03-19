@@ -88,7 +88,7 @@ new class Compra {
      * éxito, se inicia la creación de una tabla para ingresar las líneas de compra (detalles de compra).
      */
     crearListaProductos() {
-        util.fetchData(util.url, {
+        util.fetchData(util.URL, {
             'body': {
                 'clase': 'Producto',
                 'accion': 'listar'
@@ -270,7 +270,7 @@ new class Compra {
             detalle: this.tablaCompras.getData()
         };
 
-        util.fetchData(util.url, {
+        util.fetchData(util.URL, {
             'method': 'POST',
             'body': {
                 clase: 'Compra',
