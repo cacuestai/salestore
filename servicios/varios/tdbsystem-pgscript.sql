@@ -564,6 +564,36 @@ INSERT INTO proveedores(id_proveedor, nombre, telefono, correo)
 INSERT INTO proveedores(id_proveedor, nombre, telefono, correo)
 	VALUES('PR08','Distribuidora ComaRico','7152431','comaricobien@gmail.com')
 	ON CONFLICT DO NOTHING;
+	
+INSERT INTO proveedores(
+	id_proveedor, nombre, telefono, correo)
+	VALUES ('P005', 'Jader Raúl Gomez', '8783400', 'jadergomez@gmail.com')
+	ON CONFLICT DO NOTHING;	
+
+INSERT INTO proveedores(
+	id_proveedor, nombre, telefono, correo)
+	VALUES ('P006', 'Juan Carmona', '8926241', 'juancarmona@gmail.com')
+	ON CONFLICT DO NOTHING;	
+
+INSERT INTO proveedores(
+	id_proveedor, nombre, telefono, correo)
+	VALUES ('P007', 'Juan Diego Castaño', '8451201', 'diegocastño@gmail.com')
+	ON CONFLICT DO NOTHING;	
+
+INSERT INTO proveedores(
+	id_proveedor, nombre, telefono, correo)
+	VALUES ('P008', 'Juliana Reyes', '8120167', 'julianareyes@gmail.com')
+	ON CONFLICT DO NOTHING;	
+
+INSERT INTO proveedores(
+	id_proveedor, nombre, telefono, correo)
+	VALUES ('P009', 'Andres Calamaro', '8791203', 'andrescalamaro@gmail.com')
+	ON CONFLICT DO NOTHING;	
+
+INSERT INTO proveedores(
+	id_proveedor, nombre, telefono, correo)
+	VALUES ('P010', 'Jaime Soto', '8916060', 'jaimesoto@gmail.com')
+	ON CONFLICT DO NOTHING;		
 								  
 -- A continuación algunas instrucciones DML disponibles mediante vistas o procedimientos almacenados
 								  
@@ -657,7 +687,7 @@ BEGIN
 	IF existe THEN
 		EXECUTE format('SELECT MAX(%s) FROM %s', columna, tabla) INTO ultimo;
 		IF ultimo IS NULL THEN
-			ultimo = 1;
+			ultimo = 0;
 		END IF;
 		RETURN ultimo;
 	ELSE
@@ -830,12 +860,14 @@ AS $BODY$
 BEGIN
 	idbaja = 0;
 
-	-- >> agregue aquí una instrucción SQL que permita insertar en la tabla de bajas
-	-- >> la baja que se recibe según los argumentos de la función y
-	-- >> guarde en idbaja el ID asignado a dicha baja
+	INSERT INTO bajas_productos(
+		tipo_baja, fecha, id_producto, cantidad, precio)
+		VALUES (tipobaja, fechabaja, idproducto, cantidadbaja, precioproducto) 
+		RETURNING id_baja_producto into idbaja;
 	
-	-- >> actualice la tabla productos de tal manera que se sustraiga 
-	-- >> la cantidad dada de baja, de la cantidad_disponible 
+	-- en productos, sustraer la cantidad de baja, de la cantidad_disponible 
+	UPDATE productos SET cantidad_disponible = cantidad_disponible - cantidadbaja 
+		WHERE id_producto = idproducto;
 		
 	RETURN idbaja;
 END;

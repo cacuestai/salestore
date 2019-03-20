@@ -122,8 +122,9 @@ class Producto implements Persistible {
             // si el array tiene elementos, se crea otro con sólo el ID y los datos esenciales de productos
             if (count($listaCompleta)) {
                 $listaMinima = [];
-                foreach ($listaCompleta as $fila) {
-                    $listaMinima[] = $fila->id_producto . '-' . $fila->descripcion_producto;
+                for ($i = 0; $i < count($listaCompleta); $i++) {
+                    $listaMinima[] = $listaCompleta[$i]->id_producto . '-' . $listaCompleta[$i]->descripcion_producto;
+                    $listaCompleta[$i]->i = $i; // cada elemento de la lista completa "conoce" su posición
                 }
                 // se envían las dos listas al front-end
                 echo json_encode(['ok' => TRUE, 'lista_completa' => $listaCompleta, 'lista_minima' => $listaMinima]);

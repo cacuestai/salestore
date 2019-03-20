@@ -7,6 +7,7 @@ new class BajaProducto {
 
     constructor() {
         this.producto;
+        this.productos;
         this.inicializar();
     }
 
@@ -15,11 +16,11 @@ new class BajaProducto {
      */
     inicializar() {
 
-        M.Datepicker.init($('#pago_cliente-fecha'), {
-            format: 'yyyy-mm-dd', // el formato de fecha utilizado por Postgres
-            i18n: util.datePickerES, // el idioma para el componente 
-            defaultDate: new Date() // hoy como fecha por defecto
-        });
+        // M.Datepicker.init($('#baja-fecha'), {
+        //     format: 'yyyy-mm-dd', // el formato de fecha utilizado por Postgres
+        //     i18n: util.datePickerES, // el idioma para el componente 
+        //     defaultDate: new Date() // hoy como fecha por defecto
+        // });
 
         // se muestra la fecha de hoy formateada utilizando moment.js
         $('#baja-fecha').value = moment(new Date()).format('YYYY-MM-DD');
@@ -38,8 +39,14 @@ new class BajaProducto {
                         clase: 'Producto',
                         accion: 'listar'
                     }
-                }).then(data => {
-                    this.crearListaProductos(data);
+                }).then(productos => {
+                    if (productos.ok) {
+                        delete productos.ok;
+                        this.productos = productos;
+                        this.crearListaProductos();
+                    } else {
+                        throw new Error(productos.mensaje);
+                    }
                 });
 
                 $('#baja-registrar').addEventListener('click', event => {
@@ -58,31 +65,27 @@ new class BajaProducto {
      * @param {Object} productos Un objeto con un array de nombres y con otro array 
      * que contiene todos los datos de objetos. 
      */
-    crearListaProductos(productos) {
-        if (productos.ok) {
-            M.Autocomplete.init($('#baja-producto'), {
-                // convierte el array lista_minima en un objeto para utilizarlo con Materialize.autocomplete
-                data: productos.lista_minima.reduce((resultado, item) => {
-                    resultado[item] = ''
-                    return resultado;
-                }, {}),
-                onAutocomplete: (item) => {
-                    // extraer el ID del producto (éste precede a cada nombre de la lista)
-                    let idProducto = item.split('-')[0];
-                    // utilizar dicho ID para buscar un objeto con los datos del producto
-                    // y guardar su referencia a nivel de clase
-                    this.producto = productos.lista_completa.find(obj => obj.id_producto == idProducto);
-                    console.log(this.producto);
-                    // mostrar en los elementos HTML datos relevantes del producto del que se va a realizar la baja
-                    // >> mostrar la cantidad disponible del objeto this.producto
-                    // >> mostrar la cantidad mínima del producto tomando el dato de this.producto
-                    // >> mostrar la cantidad máxima del producto tomando el dato de this.producto
-                    M.updateTextFields();
-                },
-            });
-        } else {
-            throw new Error(productos.mensaje);
-        }
+    crearListaProductos() {
+        M.Autocomplete.init($('#baja-producto'), {
+            // convierte el array lista_minima en un objeto para utilizarlo con Materialize.autocomplete
+            data: this.productos.lista_minima.reduce((resultado, item) => {
+                resultado[item] = ''
+                return resultado;
+            }, {}),
+            onAutocomplete: (item) => {
+                // extraer el ID del producto (éste precede a cada nombre de la lista)
+                let idProducto = item.split('-')[0];
+                // utilizar dicho ID para buscar un objeto con los datos del producto
+                // y guardar su referencia a nivel de clase
+                this.producto = this.productos.lista_completa.find(obj => obj.id_producto == idProducto);
+                // mostrar datos relevantes del producto del que se va a realizar la baja
+                $('#baja-disponible').value = this.producto.cantidad_disponible;
+                $('#baja-minimo').value = this.producto.cantidad_minima;
+                $('#baja-maximo').value = this.producto.cantidad_maxima;
+                M.updateTextFields();
+            },
+        });
+
     }
 
     /**
@@ -98,9 +101,11 @@ new class BajaProducto {
 
         // los datos que se registran en la base de datos
         let baja = {
-            // >> para este objeto se deben definir las propiedades tipo, fecha, producto, precio y cantidad
-            // >> para cada propiedad de este objeto se deben asignar los valores que haya ingresado el usuario
-            // >> en los elementos HTML respectivos 
+            tipo: $('#baja-motivo').value,
+            fecha: $('#baja-fecha').value,
+            producto: this.producto.id_producto,
+            precio: this.producto.precio,
+            cantidad: $('#baja-cantidad').value
         };
 
         util.fetchData(util.URL, {
@@ -115,8 +120,14 @@ new class BajaProducto {
             if (data.ok) {
                 $('#baja-id').value = data.id_baja;
                 M.toast({ html: `Baja insertada con éxito. Seguimos con la ${data.id_baja}` });
-                // >> aquí deben agregarse instrucciones para limpiar los siguientes campos (elementos HTML):
-                // >> cantidad, producto, dispinible, mínimo, máximo y motivo de la baja
+                $('#baja-cantidad').value = '';
+                $('#baja-producto').value = '';
+                $('#baja-disponible').value = '';
+                $('#baja-minimo').value = '';
+                $('#baja-maximo').value = '';
+                $('#baja-motivo').selectedIndex = 0;
+                // un producto "conoce" su posición (i) en la lista. Gracias a ello se puede actualizar la cantidad disponible
+                this.productos.lista_completa[this.producto.i].cantidad_disponible = this.producto.cantidad_disponible - baja.cantidad;
                 M.FormSelect.init($('#baja-motivo'));
             } else {
                 throw new Error(data.mensaje);
@@ -132,15 +143,24 @@ new class BajaProducto {
     validarDatos() {
         let errores = '';
 
-        // >> agregar un mensaje de error a errores si la fecha es inválida
+        if (!moment($('#baja-fecha').value).isValid()) {
+            errores += '<br> - Fecha inválida.';
+        }
 
-        // >> agregar un mensaje de error a errores si luego de eliminar los espacios iniciales y finales
-        // >> de los datos de un producto, se encuentra que es una cadena de cero longitud
-        // >> o la cantidad disponible del producto está en cero o la cantidad a dar de baja es 
-        // >> superior a la cantidad disponible
+        $('#baja-producto').value = $('#baja-producto').value.trim();
+        if (!$('#baja-producto').value) {
+            errores += '<br> - Falta ingresar el producto.';
+        } else {
+            if (this.producto.cantidad_disponible == 0) {
+                errores += '<br> - Este producto no está disponible.';
+            } else {
+                let cantidadBaja = util.esNumero($('#baja-cantidad').value) ? Number($('#baja-cantidad').value) : 0;
+                if (cantidadBaja < 1 || cantidadBaja > this.producto.cantidad_disponible) {
+                    errores += `<br> - Se espera una cantidad entre 1 y ${this.producto.cantidad_disponible}.`;
+                }
+            }
+        }
 
-        // >> agregar un mensaje de error a errores si en el formulario de entrada está apareciendo 
-        // >> el aviso "seleccione el motivo de la baja"
         if ($('#baja-motivo').selectedIndex == 0) {
             errores += '<br> - Falta seleccionar el motivo de la baja.';
         }

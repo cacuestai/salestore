@@ -25,6 +25,9 @@ Un simple ejemplo de ventas y adquisición de mercancía, **escrito en Javascrip
   - Se cambia en detalles_compras, id_pedido por id_compra y se actualiza ./vista/images/db-modelo-tdb.jpg
   - Se agregan columnas a tipo 'tipo_detalle' de la base de datos para usarlo con ventas y compras
   - Se agrega al script de la base de datos la función 'insertar_compra' para insertar las compras y sus líneas de compra.
+  - Se modifica Producto.php::listar($param) para que los productos de la lista completa "recuerden" su posición en la lista.
+  - Se incluye una demostración completa de baja de productos.
+  - Se incluye una demostración completa de pagos de clientes.
 
 ### Características de la versión 0.06
   - ¡Registro de ventas _completo_!
