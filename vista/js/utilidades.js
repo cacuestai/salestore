@@ -1,14 +1,16 @@
 'use strict';
 
 var verLog = true;
+let captcha = false; // si se coloca en true hace validación de captcha
 
-export const usuario = {
-    id: '',
-    nombre: '',
-    perfil: ''
-};
-
+export let usuario = {}; // se llena con los datos del usuario autenticado
 export const URL = './controlador/fachada.php';
+
+export let setUsuario = usuario => {
+    util.usuario.id_persona = usuario.id_persona;
+    util.usuario.nombre = usuario.nombre;
+    util.usuario.perfil = usuario.perfil;
+}
 
 /**
  * Muestra un mensaje de error por consola y al usuario
@@ -22,13 +24,7 @@ export const mensaje = (mensajeLog, mensajeUsuario = mensajeLog, clasesCSS = 're
     if (depurar && mensajeLog) {
         console.error(mensajeLog);
     }
-    // if (mensajeUsuario !== mensajeLog) {
-    //     let pos = mensajeLog.indexOf('DETAIL:');
-    //     if (pos > -1) {
-    //         mensajeLog = mensajeLog.substr(pos + 8);
-    //         mensajeUsuario = `${mensajeUsuario}<br>${mensajeLog}`;
-    //     }
-    // }
+
     M.toast({
         html: mensajeUsuario,
         classes: clasesCSS
@@ -100,17 +96,16 @@ export async function fetchData(url, data = {}) {
  * @param {String} valor Nombre de la propiedad de los objetos que se mostrará en la lista
  */
 export let crearLista = (listaSeleccionable, elementos, clave, valor, primerItem = false) => {
-
-    if (elementos.length === 0) {
-        throw new Error('Fallo al crear la lista. No existen elementos.');
-    }
-
     let select = $(listaSeleccionable);
     select.innerHTML = '';
     let opciones;
 
     if (primerItem) {
-        opciones = `<option value="" disabled selected>${primerItem}</option>`;
+        if (elementos.length === 0) {
+            opciones = `<option value="" disabled selected>Sin elementos</option>`;
+        } else {
+            opciones = `<option value="" disabled selected>${primerItem}</option>`;
+        }
     }
 
     elementos.forEach((item) => {
@@ -133,13 +128,11 @@ export let crearLista = (listaSeleccionable, elementos, clave, valor, primerItem
  */
 export let cargarLista = opciones => {
     return util.fetchData(util.URL, {
-        'body': {
-            'clase': opciones.clase,
-            'accion': opciones.accion
-        }
+        'body': opciones
     }).then(data => {
         if (data.ok) {
             crearLista(opciones.listaSeleccionable, data.lista, opciones.clave, opciones.valor, opciones.primerItem);
+            return data.lista.length;
         } else {
             throw new Error(data.mensaje);
         }
@@ -207,3 +200,43 @@ export let tabulatorES = {
  * @param {String} n Un dato que puede corresponder a un valor o no. 
  */
 export let esNumero = n => !isNaN(parseFloat(n)) && isFinite(n);
+
+export let validarCaptcha = () => {
+    if (captcha) {
+        grecaptcha.ready(() => {
+            grecaptcha.execute('6LezR3oUAAAAAAathx5ZMnKqfbmtXH0uUk5H5sOg', {
+                action: 'login'
+            }).then((token) => {
+                fetchData(util.URL, {
+                    'method': 'POST',
+                    'body': {
+                        'clase': 'Conexion',
+                        'accion': 'validarCaptcha',
+                        'token': token
+                    }
+                }).then(data => {
+                    if (data.respuesta.success) {
+                        console.log('captcha correcto');
+                        document.querySelector('#login_btnautenticar').className = 'col s12 btn btn-large waves-effect teal';
+                    } else {
+                        console.log(data);
+                    }
+                }).catch(error => {
+                    mensaje(error, 'No se pudo iniciar sesión');
+                });
+            });
+        });
+    } else {
+        document.querySelector('#login_btnautenticar').className = 'col s12 btn btn-large waves-effect teal';
+    }
+}
+
+/**
+ * Busca en una lista de productos uno a partir de su ID y si lo encuentra lo retorna, si no, retorna undefined.
+ * @param {String} descripcionProducto Un dato string con la forma ID-Descripción
+ * @param {Array} listaProductos Un array que contiene objetos de productos
+ */
+export let buscarProducto = (descripcionProducto, listaProductos) => {
+    const idProducto = descripcionProducto.split('-')[0];
+    return listaProductos.lista_completa.find(obj => obj.id_producto == idProducto);
+}
