@@ -10,9 +10,9 @@ class CategoriaProducto implements Persistible {
         extract($param);
         $sql = "SELECT * FROM categorias_productos ORDER BY id_categoria_producto";
         // prepara la instrucción SQL para ejecutarla, luego recibir los parámetros de filtrado
-        $q = $conexion->pdo->prepare($sql);
-        $q->execute();
-        $filas = $q->fetchAll(PDO::FETCH_ASSOC); // devuelve un array que contiene todas las filas del conjunto de resultados
+        $instruccion = $conexion->pdo->prepare($sql);
+        $instruccion->execute();
+        $filas = $instruccion->fetchAll(PDO::FETCH_ASSOC); // devuelve un array que contiene todas las filas del conjunto de resultados
         echo json_encode($filas); // las filas resultantes son enviadas en formato JSON al frontend
     }
 
@@ -102,15 +102,9 @@ class CategoriaProducto implements Persistible {
         if ($stmt = $conexion->pdo->query($sql, PDO::FETCH_OBJ)) {
             // se obtiene el array de objetos con las posibles filas obtenidas
             $lista = $stmt->fetchAll();
-            // si la lista tiene elementos, se envía al frontend, si no, se envía un mensaje de error
-            if (count($lista)) {
-                echo json_encode(['ok' => TRUE, 'lista' => $lista]);
-            } else {
-                echo json_encode(['ok' => FALSE, 'mensaje' => 'No existen categorías de productos']);
-            }
+            echo json_encode(['ok' => TRUE, 'lista' => $lista]);
         } else {
             // si falla la ejecución se comunica del error al frontend
-            $conexion->errorInfo(stmt);
             echo json_encode(['ok' => FALSE, 'mensaje' => 'Imposible consultar las categorías de productos']);
         }
     }

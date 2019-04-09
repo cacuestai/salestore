@@ -1,4 +1,4 @@
-/* Tabulator v4.2.3 (c) Oliver Folkerd */
+/* Tabulator v4.2.5 (c) Oliver Folkerd */
 
 //public group object
 var GroupComponent = function GroupComponent(group) {
@@ -84,6 +84,18 @@ var Group = function Group(groupManager, parent, level, key, field, generator, o
 	this.addBindings();
 
 	this.createValueGroups();
+};
+
+Group.prototype.wipe = function () {
+	if (this.groupList.length) {
+		this.groupList.forEach(function (group) {
+			group.wipe();
+		});
+	} else {
+		this.element = false;
+		this.arrowElement = false;
+		this.elementContents = false;
+	}
 };
 
 Group.prototype.createElements = function () {
@@ -272,6 +284,8 @@ Group.prototype.insertRow = function (row, to, after) {
 	if (this.groupManager.table.modExists("columnCalcs") && this.groupManager.table.options.columnCalcs != "table") {
 		this.groupManager.table.modules.columnCalcs.recalcGroup(this);
 	}
+
+	this.groupManager.updateGroupRows(true);
 };
 
 Group.prototype.scrollHeader = function (left) {
@@ -301,6 +315,7 @@ Group.prototype.conformRowData = function (data) {
 
 Group.prototype.removeRow = function (row) {
 	var index = this.rows.indexOf(row);
+	var el = row.getElement();
 
 	if (index > -1) {
 		this.rows.splice(index, 1);
@@ -315,7 +330,13 @@ Group.prototype.removeRow = function (row) {
 
 		this.groupManager.updateGroupRows(true);
 	} else {
+
+		if (el.parentNode) {
+			el.parentNode.removeChild(el);
+		}
+
 		this.generateGroupHeaderContents();
+
 		if (this.groupManager.table.modExists("columnCalcs") && this.groupManager.table.options.columnCalcs != "table") {
 			this.groupManager.table.modules.columnCalcs.recalcGroup(this);
 		}
@@ -825,6 +846,12 @@ GroupRows.prototype.getGroups = function (compoment) {
 	});
 
 	return groupComponents;
+};
+
+GroupRows.prototype.wipe = function () {
+	this.groupList.forEach(function (group) {
+		group.wipe();
+	});
 };
 
 GroupRows.prototype.pullGroupListData = function (groupList) {

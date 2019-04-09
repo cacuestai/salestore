@@ -1,6 +1,6 @@
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-/* Tabulator v4.2.3 (c) Oliver Folkerd */
+/* Tabulator v4.2.5 (c) Oliver Folkerd */
 
 var Filter = function Filter(table) {
 
@@ -69,7 +69,13 @@ Filter.prototype.initializeColumn = function (column, value) {
 					switch (filterType) {
 						case "partial":
 							filterFunc = function filterFunc(data) {
-								return String(column.getFieldValue(data)).toLowerCase().indexOf(String(value).toLowerCase()) > -1;
+								var colVal = column.getFieldValue(data);
+
+								if (typeof colVal !== 'undefined' && colVal !== null) {
+									return String(colVal).toLowerCase().indexOf(String(value).toLowerCase()) > -1;
+								} else {
+									return false;
+								}
 							};
 							type = "like";
 							break;
@@ -256,7 +262,7 @@ Filter.prototype.generateHeaderFilterElement = function (column, initialValue) {
 
 			if (column.definition.headerFilterLiveFilter !== false) {
 
-				if (!(column.definition.headerFilter === "autocomplete" || column.definition.editor === "autocomplete" && column.definition.headerFilter === true)) {
+				if (!((column.definition.headerFilter === 'autocomplete' || column.definition.editor === 'autocomplete' || column.definition.headerFilter === 'tickCross' || column.definition.editor === 'tickCross') && column.definition.headerFilter === true)) {
 					editorElement.addEventListener("keyup", searchTrigger);
 					editorElement.addEventListener("search", searchTrigger);
 
@@ -690,7 +696,7 @@ Filter.prototype.filters = {
 			return rowVal === filterVal ? true : false;
 		} else {
 			if (typeof rowVal !== 'undefined' && rowVal !== null) {
-				return String(rowVal).toLowerCase().indexOf(filterVal.toLowerCase()) > -1 ? true : false;
+				return String(rowVal).toLowerCase().indexOf(filterVal.toLowerCase()) > -1;
 			} else {
 				return false;
 			}

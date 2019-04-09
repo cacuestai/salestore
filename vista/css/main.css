@@ -10,6 +10,10 @@ main {
     flex: 1 0 auto;
 }
 
+.grecaptcha-badge {
+    visibility: hidden;
+}
+
 .modal {
     /*
       Inicialmente se probarón los formularios con este estilo:

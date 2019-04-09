@@ -1,6 +1,6 @@
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-/* Tabulator v4.2.3 (c) Oliver Folkerd */
+/* Tabulator v4.2.5 (c) Oliver Folkerd */
 
 var Ajax = function Ajax(table) {
 
@@ -43,7 +43,13 @@ Ajax.prototype.initialize = function () {
 	this.urlGenerator = this.table.options.ajaxURLGenerator || this.defaultURLGenerator;
 
 	if (this.table.options.ajaxLoaderError) {
-		this.errorElement = this.table.options.ajaxLoaderError;
+		if (typeof this.table.options.ajaxLoaderError == "string") {
+			template = document.createElement('template');
+			template.innerHTML = this.table.options.ajaxLoaderError.trim();
+			this.errorElement = template.content.firstChild;
+		} else {
+			this.errorElement = this.table.options.ajaxLoaderError;
+		}
 	}
 
 	if (this.table.options.ajaxParams) {

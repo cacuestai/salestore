@@ -1,6 +1,6 @@
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-/* Tabulator v4.2.3 (c) Oliver Folkerd */
+/* Tabulator v4.2.5 (c) Oliver Folkerd */
 
 var MoveRows = function MoveRows(table) {
 
@@ -321,8 +321,8 @@ MoveRows.prototype.setStartPosition = function (e, row) {
 	if (this.connection) {
 		position = element.getBoundingClientRect();
 
-		this.startX = position.left - pageX + window.scrollX;
-		this.startY = position.top - pageY + window.scrollY;
+		this.startX = position.left - pageX + window.pageXOffset;
+		this.startY = position.top - pageY + window.pageYOffset;
 	} else {
 		this.startY = pageY - element.getBoundingClientRect().top;
 	}

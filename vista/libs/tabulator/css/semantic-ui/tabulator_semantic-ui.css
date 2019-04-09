@@ -1,4 +1,4 @@
-/* Tabulator v4.2.3 (c) Oliver Folkerd */
+/* Tabulator v4.2.5 (c) Oliver Folkerd */
 /*******************************
          Site Settings
 *******************************/
@@ -233,7 +233,7 @@
   margin: 1em 0em;
   border: 1px solid rgba(34, 36, 38, 0.15);
   box-shadow: none;
-  border-radius: 0.28571/pxrem;
+  border-radius: 0.28571rem;
   color: rgba(0, 0, 0, 0.87);
   -ms-transform: translatez(0);
   transform: translatez(0);

@@ -1,4 +1,4 @@
-/* Tabulator v4.2.3 (c) Oliver Folkerd */
+/* Tabulator v4.2.5 (c) Oliver Folkerd */
 
 var FrozenColumns = function FrozenColumns(table) {
 	this.table = table; //hold Tabulator object
@@ -15,7 +15,12 @@ FrozenColumns.prototype.reset = function () {
 	this.initializationMode = "left";
 	this.leftColumns = [];
 	this.rightColumns = [];
+	this.leftMargin = 0;
+	this.rightMargin = 0;
 	this.active = false;
+
+	this.table.columnManager.headersElement.style.marginLeft = 0;
+	this.table.columnManager.element.style.paddingRight = 0;
 };
 
 //initialize specific column

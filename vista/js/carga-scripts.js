@@ -58,6 +58,7 @@
 
     /**
      * Analiza los script JS incluidos en un HTML y los carga en la cabecera del documento actual
+     * Ver: https://help.oclc.org/Metadata_Services/CONTENTdm/Advanced_website_customization/Customization_cookbook/Load_multiple_JavaScript_files
      * @param {String} html 
      */
     let cargarScripts = (html) => {
@@ -74,6 +75,17 @@
             const head = document.head || document.getElementsByTagName("head")[0] || document.documentElement;
             head.insertBefore(objScript, head.lastChild);
         });
+    }
+
+    /**
+     * Supuestamente carga un script
+     * *** falta probar su funcionamiento ***
+     * @param {String} url 
+     */
+    let cargarScript = (url) => {
+        let script = document.createElement("script");
+        script.src = url;
+        document.head.appendChild(script);
     }
 
     /**

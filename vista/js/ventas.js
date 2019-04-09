@@ -4,6 +4,8 @@ new class Venta {
 
     constructor() {
         this.tablaVentas;
+        this.tablaLineasVentas;
+        this.productos;
 
         let instances = M.Datepicker.init($('#venta-fecha'), {
             format: 'yyyy-mm-dd',
@@ -11,7 +13,13 @@ new class Venta {
             defaultDate: new Date()
         });
 
-        this.filasPorPagina = 7;
+        this.filasPorPagina = 10;
+
+        M.Collapsible.init($('#ventas-opciones'), {
+            onOpenEnd: (elemento) => {
+                this.actualizarListaVentas(elemento);
+            }
+        });
 
         $('#venta-vendedor').value = util.usuario.nombre;
         $('#venta-fecha').value = moment(new Date()).format('YYYY-MM-DD'); // <-- observe uno de los usos que se le puede dar a moment.js
@@ -29,6 +37,9 @@ new class Venta {
         $('#venta-paga').addEventListener('input', event => {
             this.calcularDeuda();
         });
+
+        this.inicializarGridVentas();
+
     }
 
     /**
@@ -76,6 +87,8 @@ new class Venta {
                 'accion': 'listar'
             }
         }).then(productos => {
+            this.productos = productos;
+
             if (productos.ok) {
                 this.crearLineasDeVenta(productos, this.calcularLineaVenta, this.calcularTotales, this.calcularTodo);
             } else {
@@ -90,7 +103,7 @@ new class Venta {
      * datos de cada producto y otra con los datos básicos para visualizar en un campo de autocompletar.
      */
     crearLineasDeVenta(productos, _calcularLineaVenta, _calcularTotal) {
-        this.tablaVentas = new Tabulator("#tabla-ventas", {
+        this.tablaLineasVentas = new Tabulator("#tabla-lineas_venta", {
             height: "200px",
             movableColumns: true,
             resizableRows: true,
@@ -125,7 +138,7 @@ new class Venta {
                 { title: "Vr. Unitario", field: "valor", width: 100, align: "right" },
                 { title: "% IVA", field: "iva_porcentaje", width: 100, align: "right" },
                 { title: "Vr. IVA", field: "iva_valor", width: 100, align: "right" },
-                { title: "Subtotale", field: "subtotal", width: 100, align: "right" },
+                { title: "Subtotal", field: "subtotal", width: 100, align: "right" },
                 { // la última columna incluye un botón para eliminar líneas de ventas
                     title: 'Control',
                     headerSort: false,
@@ -157,7 +170,7 @@ new class Venta {
         btnAgregar.addEventListener('click', event => {
 
             let adicionar = true; // pasará a false si encuentra una línea de venta incompleta
-            let lineasDeVenta = this.tablaVentas.getData();
+            let lineasDeVenta = this.tablaLineasVentas.getData();
 
             lineasDeVenta.forEach((lineaVenta) => {
                 if (!util.esNumero(lineaVenta.subtotal)) {
@@ -166,7 +179,7 @@ new class Venta {
             });
 
             if (adicionar) {
-                this.tablaVentas.addRow({ cantidad: 1, producto: '' }, false); // agregar una fila en blanco al final
+                this.tablaLineasVentas.addRow({ cantidad: 1, producto: '' }, false); // agregar una fila en blanco al final
             } else {
                 M.toast({ html: 'Las líneas de venta deben estar completas para poder agregar nuevas líneas' });
             }
@@ -199,8 +212,7 @@ new class Venta {
      */
     calcularLineaVenta(celda, productos) {
         let filaActual = celda.getRow().getData();
-        let idProducto = filaActual.producto.split('-')[0];
-        let producto = productos.lista_completa.find(obj => obj.id_producto == idProducto);
+        let producto = util.buscarProducto(filaActual.producto, productos);
 
         if (producto) {
             filaActual.valor = producto.precio;
@@ -215,6 +227,7 @@ new class Venta {
      * Se envían los datos del front-end al back-end para ser guardados en la base de datos
      */
     registrarVenta() {
+
         // ensayar los tiempos de espera en servidores lentos para ver si esto es necesario:
         //      $('#venta-registrar').disabled = true;
         //      $('#venta-cancelar').disabled = true;
@@ -228,12 +241,12 @@ new class Venta {
         let venta = {
             fecha: $('#venta-fecha').value,
             cliente: $('#venta-cliente').value,
-            vendedor: util.usuario.id,
+            vendedor: util.usuario.id_persona,
             total: $('#venta-total').value,
             iva: $('#venta-iva').value,
             paga: $('#venta-paga').value,
             adeuda: $('#venta-adeuda').value,
-            detalle: this.tablaVentas.getData()
+            detalle: this.tablaLineasVentas.getData()
         };
 
         util.fetchData(util.URL, {
@@ -246,6 +259,7 @@ new class Venta {
         }).then(data => {
             // si todo sale bien se retorna el ID de la venta registrada
             if (data.ok) {
+                this.actualizarStock(venta.detalle);
                 $('#venta-numero').value = data.id_venta;
                 M.toast({ html: `Venta insertada con éxito. Seguimos con la ${data.id_venta}` });
                 $('#venta-paga').value = '';
@@ -260,10 +274,23 @@ new class Venta {
     }
 
     /**
+     * Actualiza las cantidades disponibles de los productos afectados con la venta
+     * @param {Array} lineasDeVenta 
+     */
+    actualizarStock(lineasDeVenta) {
+        lineasDeVenta.forEach((lineaVenta) => {
+            if (util.esNumero(lineaVenta.subtotal)) {
+                let producto = util.buscarProducto(lineaVenta.producto, this.productos);
+                producto.cantidad_disponible = producto.cantidad_disponible - lineaVenta.cantidad;
+            }
+        });
+    }
+
+    /**
      * Al pulsar este botón los datos que se estén editando actualmente, se perderán.
      */
     cancelarVenta() {
-        this.tablaVentas.clearData();
+        this.tablaLineasVentas.clearData();
         $('#venta-cliente').value = '';
         $('#venta-paga').value = '';
         $('#venta-adeuda').value = '';
@@ -299,7 +326,7 @@ new class Venta {
             errores += '<br>Falta seleccionar el cliente';
         }
 
-        let lineasDeVenta = this.tablaVentas.getData();
+        let lineasDeVenta = this.tablaLineasVentas.getData();
         if (lineasDeVenta.length == 0) {
             errores += '<br>La venta aún no tiene detalles de venta.';
         } else {
@@ -321,5 +348,64 @@ new class Venta {
 
         return errores;
     }
+
+    inicializarGridVentas() {
+        this.tablaVentas = new Tabulator("#tabla-ventas", {
+            columns: [{
+                    title: "Estado",
+                    field: "estado",
+                    align: "center",
+                    formatter: (cell, formatterParams, onRendered) => { // semaforización
+                        return `<i class="material-icons ${cell.getValue()}-text">flare</i>`;
+                    },
+                    width: 80
+                },
+                { title: "Fecha", field: "fecha_venta", width: 100, align: "center" },
+                { title: "Cliente", field: "cliente", width: 240 },
+                { title: "De contado", field: "total_contado", width: 100, align: "right", formatter: "money", formatterParams: { precision: 0 }, bottomCalc: "sum", bottomCalcFormatter: "money", bottomCalcFormatterParams: { precision: 0 } },
+                { title: "A crédito", field: "total_credito", width: 100, align: "right", formatter: "money", formatterParams: { precision: 0 }, bottomCalc: "sum", bottomCalcFormatter: "money", bottomCalcFormatterParams: { precision: 0 } },
+                { title: "Total", field: "total", width: 100, align: "right", formatter: "money", formatterParams: { precision: 0 }, bottomCalc: "sum", bottomCalcFormatter: "money", bottomCalcFormatterParams: { precision: 0 } },
+                { title: "Vendedor", field: "vendedor" }
+            ],
+            ajaxURL: util.URL,
+            ajaxParams: { // parámetros que se envían al servidor para mostrar la tabla
+                clase: 'Venta',
+                accion: 'listar',
+                opcion: 2
+            },
+            ajaxConfig: 'POST', // tipo de solicitud HTTP ajax
+            ajaxContentType: 'json', // enviar parámetros al servidor como una cadena JSON
+            layout: 'fitColumns', // ajustar columnas al ancho de la tabla
+            responsiveLayout: 'hide', // ocultar columnas que no caben en el espacio de trabajola tabla
+            tooltips: true, // mostrar mensajes sobre las celdas.
+            addRowPos: 'top', // al agregar una nueva fila, agréguela en la parte superior de la tabla
+            history: true, // permite deshacer y rehacer acciones sobre la tabla.
+            pagination: 'local', // cómo paginar los datos
+            paginationSize: this.filasPorPagina,
+            movableColumns: true, // permitir cambiar el orden de las columnas
+            resizableRows: true, // permitir cambiar el orden de las filas
+            /////////////initialSort: this.ordenInicial,
+            // addRowPos: 'top', // no se usa aquí. Aquí se usa un formulario de edición personalizado
+            ////////////index: this.indice, // indice único de cada fila
+            // locale: true, // se supone que debería utilizar el idioma local
+            ///////////rowAdded: (row) => this.filaActual = row,
+            locale: "es", // idioma. Ver script de utilidades
+            langs: util.tabulatorES // ver script de utilidades
+        });
+    }
+
+    actualizarListaVentas(elemento) {
+        if (elemento.id === 'venta-listado') {
+            this.tablaVentas.setData(util.URL, {
+                clase: 'Venta',
+                accion: 'listar',
+                opcion: 2
+            });
+            // lo siguiente se requiere por simultáneamente se está terminando de abrir el pliegue 
+            // y se está creando la tabla y por ende ésta no "conoce" las dimensiones precisas.
+            this.tablaVentas.redraw();
+        }
+    }
+
 
 }

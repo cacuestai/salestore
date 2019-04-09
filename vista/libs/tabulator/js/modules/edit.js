@@ -1,6 +1,6 @@
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-/* Tabulator v4.2.3 (c) Oliver Folkerd */
+/* Tabulator v4.2.5 (c) Oliver Folkerd */
 
 var Edit = function Edit(table) {
 	this.table = table; //hold Tabulator object
@@ -437,11 +437,6 @@ Edit.prototype.editors = {
 		onRendered(function () {
 			input.focus();
 			input.style.height = "100%";
-
-			//submit new value on blur
-			input.addEventListener("blur", function (e) {
-				onChange();
-			});
 		});
 
 		function onChange() {
@@ -457,6 +452,11 @@ Edit.prototype.editors = {
 				cancel();
 			}
 		}
+
+		//submit new value on blur
+		input.addEventListener("blur", function (e) {
+			onChange();
+		});
 
 		//submit new value on enter
 		input.addEventListener("keydown", function (e) {
@@ -778,7 +778,7 @@ Edit.prototype.editors = {
 		input.style.boxSizing = "border-box";
 		input.readOnly = true;
 
-		input.value = initialValue;
+		input.value = typeof initialValue !== "undefined" ? initialValue : "";
 
 		if (editorParams.values === true) {
 			parseItems(getUniqueColumnValues(), initialValue);
@@ -795,6 +795,7 @@ Edit.prototype.editors = {
 					//up arrow
 					e.stopImmediatePropagation();
 					e.stopPropagation();
+					e.preventDefault();
 
 					index = dataItems.indexOf(currentItem);
 
@@ -807,6 +808,7 @@ Edit.prototype.editors = {
 					//down arrow
 					e.stopImmediatePropagation();
 					e.stopPropagation();
+					e.preventDefault();
 
 					index = dataItems.indexOf(currentItem);
 
@@ -817,6 +819,14 @@ Edit.prototype.editors = {
 							setCurrentItem(dataItems[index + 1]);
 						}
 					}
+					break;
+
+				case 37: //left arrow
+				case 39:
+					//right arrow
+					e.stopImmediatePropagation();
+					e.stopPropagation();
+					e.preventDefault();
 					break;
 
 				case 13:
@@ -925,14 +935,40 @@ Edit.prototype.editors = {
 				}
 			}
 
+			if (editorParams.searchFunc) {
+				itemList.forEach(function (item) {
+					item.search = {
+						title: item.title,
+						value: item.value
+					};
+				});
+			}
+
 			allItems = itemList;
 		}
 
 		function filterList(term, intialLoad) {
-			var matches = [];
+			var matches = [],
+			    searchObjs = [],
+			    searchResults = [];
 
 			if (editorParams.searchFunc) {
-				matches = editorParams.searchFunc(term, values);
+
+				allItems.forEach(function (item) {
+					searchObjs.push(item.search);
+				});
+
+				searchResults = editorParams.searchFunc(term, searchObjs);
+
+				searchResults.forEach(function (result) {
+					var match = allItems.find(function (item) {
+						return item.search === result;
+					});
+
+					if (match) {
+						matches.push(match);
+					}
+				});
 			} else {
 				if (term === "") {
 
@@ -1025,8 +1061,8 @@ Edit.prototype.editors = {
 			if (currentItem) {
 				if (initialValue !== currentItem.value) {
 					initialValue = currentItem.value;
-					input.value = currentItem.value;
-					success(input.value);
+					input.value = currentItem.title;
+					success(currentItem.value);
 				} else {
 					cancel();
 				}
@@ -1094,6 +1130,7 @@ Edit.prototype.editors = {
 					//up arrow
 					e.stopImmediatePropagation();
 					e.stopPropagation();
+					e.preventDefault();
 
 					index = displayItems.indexOf(currentItem);
 
@@ -1108,6 +1145,7 @@ Edit.prototype.editors = {
 					//down arrow
 					e.stopImmediatePropagation();
 					e.stopPropagation();
+					e.preventDefault();
 
 					index = displayItems.indexOf(currentItem);
 
@@ -1118,6 +1156,14 @@ Edit.prototype.editors = {
 							setCurrentItem(displayItems[index + 1]);
 						}
 					}
+					break;
+
+				case 37: //left arrow
+				case 39:
+					//right arrow
+					e.stopImmediatePropagation();
+					e.stopPropagation();
+					e.preventDefault();
 					break;
 
 				case 13:

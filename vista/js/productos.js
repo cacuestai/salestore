@@ -295,16 +295,16 @@ new class Producto {
 
         MaterialDialog.dialog( // ver https://github.com/rudmanmrrod/material-dialog
             "Va a eliminar un producto. Por favor confirme la acción:", {
-                title: "Cuidado",
+                title: 'Cuidado',
                 dismissible: false,
                 buttons: {
                     close: {
-                        className: "red",
-                        text: "Cancelar",
+                        className: 'red darken-4',
+                        text: 'Cancelar',
                     },
                     confirm: {
-                        className: "blue",
-                        text: "Confirmar",
+                        className: 'teal',
+                        text: 'Confirmar',
                         callback: () => {
                             let idFila = filaActual.getData().id_producto;
 

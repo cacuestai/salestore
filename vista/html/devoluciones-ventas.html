@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Devoluciones por ventas</title>
+    <script type="text/javascript" src="./vista/js/devoluciones-ventas.js"></script>
+</head>
+
+<body>
+
+    <div class="card-panel">
+        <div class="row teal teal-text lighten-5">
+            <div class="grid-example col s12">
+                <h5>Devoluciones por ventas</h5>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="input-field col s2">
+                <input id="devolucion_venta-fecha" type="text" class="datepicker">
+                <label for="devolucion_venta-fecha" class="active">Fecha</label>
+            </div>
+            <div class="input-field col s2">
+                <input id="devolucion_venta-numero" type="text" class="active" readonly>
+                <label for="devolucion_venta-numero" class="active">Devolución</label>
+            </div>
+            <div class="input-field col s4">
+                <select id="devolucion_venta-cliente"></select>
+                <label for="devolucion_venta-cliente">Cliente</label>
+            </div>
+            <div class="input-field col s4">
+                <select id="devolucion_venta-datos_venta">
+                    <option value="" disabled selected>Sin elementos</option>
+                </select>
+                <label for="devolucion_venta-datos_venta">Venta</label>
+            </div>
+        </div>
+
+        <div class="row teal teal-text lighten-5">
+            <div id="devolucion_venta-info" class="grid-example col s12"><b>Detalle de la venta</b></div>
+            <div id="devolucion_venta-tabla"></div>
+        </div>
+
+        <nav class="nav-wrapper grey lighten-2">
+            <ul class="right hide-on-med-and-down">
+                <li><a id="devolucion_venta-cancelar" class="waves-effect waves-light btn">Cancelar devolución <i class="material-icons right">clear</i></a></li>
+                <li><a id="devolucion_venta-registrar" class="waves-effect waves-light btn">Registrar devolución <i class="material-icons right">send</i></a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="row">
+        Importante: si la venta ha tenido devoluciones previas, la primera columna muestra la diferencia entre lo vendido y lo devuelto previamente.
+    </div>
+
+</body>
+
+</html>

@@ -5,7 +5,7 @@ new class Compra {
     constructor() {
         this.tablaCompras;
 
-        var instances = M.Datepicker.init($('#compra-fecha'), {
+        var instances = M.Datepicker.init($('.datepicker', true), {
             format: 'yyyy-mm-dd',
             i18n: util.datePickerES,
             defaultDate: new Date()
@@ -13,11 +13,10 @@ new class Compra {
 
         this.filasPorPagina = 7;
 
-        $('#compra-fecha').value = moment(new Date()).format('YYYY-MM-DD'); // <-- observe uno de los usos que se le puede dar a moment.js
+        $('#compra-fecha_pedido').value = moment(new Date()).format('YYYY-MM-DD'); // <-- observe uno de los usos que se le puede dar a moment.js
         $('#compra-fecha_recibido').value = moment(new Date()).format('YYYY-MM-DD');
 
         this.inicializarProveedores();
-        ////////////////////////this.inicializarPersonal();
 
         $('#compra-cancelar').addEventListener('click', event => {
             this.cancelarCompra();
@@ -65,23 +64,6 @@ new class Compra {
         });
     }
 
-    // inicializarPersonal() {
-    //     util.cargarLista({ // llenar los elementos de la lista desplegable de clientes
-    //         clase: 'Personal',
-    //         accion: 'listar',
-    //         listaSeleccionable: '#compra-vendedor',
-    //         clave: 'id_personal',
-    //         valor: 'nombre',
-    //         primerItem: 'Seleccione Personal'
-    //     }).then(() => {
-    //         $('#compra-proveedor').value = '';
-    //         M.FormSelect.init($('#compra-proveedor'));
-    //         this.crearListaProductos();
-    //     }).catch(error => {
-    //         util.mensaje(error);
-    //     });
-    // }
-
     /**
      * Intenta cargar la lista de productos que es posible seleccionar para la compra, si sucede 
      * algún error en esta parte, no se continúa configurando el formulario de compras, si hay
@@ -95,7 +77,8 @@ new class Compra {
             }
         }).then(productos => {
             if (productos.ok) {
-                this.crearLineasDeCompra(productos, this.calcularLineaCompra, this.calcularTotales, this.calcularTodo);
+                this.productos = productos;
+                this.crearLineasDeCompra(this.productos, this.calcularLineaCompra, this.calcularTotales, this.calcularTodo);
             } else {
                 throw new Error(productos.mensaje);
             }
@@ -232,8 +215,7 @@ new class Compra {
      */
     calcularLineaCompra(celda, productos) {
         let filaActual = celda.getRow().getData();
-        let idProducto = filaActual.producto.split('-')[0];
-        let producto = productos.lista_completa.find(obj => obj.id_producto == idProducto);
+        let producto = util.buscarProducto(filaActual.producto, productos);
 
         if (producto) {
             filaActual.valor = producto.precio;
@@ -259,10 +241,9 @@ new class Compra {
         }
 
         let compra = {
-            fecha_compra: $('#compra-fecha').value,
+            fecha_compra: $('#compra-fecha_pedido').value,
             fecha_recibido: $('#compra-fecha_recibido').value,
             proveedor: $('#compra-proveedor').value,
-            // vendedor: util.usuario.id,
             total: $('#compra-total').value,
             iva: $('#compra-iva').value,
             paga: $('#compra-paga').value,
@@ -282,6 +263,7 @@ new class Compra {
 
             // si todo sale bien se retorna el ID de la compra registrada
             if (data.ok) {
+                this.actualizarStock(compra.detalle);
                 $('#compra-numero').value = data.id_compra;
                 util.mensaje('', '<i class="material-icons">done</i> <p>  compra exitosa</p>', 'teal');
                 this.tablaCompras.clearData();
@@ -296,6 +278,19 @@ new class Compra {
             }
         }).catch(error => {
             util.mensaje(error, 'No se pudo determinar el ID de la siguiente compra');
+        });
+    }
+
+    /**
+     * Actualiza las cantidades disponibles de los productos afectados con la compra
+     * @param {Array} lineasDeCompra
+     */
+    actualizarStock(lineasDeCompra) {
+        lineasDeCompra.forEach((lineaCompra) => {
+            if (util.esNumero(lineaCompra.subtotal)) {
+                let producto = util.buscarProducto(lineaCompra.producto, this.productos);
+                producto.cantidad_disponible = producto.cantidad_disponible + lineaCompra.cantidad;
+            }
         });
     }
 
@@ -332,7 +327,7 @@ new class Compra {
     validarDatos() {
         let errores = '';
 
-        if (!moment($('#compra-fecha').value).isValid()) {
+        if (!moment($('#compra-fecha_pedido').value).isValid()) {
             errores += '<br>Fecha inválida';
         }
         if (!moment($('#compra-fecha_recibido').value).isValid()) {

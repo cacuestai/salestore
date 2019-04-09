@@ -87,4 +87,31 @@ class Conexion {
         }
     }
 
+    /**
+     * Verificar que sea un humano el que está accediendo al sistema
+     */
+    public static function validarCaptcha($param) {
+        $token = TRUE;
+        extract($param);
+
+        if (!$token) {
+            $ok = FALSE;
+        }
+
+        $respuesta = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret=' . CLAVE_RECAPTCHA . "&response=$token");
+        $respuesta = json_decode($respuesta, true);
+        $ok = (intval($respuesta["success"]) !== 1) ? FALSE : TRUE;
+
+        echo json_encode(["ok" => $ok, "token" => $token, "respuesta" => $respuesta]);
+    }
+
+    /*
+        Para corregir el error: failed loading cafile stream: `C:\xampp\apache\bin\curl-ca-bundle.crt':
+        Descargué curl-7.64.0_3-win64-mingw.zip de https://curl.haxx.se/windows/
+        Descomprimí y
+        Copie de ./curl-7.64.0-win64-mingw/bin el archivo a C:/xampp/apache/bin
+        Y listo
+        clave 123 = $2y$10$CqVjREFhgCa..y/uXfC.e.AepkmA/TD94CefP80Gq4TcLhWPyUeUu
+ */
+
 }

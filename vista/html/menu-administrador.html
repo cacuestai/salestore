@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Menú de la aplicación</title>
+</head>
+
+<body>
+    <ul id="menu-principal" class="sidenav">
+        <li>
+            <div class="user-view">
+                <div class="background">
+                    <img src="./vista/images/grid-fondo.jpg">
+                </div>
+
+                <a href="#user"><img class="circle" src="./vista/images/grid.jpg"></a>
+                <a href="#name"><span class="white-text name">Carlos Cuesta Iglesias</span></a>
+                <a href="#email"><span class="white-text email">carlos.cuesta@ucaldas.edu.co</span></a>
+            </div>
+        </li>
+
+        <ul class="collapsible collapsible-accordion">
+            <li>
+                <a class="collapsible-header waves-effect waves-light btn teal">Contactos<i class="material-icons">arrow_drop_down</i></a>
+                <div class="collapsible-body">
+                    <ul>
+                        <li><a id="menu-clientes" class="waves-effect waves-light btn sidenav-close"><i class="material-icons">people</i>Clientes</a></li>
+                        <li><a id="menu-personal" class="waves-effect waves-light btn sidenav-close"><i class="material-icons">group</i>Personal</a></li>
+                        <li><a id="menu-proveedores" class="waves-effect waves-light btn sidenav-close"><i class="material-icons">contacts</i>Proveedores</a></li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+
+        <li>
+            <div class="divider"></div>
+        </li>
+
+        <ul class="collapsible collapsible-accordion">
+            <li>
+                <a class="collapsible-header waves-effect waves-light btn teal">Sobre productos<i class="material-icons">arrow_drop_down</i></a>
+                <div class="collapsible-body">
+                    <ul>
+                        <li><a id="menu-categorias" class="waves-effect waves-light btn sidenav-close"><i class="material-icons">filter_none</i>Categorías</a></li>
+                        <li><a id="menu-presentaciones" class="waves-effect waves-light btn sidenav-close"><i class="material-icons">library_books</i>Presentaciones</a></li>
+                        <li><a id="menu-productos" class="waves-effect waves-light btn sidenav-close"><i class="material-icons">queue</i>Productos</a></li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+
+        <li><a id="menu-compras" class="waves-effect waves-light btn sidenav-close"><i class="material-icons">add_shopping_cart</i>Compras</a></li>
+        <li><a id="menu-bajas" class="waves-effect waves-light btn sidenav-close"><i class="material-icons">clear</i>Bajas</a></li>
+
+        <ul class="collapsible collapsible-accordion">
+            <li>
+                <a class="collapsible-header waves-effect waves-light btn teal">Devoluciones<i class="material-icons">arrow_drop_down</i></a>
+                <div class="collapsible-body">
+                    <ul>
+                        <li><a id="menu-devolucion_venta" class="waves-effect waves-light btn sidenav-close"><i class="material-icons">clear</i>Devolución venta</a></li>
+                        <li><a id="menu-devolucion_compra" class="waves-effect waves-light btn sidenav-close"><i class="material-icons">clear</i>Devolución compra</a></li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+
+        <li>
+            <div class="divider"></div>
+        </li>
+        <li><a id="menu-ventas" class="waves-effect waves-light btn sidenav-close"><i class="material-icons">add_shopping_cart</i>Ventas</a></li>
+
+        <ul class="collapsible collapsible-accordion">
+            <li>
+                <a class="collapsible-header waves-effect waves-light btn teal">Pagos<i class="material-icons">arrow_drop_down</i></a>
+                <div class="collapsible-body">
+                    <ul>
+                        <li><a id="menu-pago-clientes" class="waves-effect waves-light btn sidenav-close"><i class="material-icons">account_balance_wallet</i>Pagos de clientes</a></li>
+                        <li><a id="menu-pago-proveedores" class="waves-effect waves-light btn sidenav-close"><i class="material-icons">account_balance_wallet</i>Pagos a proveedores</a></li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+
+        <li>
+            <div class="divider"></div>
+        </li>
+        <li><a id="menu-btnacercade" class="waves-effect waves-light btn sidenav-close"><i class="material-icons">info</i>Acerca de...</a></li>
+    </ul>
+
+    <a href="#" data-target="menu-principal" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+</body>
+
+</html>

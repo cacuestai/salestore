@@ -10,9 +10,9 @@ class Producto implements Persistible {
         extract($param);
         $sql = "SELECT * FROM lista_productos ORDER BY nombre";
         // prepara la instrucción SQL para ejecutarla, luego recibir los parámetros de filtrado
-        $q = $conexion->pdo->prepare($sql);
-        $q->execute();
-        $filas = $q->fetchAll(PDO::FETCH_ASSOC); // devuelve un array que contiene todas las filas del conjunto de resultados
+        $instruccion = $conexion->pdo->prepare($sql);
+        $instruccion->execute();
+        $filas = $instruccion->fetchAll(PDO::FETCH_ASSOC); // devuelve un array que contiene todas las filas del conjunto de resultados
         echo json_encode($filas); // las filas resultantes son enviadas en formato JSON al frontend
     }
 
@@ -119,21 +119,15 @@ class Producto implements Persistible {
         if ($stmt = $conexion->pdo->query($sql, PDO::FETCH_OBJ)) {
             // se obtiene el array de objetos, cada uno con todos los datos de productos
             $listaCompleta = $stmt->fetchAll();
-            // si el array tiene elementos, se crea otro con sólo el ID y los datos esenciales de productos
-            if (count($listaCompleta)) {
-                $listaMinima = [];
-                for ($i = 0; $i < count($listaCompleta); $i++) {
-                    $listaMinima[] = $listaCompleta[$i]->id_producto . '-' . $listaCompleta[$i]->descripcion_producto;
-                    $listaCompleta[$i]->i = $i; // cada elemento de la lista completa "conoce" su posición
-                }
-                // se envían las dos listas al front-end
-                echo json_encode(['ok' => TRUE, 'lista_completa' => $listaCompleta, 'lista_minima' => $listaMinima]);
-            } else {
-                echo json_encode(['ok' => FALSE, 'mensaje' => 'No existen productos']);
+            // se crea otra lista con sólo el ID y los datos esenciales de productos
+            $listaMinima = [];
+            foreach ($listaCompleta as $fila) {
+                $listaMinima[] = $fila->id_producto . '-' . $fila->descripcion_producto;
             }
+            // se envían las dos listas al front-end
+            echo json_encode(['ok' => TRUE, 'lista_completa' => $listaCompleta, 'lista_minima' => $listaMinima]);
         } else {
             // si falla la ejecución se comunica del error al frontend
-            $conexion->errorInfo(stmt);
             echo json_encode(['ok' => FALSE, 'mensaje' => 'Imposible consultar el listado de productos']);
         }
     }

@@ -223,16 +223,16 @@ new class Proveedor {
 
         MaterialDialog.dialog( // ver https://github.com/rudmanmrrod/material-dialog
             "Va a eliminar un proveedor y están escasos. Por favor confirme la acción:", {
-                title: "Cuidado",
+                title: 'Cuidado',
                 dismissible: false,
                 buttons: {
                     close: {
-                        className: "red",
-                        text: "Cancelar",
+                        className: 'red darken-4',
+                        text: 'Cancelar',
                     },
                     confirm: {
-                        className: "blue",
-                        text: "Confirmar",
+                        className: 'teal',
+                        text: 'Confirmar',
                         callback: () => {
 
                             // se envía el ID del cliente al back-end para el eliminado y se actualiza la tabla

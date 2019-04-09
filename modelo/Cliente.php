@@ -12,9 +12,9 @@ class Cliente implements Persistible {
                    FROM clientes
                 ORDER BY nombre";
         // prepara la instrucción SQL para ejecutarla, luego recibir los parámetros de filtrado
-        $q = $conexion->pdo->prepare($sql);
-        $q->execute();
-        $filas = $q->fetchAll(PDO::FETCH_ASSOC); // devuelve un array que contiene todas las filas del conjunto de resultados
+        $instruccion = $conexion->pdo->prepare($sql);
+        $instruccion->execute();
+        $filas = $instruccion->fetchAll(PDO::FETCH_ASSOC); // devuelve un array que contiene todas las filas del conjunto de resultados
         echo json_encode($filas); // las filas resultantes son enviadas en formato JSON al frontend
     }
 
@@ -104,26 +104,28 @@ class Cliente implements Persistible {
     }
 
     public function listar($param) {
+        $opcion = 0;
         extract($param);
 
-        $sql = "SELECT id_cliente, nombre, telefonos, direccion, con_credito
-                    FROM clientes
-                    ORDER BY nombre";
+        if ($opcion == 1) { // filtrar sólo los clientes con ventas registradas
+            $sql = "SELECT DISTINCT v.id_cliente, nombre, telefonos, direccion, con_credito
+                        FROM clientes c
+                        INNER JOIN ventas v ON c.id_cliente = v.id_cliente
+                        ORDER BY nombre";
+        } else { // listar todos clientes
+            $sql = "SELECT id_cliente, nombre, telefonos, direccion, con_credito
+                        FROM clientes
+                        ORDER BY nombre";
+        }
 
         // se ejecuta la instrucción SQL, para obtener el conjunto de resultados (si los hay) como un objeto PDOStatement
         if ($stmt = $conexion->pdo->query($sql, PDO::FETCH_OBJ)) {
             // se obtiene el array de objetos con las posibles filas obtenidas
             $lista = $stmt->fetchAll();
-            // si la lista tiene elementos, se envía al frontend, si no, se envía un mensaje de error
-            if (count($lista)) {
-                echo json_encode(['ok' => TRUE, 'lista' => $lista]);
-            } else {
-                echo json_encode(['ok' => FALSE, 'mensaje' => 'No existen clientes']);
-            }
+            echo json_encode(['ok' => TRUE, 'lista' => $lista]);
         } else {
             // si falla la ejecución se comunica del error al frontend
-            $conexion->errorInfo(stmt);
-            echo json_encode(['ok' => FALSE, 'mensaje' => 'Imposible consultar el listado de clientes']);
+            echo json_encode(['ok' => FALSE, 'mensaje' => 'Fallo al hacer la consulta de clientes']);
         }
     }
 

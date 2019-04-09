@@ -3,5 +3,6 @@
     "SERVIDOR": "localhost",
     "PUERTO": "5432",
     "USUARIO": "postgres",
-    "CONTRASENA": "XXXXXXXX"
+    "CONTRASENA": "XXXXXXXX",
+    "CLAVE_RECAPTCHA": "6Le7-FkUAAAAADDSsTVBvpoUB5MkesNKgPVemFf-UD"
 }

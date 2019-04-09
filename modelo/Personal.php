@@ -12,12 +12,12 @@ class Personal implements Persistible {
                     FROM personal
                 ORDER BY nombre";
         // prepara la instrucción SQL para ejecutarla, luego recibir los parámetros de filtrado
-        $q = $conexion->pdo->prepare($sql);
-        $q->execute();
-        $filas = $q->fetchAll(PDO::FETCH_ASSOC); // devuelve un array que contiene todas las filas del conjunto de resultados
+        $instruccion = $conexion->pdo->prepare($sql);
+        $instruccion->execute();
+        $filas = $instruccion->fetchAll(PDO::FETCH_ASSOC); // devuelve un array que contiene todas las filas del conjunto de resultados
         echo json_encode($filas); // las filas resultantes son enviadas en formato JSON al frontend
     }
-    
+
     /**
      * Inserta un registro de personal en la base de datos
      */
@@ -32,7 +32,7 @@ class Personal implements Persistible {
         $instruccion = $conexion->pdo->prepare($sql);
 
         if ($instruccion) {
-            $data['contrasena'] = password_hash($data['contrasena'], PASSWORD_BCRYPT);
+            $data['contrasena'] = password_hash($data['contrasena'], PASSWORD_DEFAULT);
             $instruccion->bindParam(':id_persona', $data['id_persona']);
             $instruccion->bindParam(':nombre', $data['nombre']);
             $instruccion->bindParam(':telefono', $data['telefono']);
@@ -114,16 +114,35 @@ class Personal implements Persistible {
         if ($stmt = $conexion->pdo->query($sql, PDO::FETCH_OBJ)) {
             // se obtiene el array de objetos con las posibles filas obtenidas
             $lista = $stmt->fetchAll();
-            // si la lista tiene elementos, se envía al frontend, si no, se envía un mensaje de error
-            if (count($lista)) {
-                echo json_encode(['ok' => TRUE, 'lista' => $lista]);
-            } else {
-                echo json_encode(['ok' => FALSE, 'mensaje' => 'No existe registro de personal']);
-            }
+            echo json_encode(['ok' => TRUE, 'lista' => $lista]);
         } else {
             // si falla la ejecución se comunica del error al frontend
-            $conexion->errorInfo(stmt);
             echo json_encode(['ok' => FALSE, 'mensaje' => 'Imposible consultar el personal']);
+        }
+    }
+
+    public function autenticar($param) {
+        extract($param);
+
+        $sql = "SELECT id_persona, nombre, perfil, contrasena FROM personal
+                   WHERE id_persona = :id_persona";
+
+        $instruccion = $conexion->pdo->prepare($sql);
+        if ($instruccion) {
+            $instruccion->bindParam(':id_persona', $idPersona);
+            if ($instruccion->execute()) {
+                $usuario = $instruccion->fetch(PDO::FETCH_ASSOC);
+                if (password_verify($contrasena, $usuario['contrasena'])) {
+                    unset($usuario['contrasena']); // no se envía la contraseña al front-end
+                    echo json_encode(["ok" => TRUE, "usuario" => $usuario]);
+                } else {
+                    echo json_encode(["ok" => FALSE, "mensaje" => "Falló la autenticación del usuario"]);
+                }
+            } else {
+                echo $conexion->errorInfo($instruccion);
+            }
+        } else {
+            echo json_encode(['ok' => FALSE, 'mensaje' => 'Falló el acceso a los datos del usuario']);
         }
     }
 

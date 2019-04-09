@@ -1,4 +1,4 @@
-/* Tabulator v4.2.3 (c) Oliver Folkerd */
+/* Tabulator v4.2.5 (c) Oliver Folkerd */
 
 var ReactiveData = function ReactiveData(table) {
 	this.table = table; //hold Tabulator object
@@ -139,11 +139,11 @@ ReactiveData.prototype.watchData = function (data) {
 				if (end !== 0) {
 					var oldRows = data.slice(start, typeof args[1] === "undefined" ? args[1] : start + end);
 
-					oldRows.forEach(function (rowData) {
+					oldRows.forEach(function (rowData, i) {
 						var row = self.table.rowManager.getRowFromDataObject(rowData);
 
 						if (row) {
-							row.deleteActual(true);
+							row.deleteActual(i !== oldRows.length - 1);
 						}
 					});
 				}

@@ -16,7 +16,6 @@ class PagoCliente implements Persistible {
         $instruccion = $conexion->pdo->prepare($sql);
         if ($instruccion) {
             if ($instruccion->execute([':cliente' => $cliente])) {
-                $info = $conexion->errorInfo($instruccion, FALSE);
                 $filas = $instruccion->fetchAll(PDO::FETCH_ASSOC); // devuelve un array que contiene todas las filas del conjunto de resultados
                 echo json_encode($filas); // las filas resultantes son enviadas en formato JSON al frontend
             } else {

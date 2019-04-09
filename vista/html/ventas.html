@@ -11,61 +11,75 @@
 
 <body>
 
-    <div class="card-panel">
-        <div class="row">
-            <div class="input-field col s2">
-                <input id="venta-fecha" type="text" class="datepicker">
-                <label for="venta-fecha" class="active">Fecha</label>
-            </div>
-            <div class="input-field col s2">
-                <input id="venta-numero" type="text" class="active" readonly>
-                <label for="venta-numero" class="active">Venta</label>
-            </div>
-            <div class="input-field col s4">
-                <select id="venta-cliente"></select>
-                <label for="venta-cliente">Cliente</label>
-            </div>
-            <div class="input-field col s4">
-                <input id="venta-vendedor" type="text" class="active" readonly>
-                <label for="venta-vendedor" class="active">Vendedor</label>
-            </div>
-        </div>
+    <ul id="ventas-opciones" class="collapsible">
+        <li class="active">
+            <div class="collapsible-header"><i class="material-icons">add_shopping_cart</i>Registro de ventas</div>
+            <div class="collapsible-body">
+                <div class="row">
+                    <div class="input-field col s2">
+                        <input id="venta-fecha" type="text" class="datepicker">
+                        <label for="venta-fecha" class="active">Fecha</label>
+                    </div>
+                    <div class="input-field col s2">
+                        <input id="venta-numero" type="text" class="active" readonly>
+                        <label for="venta-numero" class="active">Venta</label>
+                    </div>
+                    <div class="input-field col s4">
+                        <select id="venta-cliente"></select>
+                        <label for="venta-cliente">Cliente</label>
+                    </div>
+                    <div class="input-field col s4">
+                        <input id="venta-vendedor" type="text" class="active" readonly>
+                        <label for="venta-vendedor" class="active">Vendedor</label>
+                    </div>
+                </div>
 
-        <nav class="nav-wrapper teal lighten-5">
-            <a class="blue-grey-text">&nbsp;<b>Detalle de la venta</b></a>
-            <ul class="right">
-                <li id="venta-btnagregar"><a class="btn-floating"><i class="material-icons">add</i></a></li>
-            </ul>
-        </nav>
+                <nav class="nav-wrapper teal lighten-5">
+                    <a class="blue-grey-text">&nbsp;<b>Detalle de la venta</b></a>
+                    <ul class="right">
+                        <li id="venta-btnagregar"><a class="btn-floating"><i class="material-icons">add</i></a></li>
+                    </ul>
+                </nav>
 
-        <div id="tabla-ventas"></div>
+                <div id="tabla-lineas_venta"></div>
 
-        <div class="row">
-            <div class="input-field col s3">
-                <input id="venta-paga" type="text" class="active">
-                <label for="venta-paga" class="active">Paga</label>
-            </div>
-            <div class="input-field col s3">
-                <input id="venta-adeuda" type="text" class="active" readonly>
-                <label for="venta-adeuda" class="active">Adeuda</label>
-            </div>
-            <div class="input-field col s3">
-                <input id="venta-total" type="text" class="active" readonly>
-                <label for="venta-total" class="active">Total de la venta</label>
-            </div>
-            <div class="input-field col s3">
-                <input id="venta-iva" type="text" class="active" readonly>
-                <label for="venta-iva" class="active">Total de IVA</label>
-            </div>
-        </div>
+                <div class="row">
+                    <div class="input-field col s3">
+                        <input id="venta-paga" type="text" class="active">
+                        <label for="venta-paga" class="active">Paga</label>
+                    </div>
+                    <div class="input-field col s3">
+                        <input id="venta-adeuda" type="text" class="active" readonly>
+                        <label for="venta-adeuda" class="active">Adeuda</label>
+                    </div>
+                    <div class="input-field col s3">
+                        <input id="venta-total" type="text" class="active" readonly>
+                        <label for="venta-total" class="active">Total de la venta</label>
+                    </div>
+                    <div class="input-field col s3">
+                        <input id="venta-iva" type="text" class="active" readonly>
+                        <label for="venta-iva" class="active">Total de IVA</label>
+                    </div>
+                </div>
 
-        <nav class="nav-wrapper grey lighten-2">
-            <ul class="right hide-on-med-and-down">
-                <li><a id="venta-cancelar" class="waves-effect waves-light btn">Cancelar venta <i class="material-icons right">clear</i></a></li>
-                <li><a id="venta-registrar" class="waves-effect waves-light btn">Registrar venta <i class="material-icons right">send</i></a></li>
-            </ul>
-        </nav>
-    </div>
+                <nav class="nav-wrapper grey lighten-2">
+                    <ul class="right hide-on-med-and-down">
+                        <li><a id="venta-cancelar" class="waves-effect waves-light btn">Cancelar venta <i class="material-icons right">clear</i></a></li>
+                        <li><a id="venta-registrar" class="waves-effect waves-light btn">Registrar venta <i class="material-icons right">send</i></a></li>
+                    </ul>
+                </nav>
+            </div>
+        </li>
+
+        <li id="venta-listado">
+            <div class="collapsible-header"><i class="material-icons">filter_none</i>Listado de ventas</div>
+            <div class="collapsible-body">
+                <div id="tabla-ventas">
+                    <!-- aquí se incrusta desde JS una tabla con reporte de ventas -->
+                </div>
+            </div>
+        </li>
+    </ul>
 
 </body>
 

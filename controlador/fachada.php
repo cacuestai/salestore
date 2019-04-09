@@ -12,7 +12,7 @@ class Controlador {
         try {
             // por seguridad sólo recibir solicitudes por POST, evitar GET
             if ($_SERVER["REQUEST_METHOD"] !== 'POST') {
-                throw new Exception("Método de solicitud no permitida");
+                throw new Exception("Modo de solicitud no permitido");
             }
             $contentType = isset($_SERVER["CONTENT_TYPE"]) ? trim($_SERVER["CONTENT_TYPE"]) : '';
 
@@ -97,13 +97,14 @@ class Controlador {
         // --------------------------------------------------------------------------------------
         session_start();
 
-        $conexionDB = json_decode(file_get_contents("../servicios/varios/conexion.json"), TRUE);
+        $configuracion = json_decode(file_get_contents("../servicios/varios/conexion.json"), TRUE);
 
-        define('BASE_DATOS', $conexionDB['BASE_DATOS']);
-        define('SERVIDOR', $conexionDB['SERVIDOR']);
-        define('PUERTO', $conexionDB['PUERTO']);
-        define('USUARIO', $conexionDB['USUARIO']);
-        define('CONTRASENA', $conexionDB['CONTRASENA']);
+        define('BASE_DATOS', $configuracion['BASE_DATOS']);
+        define('SERVIDOR', $configuracion['SERVIDOR']);
+        define('PUERTO', $configuracion['PUERTO']);
+        define('USUARIO', $configuracion['USUARIO']);
+        define('CONTRASENA', $configuracion['CONTRASENA']);
+        define('CLAVE_RECAPTCHA', $configuracion['CLAVE_RECAPTCHA']);
 
         include_once "../servicios/util/Conexion.php";
         //  require '../vendor/autoload.php'; // si se usa composer

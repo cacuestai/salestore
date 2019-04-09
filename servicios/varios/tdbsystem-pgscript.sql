@@ -23,6 +23,10 @@ DROP TABLE IF EXISTS detalles_compras;
 DROP TABLE IF EXISTS devoluciones_compras CASCADE;
 DROP TABLE IF EXISTS detalles_devoluciones_compras;
 
+DROP VIEW IF EXISTS lista_devoluciones_ventas CASCADE;
+DROP VIEW IF EXISTS lista_detalles_ventas CASCADE;
+DROP VIEW IF EXISTS lista_detalles_ventas_agrupadas CASCADE;
+DROP VIEW IF EXISTS lista_devoluciones_ventas_agrupadas CASCADE;
 DROP VIEW IF EXISTS lista_productos CASCADE;
 
 DROP FUNCTION IF EXISTS insertar_producto CASCADE;
@@ -33,6 +37,7 @@ DROP FUNCTION IF EXISTS maximo;
 DROP FUNCTION IF EXISTS insertar_pago_cliente;
 DROP FUNCTION IF EXISTS insertar_baja_producto;
 DROP FUNCTION IF EXISTS insertar_compra;
+DROP FUNCTION IF EXISTS insertar_devolucion_venta;
 
 DROP TYPE IF EXISTS tipo_detalle CASCADE;
 
@@ -480,55 +485,55 @@ INSERT INTO productos(nombre, precio, cantidad_disponible, cantidad_minima, cant
 -------------------------------------	
 
 INSERT INTO personal(id_persona, nombre, telefono, direccion, perfil, contrasena)
-	VALUES('001','Jorge Pérez','8530001','Cra.3#10-34','Administrador','827ccb0eea8a706c4c34a16891f84e7b')
+	VALUES('001','Jorge Pérez','8530001','Cra.3#10-34','Administrador','$2y$10$H.j77qRgZ6gm7ua7vOciLOSr3JQiG3g7fa3RLxPcYv2HNObCn673y')
 	ON CONFLICT DO NOTHING;
 	
 INSERT INTO personal(id_persona, nombre, telefono, direccion, perfil, contrasena)
-	VALUES('002','Valeria Mejia Zapata','8536345','Cra.5#19-37','Vendedor','827ccb0eea8a706c4c34a16891f84e7b')
+	VALUES('002','Valeria Mejia Zapata','8536345','Cra.5#19-37','Vendedor','$2y$10$H.j77qRgZ6gm7ua7vOciLOSr3JQiG3g7fa3RLxPcYv2HNObCn673y')
 	ON CONFLICT DO NOTHING;
 	
 INSERT INTO personal(id_persona, nombre, telefono, direccion, perfil, contrasena)
-	VALUES('003','Juan Bermudez Duque','8531235','Cra.1#11-23','Vendedor','827ccb0eea8a706c4c34a16891f84e7b')
+	VALUES('003','Juan Bermudez Duque','8531235','Cra.1#11-23','Vendedor','$2y$10$H.j77qRgZ6gm7ua7vOciLOSr3JQiG3g7fa3RLxPcYv2HNObCn673y')
 	ON CONFLICT DO NOTHING;
 
 INSERT INTO personal(id_persona, nombre, telefono, direccion, perfil, contrasena)
-	VALUES('004','Carlos Franco','3237059840','Calle 15 #30-17','Administrador','akm12')
+	VALUES('004','Carlos Franco','3237059840','Calle 15 #30-17','Administrador','$2y$10$H.j77qRgZ6gm7ua7vOciLOSr3JQiG3g7fa3RLxPcYv2HNObCn673y')
 	ON CONFLICT DO NOTHING;
 
 INSERT INTO personal(id_persona, nombre, telefono, direccion, perfil, contrasena)
-	VALUES('005','Edgar Velez','3157059840','Calle 25 #32-17','Vendedor','bkm13')
+	VALUES('005','Edgar Velez','3157059840','Calle 25 #32-17','Vendedor','$2y$10$H.j77qRgZ6gm7ua7vOciLOSr3JQiG3g7fa3RLxPcYv2HNObCn673y')
 	ON CONFLICT DO NOTHING;
 
 INSERT INTO personal(id_persona, nombre, telefono, direccion, perfil, contrasena)
-	VALUES('006','Cristian Aristi','3183059840','Calle 95 #90-17','Vendedor','ckm14')
+	VALUES('006','Cristian Aristi','3183059840','Calle 95 #90-17','Vendedor','$2y$10$H.j77qRgZ6gm7ua7vOciLOSr3JQiG3g7fa3RLxPcYv2HNObCn673y')
 	ON CONFLICT DO NOTHING;
 
 INSERT INTO personal(id_persona, nombre, telefono, direccion, perfil, contrasena)
-	VALUES('007','Jose Londoño','3111059840','Calle 65 #10-27','Vendedor','dkm15')
+	VALUES('007','Jose Londoño','3111059840','Calle 65 #10-27','Vendedor','$2y$10$H.j77qRgZ6gm7ua7vOciLOSr3JQiG3g7fa3RLxPcYv2HNObCn673y')
 	ON CONFLICT DO NOTHING;
 
 INSERT INTO personal(id_persona, nombre, telefono, direccion, perfil, contrasena)
-	VALUES('008','Juan Duran','3104059840','Calle 65 #50-57','Vendedor','ekm16')
+	VALUES('008','Juan Duran','3104059840','Calle 65 #50-57','Vendedor','$2y$10$H.j77qRgZ6gm7ua7vOciLOSr3JQiG3g7fa3RLxPcYv2HNObCn673y')
 	ON CONFLICT DO NOTHING;
 
 INSERT INTO personal(id_persona, nombre, telefono, direccion, perfil, contrasena)
-	VALUES('009','Maria Gomez','3110059840','Calle 65 #30-10','Vendedor','fkm17')
+	VALUES('009','Maria Gomez','3110059840','Calle 65 #30-10','Vendedor','$2y$10$H.j77qRgZ6gm7ua7vOciLOSr3JQiG3g7fa3RLxPcYv2HNObCn673y')
 	ON CONFLICT DO NOTHING;
 
 INSERT INTO personal(id_persona, nombre, telefono, direccion, perfil, contrasena)
-	VALUES('010','Liliana Franco','3112059840','Calle 65 #30-40','Administrador','jkm18')
+	VALUES('010','Liliana Franco','3112059840','Calle 65 #30-40','Administrador','$2y$10$H.j77qRgZ6gm7ua7vOciLOSr3JQiG3g7fa3RLxPcYv2HNObCn673y')
 	ON CONFLICT DO NOTHING;
 
 INSERT INTO personal(id_persona, nombre, telefono, direccion, perfil, contrasena)
-	VALUES('011','Ana Solarte','3135459840','Calle 65 #12-11','Vendedor','hkm19')
+	VALUES('011','Ana Solarte','3135459840','Calle 65 #12-11','Vendedor','$2y$10$H.j77qRgZ6gm7ua7vOciLOSr3JQiG3g7fa3RLxPcYv2HNObCn673y')
 	ON CONFLICT DO NOTHING;
 
 INSERT INTO personal(id_persona, nombre, telefono, direccion, perfil, contrasena)
-	VALUES('012','Josefa Franco','3106059840','Calle 65 #20-17','Vendedor','ikm10')
+	VALUES('012','Josefa Franco','3106059840','Calle 65 #20-17','Vendedor','$2y$10$H.j77qRgZ6gm7ua7vOciLOSr3JQiG3g7fa3RLxPcYv2HNObCn673y')
 	ON CONFLICT DO NOTHING;
 
 INSERT INTO personal(id_persona, nombre, telefono, direccion, perfil, contrasena)
-	VALUES('013','Jenny Franco','3114059840','Calle 65 #10-17','Administrador','jkm21')
+	VALUES('013','Jenny Franco','3114059840','Calle 65 #10-17','Administrador','$2y$10$H.j77qRgZ6gm7ua7vOciLOSr3JQiG3g7fa3RLxPcYv2HNObCn673y')
 	ON CONFLICT DO NOTHING;
 
 -------------------------------------	
@@ -615,6 +620,101 @@ CREATE OR REPLACE VIEW lista_productos AS
 				INNER JOIN presentaciones_productos pp ON p.id_presentacion_producto = pp.id_presentacion_producto
 			ORDER BY p.nombre, pp.descripcion;
 
+CREATE OR REPLACE VIEW lista_detalles_ventas AS
+ SELECT v.id_venta,
+    v.fecha_venta,
+    dv.id_detalle_venta,
+    dv.id_producto AS producto,
+    lp.descripcion_producto,
+    dv.cantidad AS vendido,
+    dv.valor_producto,
+    dv.cantidad::numeric * dv.valor_producto AS total_linea
+   FROM detalles_ventas dv
+     JOIN lista_productos lp ON dv.id_producto = lp.id_producto
+     JOIN ventas v ON v.id_venta = dv.id_venta;
+
+CREATE OR REPLACE VIEW lista_detalles_ventas_agrupadas AS
+ SELECT ldv.id_venta,
+    ldv.fecha_venta,
+    ldv.producto,
+    ldv.descripcion_producto,
+    sum(ldv.vendido) AS vendido,
+    ldv.valor_producto
+   FROM lista_detalles_ventas ldv
+  GROUP BY ldv.id_venta, ldv.fecha_venta, ldv.producto, ldv.descripcion_producto, ldv.valor_producto;
+	
+CREATE OR REPLACE VIEW lista_devoluciones_ventas AS
+ SELECT v.id_venta,
+    dv.id_devolucion_venta,
+    dv.fecha AS fecha_devolucion,
+    ddv.id_detalle_devolucion_venta,
+    ddv.id_producto,
+    lp.descripcion_producto,
+    ddv.cantidad AS cantidad_devuelta,
+    lp.precio
+   FROM detalles_devoluciones_ventas ddv
+     JOIN devoluciones_ventas dv ON ddv.id_devolucion_venta = dv.id_devolucion_venta
+     JOIN lista_productos lp ON ddv.id_producto = lp.id_producto
+     JOIN ventas v ON dv.id_venta = v.id_venta;
+
+CREATE OR REPLACE VIEW lista_devoluciones_ventas_agrupadas AS
+ SELECT l.id_venta,
+    l.fecha_devolucion,
+    l.id_producto,
+    l.descripcion_producto,
+    sum(l.cantidad_devuelta) AS total_devuelto,
+    l.precio
+   FROM lista_devoluciones_ventas l
+  GROUP BY l.id_venta, l.fecha_devolucion, l.id_producto, l.descripcion_producto, l.precio;
+
+CREATE OR REPLACE VIEW lista_detalles_compras AS
+ SELECT c.id_compra,
+    c.fecha_compra,
+    dc.id_detalle_compra,
+    dc.id_producto AS producto,
+    lp.descripcion_producto,
+    dc.cantidad_pedida,
+	dc.cantidad_recibida,
+    dc.valor_producto,
+    dc.cantidad_recibida::numeric * dc.valor_producto AS total_linea
+   FROM detalles_compras dc
+     JOIN lista_productos lp ON dc.id_producto = lp.id_producto
+     JOIN compras c ON c.id_compra = dc.id_compra;
+	 
+CREATE OR REPLACE VIEW lista_devoluciones_compras AS
+ SELECT c.id_compra,
+    dc.id_devolucion_compra,
+    dc.fecha_devolucion,
+    ddc.id_detalle_devolucion_compra,
+    ddc.id_producto,
+    lp.descripcion_producto,
+    ddc.cantidad,
+    lp.precio
+   FROM detalles_devoluciones_compras ddc
+     JOIN devoluciones_compras dc ON ddc.id_devolucion_compra = dc.id_devolucion_compra
+     JOIN lista_productos lp ON ddc.id_producto = lp.id_producto
+     JOIN compras c ON dc.id_compra = c.id_compra;
+	 
+CREATE OR REPLACE VIEW lista_detalles_compras_agrupadas AS
+ SELECT ldc.id_compra,
+    ldc.fecha_compra,
+    ldc.producto,
+    ldc.descripcion_producto,
+    sum(ldc.cantidad_recibida) AS recibido,
+    ldc.valor_producto
+   FROM lista_detalles_compras ldc
+  GROUP BY ldc.id_compra, ldc.fecha_compra, ldc.producto, ldc.descripcion_producto, ldc.valor_producto;
+
+CREATE OR REPLACE VIEW lista_devoluciones_compras_agrupadas AS
+ SELECT l.id_compra,
+    l.fecha_devolucion,
+    l.id_producto,
+    l.descripcion_producto,
+    sum(l.cantidad) AS total_devuelto,
+    l.precio
+   FROM lista_devoluciones_compras l
+  GROUP BY l.id_compra, l.fecha_devolucion, l.id_producto, l.descripcion_producto, l.precio;
+
 CREATE OR REPLACE FUNCTION insertar_presentacion(descripcion_presentacion character varying)
     RETURNS integer
     LANGUAGE 'plpgsql'
@@ -629,7 +729,7 @@ BEGIN
 	RETURN idpresentacion;
 END;
 $BODY$;
-
+	
 CREATE OR REPLACE FUNCTION insertar_categoria(nombre_categoria character varying)
     RETURNS integer
     LANGUAGE 'plpgsql'
@@ -696,7 +796,8 @@ BEGIN
 END;
 $BODY$;
 
--- Un bloque anónimo para la creación controlada de un tipo necesario para la inserción de detalles de ventas/compras
+-- Un bloque anónimo para la creación controlada de un tipos necesario para la inserción de detalles de ventas/compras
+-- y l inserción de devoluciones ventas/compras
 
 DO $$
 BEGIN
@@ -801,7 +902,7 @@ BEGIN
 	SELECT (datos_compra#>>'{total}')::FLOAT FROM json_each(datos_compra) WHERE key = 'total' INTO total;
 	SELECT (datos_compra#>>'{iva}')::FLOAT FROM json_each(datos_compra) WHERE key = 'iva' INTO iva;
 	SELECT (datos_compra#>>'{paga}')::FLOAT FROM json_each(datos_compra) WHERE key = 'paga' INTO paga;
-	
+
 	credito = total - paga;
 	
 	INSERT INTO compras(fecha_compra, fecha_recibido, total_credito, total_contado, id_proveedor)
@@ -816,7 +917,7 @@ BEGIN
 				-- recupera el JSON correspondiente a la propiedad 'detalle'
 				SELECT value FROM json_each(datos_compra) WHERE key = 'detalle')
 			) LOOP
-			
+
 			i = strpos(linea_compra.producto, '-') - 1;
 			idproducto = substr(linea_compra.producto, 1, i);
 			
@@ -834,6 +935,98 @@ BEGIN
 END;
 $BODY$;
 
+-- la función que registra devoluciones por venta, los detalles de devolución por ventas y afecta el stock de productos
+
+CREATE OR REPLACE FUNCTION insertar_devolucion_venta(datos_devolucion JSON)
+    RETURNS integer
+    LANGUAGE 'plpgsql'
+AS $BODY$
+DECLARE
+	i INTEGER;
+	iddevolucion INTEGER;
+	idproducto INTEGER;
+	fecha DATE;
+	venta INTEGER;
+	linea_devolucion RECORD;
+BEGIN
+	iddevolucion = 0;
+	-- transfiere a variables las propiedades del objeto JSON 'datos_devolucion', excepto el array 'detalle'
+	SELECT (datos_devolucion#>>'{fecha}')::DATE FROM json_each(datos_devolucion) WHERE key = 'fecha' INTO fecha;
+	SELECT (datos_devolucion#>>'{venta}')::INTEGER FROM json_each(datos_devolucion) WHERE key = 'venta' INTO venta;
+	
+	INSERT INTO devoluciones_ventas(id_venta, fecha) VALUES (venta, fecha) RETURNING id_devolucion_venta INTO iddevolucion;
+	
+	IF iddevolucion > 0 THEN
+		-- recorre las filas correspondientes a cada detalle de devoluciones por venta
+		FOR linea_devolucion IN
+			-- expande el array de objetos 'detalle' a un conjunto de filas de tipo 'tipo_detalle'
+			SELECT * FROM json_populate_recordset(null::tipo_detalle, (
+				-- recupera el JSON correspondiente a la propiedad 'detalle'
+				SELECT value FROM json_each(datos_devolucion) WHERE key = 'detalle')
+			) LOOP
+			
+			idproducto = linea_devolucion.producto::integer; -- un cast de varchar a integer
+			
+			-- por cada detalle, inserta una línea de devolucion.
+			INSERT INTO detalles_devoluciones_ventas(id_devolucion_venta, id_producto, cantidad)
+				VALUES (iddevolucion, idproducto, linea_devolucion.cantidad);
+
+			-- en productos, agregar la cantidad devuelta a la cantidad_disponible 
+			UPDATE productos SET cantidad_disponible = cantidad_disponible + linea_devolucion.cantidad 
+				WHERE id_producto = idproducto;
+		END LOOP;
+	END IF;
+	
+	RETURN iddevolucion;
+END;
+$BODY$;
+
+-- la función que registra devoluciones por venta, los detalles de devolución por ventas y afecta el stock de productos
+
+CREATE OR REPLACE FUNCTION insertar_devolucion_compra(datos_devolucion JSON)
+    RETURNS integer
+    LANGUAGE 'plpgsql'
+AS $BODY$
+DECLARE
+	i INTEGER;
+	iddevolucion INTEGER;
+	idproducto INTEGER;
+	fecha DATE;
+	compra INTEGER;
+	linea_devolucion RECORD;
+BEGIN
+	iddevolucion = 0;
+	-- transfiere a variables las propiedades del objeto JSON 'datos_devolucion', excepto el array 'detalle'
+	SELECT (datos_devolucion#>>'{fecha}')::DATE FROM json_each(datos_devolucion) WHERE key = 'fecha' INTO fecha;
+	SELECT (datos_devolucion#>>'{compra}')::INTEGER FROM json_each(datos_devolucion) WHERE key = 'compra' INTO compra;
+	
+	INSERT INTO devoluciones_compras(id_compra, fecha_devolucion) VALUES (compra, fecha) RETURNING id_devolucion_compra INTO iddevolucion;
+	
+	IF iddevolucion > 0 THEN
+		-- recorre las filas correspondientes a cada detalle de devoluciones por compra
+		FOR linea_devolucion IN
+			-- expande el array de objetos 'detalle' a un conjunto de filas de tipo 'tipo_detalle'
+			SELECT * FROM json_populate_recordset(null::tipo_detalle, (
+				-- recupera el JSON correspondiente a la propiedad 'detalle'
+				SELECT value FROM json_each(datos_devolucion) WHERE key = 'detalle')
+			) LOOP
+			
+			idproducto = linea_devolucion.producto::integer; -- un cast de varchar a integer
+			
+			-- por cada detalle, inserta una línea de devolucion.
+			INSERT INTO detalles_devoluciones_compras(id_devolucion_compra, id_producto, cantidad)
+				VALUES (iddevolucion, idproducto, linea_devolucion.cantidad);
+
+			-- en productos, agregar la cantidad devuelta a la cantidad_disponible 
+			UPDATE productos SET cantidad_disponible = cantidad_disponible - linea_devolucion.cantidad 
+				WHERE id_producto = idproducto;
+		END LOOP;
+	END IF;
+	
+	RETURN iddevolucion;
+END;
+$BODY$;
+
 CREATE OR REPLACE FUNCTION insertar_pago_cliente(cliente character varying, valor numeric, fecha date) RETURNS integer
     LANGUAGE 'plpgsql'
 AS $BODY$
@@ -843,6 +1036,19 @@ BEGIN
 	idpago = 0;
 	INSERT INTO pagos_clientes(id_cliente, valor_pago, fecha_pago) VALUES (cliente, valor, fecha)
 		RETURNING id_pago_cliente into idpago;
+	RETURN idpago;
+END;
+$BODY$;
+
+CREATE OR REPLACE FUNCTION insertar_pago_proveedor(proveedor character varying, valor numeric, fecha date) RETURNS integer
+    LANGUAGE 'plpgsql'
+AS $BODY$
+   DECLARE
+      idpago integer;
+BEGIN
+	idpago = 0;
+	INSERT INTO pagos_proveedores(id_proveedor, valor_pago, fecha_pago) VALUES (proveedor, valor, fecha)
+		RETURNING id_pago_proveedor into idpago;
 	RETURN idpago;
 END;
 $BODY$;

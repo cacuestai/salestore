@@ -6,8 +6,7 @@
 new class BajaProducto {
 
     constructor() {
-        this.producto;
-        this.productos;
+        this.producto; // "referencia" al último elemento de la lista de productos, seleccionado mediante autocompletar
         this.inicializar();
     }
 
@@ -16,11 +15,11 @@ new class BajaProducto {
      */
     inicializar() {
 
-        // M.Datepicker.init($('#baja-fecha'), {
-        //     format: 'yyyy-mm-dd', // el formato de fecha utilizado por Postgres
-        //     i18n: util.datePickerES, // el idioma para el componente 
-        //     defaultDate: new Date() // hoy como fecha por defecto
-        // });
+        M.Datepicker.init($('#baja-fecha'), {
+            format: 'yyyy-mm-dd', // el formato de fecha utilizado por Postgres
+            i18n: util.datePickerES, // el idioma para el componente 
+            defaultDate: new Date() // hoy como fecha por defecto
+        });
 
         // se muestra la fecha de hoy formateada utilizando moment.js
         $('#baja-fecha').value = moment(new Date()).format('YYYY-MM-DD');
@@ -42,8 +41,7 @@ new class BajaProducto {
                 }).then(productos => {
                     if (productos.ok) {
                         delete productos.ok;
-                        this.productos = productos;
-                        this.crearListaProductos();
+                        this.crearListaProductos(productos);
                     } else {
                         throw new Error(productos.mensaje);
                     }
@@ -65,19 +63,15 @@ new class BajaProducto {
      * @param {Object} productos Un objeto con un array de nombres y con otro array 
      * que contiene todos los datos de objetos. 
      */
-    crearListaProductos() {
+    crearListaProductos(productos) {
         M.Autocomplete.init($('#baja-producto'), {
             // convierte el array lista_minima en un objeto para utilizarlo con Materialize.autocomplete
-            data: this.productos.lista_minima.reduce((resultado, item) => {
+            data: productos.lista_minima.reduce((resultado, item) => {
                 resultado[item] = ''
                 return resultado;
             }, {}),
             onAutocomplete: (item) => {
-                // extraer el ID del producto (éste precede a cada nombre de la lista)
-                let idProducto = item.split('-')[0];
-                // utilizar dicho ID para buscar un objeto con los datos del producto
-                // y guardar su referencia a nivel de clase
-                this.producto = this.productos.lista_completa.find(obj => obj.id_producto == idProducto);
+                this.producto = util.buscarProducto(item, productos);
                 // mostrar datos relevantes del producto del que se va a realizar la baja
                 $('#baja-disponible').value = this.producto.cantidad_disponible;
                 $('#baja-minimo').value = this.producto.cantidad_minima;
@@ -126,8 +120,8 @@ new class BajaProducto {
                 $('#baja-minimo').value = '';
                 $('#baja-maximo').value = '';
                 $('#baja-motivo').selectedIndex = 0;
-                // un producto "conoce" su posición (i) en la lista. Gracias a ello se puede actualizar la cantidad disponible
-                this.productos.lista_completa[this.producto.i].cantidad_disponible = this.producto.cantidad_disponible - baja.cantidad;
+                // dado que this.producto es una "referencia" a un elemento de la lista, dicho elemento se puede actualizar así:
+                this.producto.cantidad_disponible = this.producto.cantidad_disponible - baja.cantidad;
                 M.FormSelect.init($('#baja-motivo'));
             } else {
                 throw new Error(data.mensaje);
@@ -151,7 +145,7 @@ new class BajaProducto {
         if (!$('#baja-producto').value) {
             errores += '<br> - Falta ingresar el producto.';
         } else {
-            if (this.producto.cantidad_disponible == 0) {
+            if (this.producto.cantidad_disponible < 1) {
                 errores += '<br> - Este producto no está disponible.';
             } else {
                 let cantidadBaja = util.esNumero($('#baja-cantidad').value) ? Number($('#baja-cantidad').value) : 0;

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Autenticación</title>
+</head>
+
+<body>
+
+    <!-- especificaciones de un cuadro modal -->
+    <div id="modal-autenticacion" class="modal">
+        <div class="modal-content">
+            <!-- especificaciones del formulario de autenticación -->
+            <center>
+                <h5 id="login-titulo" class="teal-text">Por favor, ingrese a su cuenta</h5>
+
+                <div class="container">
+                    <div class="z-depth-1 grey lighten-4 row" style="display: inline-block; padding: 32px 48px 0px 48px; border: 1px solid #EEE;">
+
+                        <form class="col s12">
+
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <i class="material-icons prefix teal-text text-darken-2">account_box</i>
+                                    <input class="validate" type="text" name="login-usuario" id="login-usuario" required/>
+                                    <label for="login-usuario">Ingrese su identificación</label>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <i class="material-icons prefix teal-text text-darken-2">lock</i>
+                                    <input class="validate" type="password" name="login-password" id="login-password" />
+                                    <label for="login-password">Ingrese su contraseña</label>
+                                </div>
+                                <label style="float: right;">
+                                        <a class="pink-text" href="#!"><b>¿Olvidó su contraseña?</b></a>
+                                </label>
+                            </div>
+
+                            <div class="g-recaptcha" data-sitekey="6LezR3oUAAAAAAathx5ZMnKqfbmtXH0uUk5H5sOg"></div>
+
+                            <center>
+                                <div class="row">
+                                    <button type="button" id="login_btnautenticar" name="login_btnautenticar" class="col s12 btn waves-effect teal disabled">Autenticar</button>
+                                </div>
+                            </center>
+                        </form>
+                    </div>
+                </div>
+            </center>
+            <!-- hasta aquí el formulario de autenticación -->
+        </div>
+        <!-- hasta aquí las especificaciones de un cuadro modal -->
+
+    </div>
+
+</body>
+
+</html>
