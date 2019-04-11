@@ -118,10 +118,10 @@ new class Venta {
                         max: 1000
                     },
                     align: "right",
-                    cellEdited: function(celda) {
-                        _calcularLineaVenta(celda, productos);
-                        _calcularTotal(celda.getRow().getTable().getData());
-                    }
+                    // cellEdited: function(celda) {
+                    //     _calcularLineaVenta(celda, productos);
+                    //     _calcularTotal(celda.getRow().getTable().getData());
+                    // }
                 },
                 {
                     title: "Descripción de productos",

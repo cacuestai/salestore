@@ -51,7 +51,6 @@ window.MaterialDialog = MaterialDialog;
 
             formAutenticacion.open();
         });
-
     });
 
     function cargarMenu() {
@@ -92,6 +91,7 @@ window.MaterialDialog = MaterialDialog;
                 formAutenticacion.close();
             }
         });
+
     }
 
 })(document, window);
