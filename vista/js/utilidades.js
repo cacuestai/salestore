@@ -65,7 +65,7 @@ export let gestionarOpciones = (opciones, opcion) => {
  * Importante: como no requiere dar la ruta completa, tenga cuidado...
  * @returns {url} Si la URL existe devuelve un objeto de tipo URL
  */
-export function existeScript(strURL) {
+export function urlScript(strURL) {
     let scripts = Array.from(document.querySelectorAll('script')).map(script => script.src);
     let script = scripts.find(a => a.includes(strURL));
     let url;
