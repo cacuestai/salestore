@@ -230,7 +230,7 @@ export let validarCaptcha = claveSitioWeb => {
                     }).then(data => {
                         if (data.respuesta.success) {
                             console.log('captcha correcto');
-                            document.querySelector('#login_btnautenticar').className = 'col s12 btn btn-large waves-effect teal';
+                            document.querySelector('#login_btnautenticar').className = 'col s12 btn waves-effect teal';
                         } else {
                             throw 'Falló la verificación reCaptcha del lado del servidor';
                         }
