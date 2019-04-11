@@ -54,7 +54,7 @@ new class DevolucionCompra {
      */
     crearLineasDeCompra() {
         this.tablaDetalleCompra = new Tabulator("#devolucion_compra-tabla", {
-            ajaxURL: util.URL,
+            ajaxURL: util.URL_APP,
             ajaxParams: { // parámetros que se envían al servidor para mostrar la tabla
                 clase: 'Compra',
                 accion: 'listarDetalleCompra',
@@ -150,7 +150,7 @@ new class DevolucionCompra {
      */
     inicializarDetallesProveedor() {
         $('#devolucion_compra-datos_compra').addEventListener('change', event => {
-            this.tablaDetalleCompra.setData(util.URL, {
+            this.tablaDetalleCompra.setData(util.URL_APP, {
                 clase: 'Compra',
                 accion: 'listarDetalleCompra',
                 idCompra: event.target.value
@@ -191,7 +191,7 @@ new class DevolucionCompra {
             return;
         }
 
-        util.fetchData(util.URL, {
+        util.fetchData(util.URL_APP, {
             'method': 'POST',
             'body': {
                 clase: 'DevolucionCompra',

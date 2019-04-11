@@ -54,7 +54,7 @@ new class DevolucionVenta {
      */
     crearLineasDeVenta() {
         this.tablaDetalleVenta = new Tabulator("#devolucion_venta-tabla", {
-            ajaxURL: util.URL,
+            ajaxURL: util.URL_APP,
             ajaxParams: { // parámetros que se envían al servidor para mostrar la tabla
                 clase: 'Venta',
                 accion: 'listarDetalleVenta',
@@ -151,7 +151,7 @@ new class DevolucionVenta {
      */
     inicializarDetallesVenta() {
         $('#devolucion_venta-datos_venta').addEventListener('change', event => {
-            this.tablaDetalleVenta.setData(util.URL, {
+            this.tablaDetalleVenta.setData(util.URL_APP, {
                 clase: 'Venta',
                 accion: 'listarDetalleVenta',
                 idVenta: event.target.value
@@ -192,7 +192,7 @@ new class DevolucionVenta {
             return;
         }
 
-        util.fetchData(util.URL, {
+        util.fetchData(util.URL_APP, {
             'method': 'POST',
             'body': {
                 clase: 'DevolucionVenta',

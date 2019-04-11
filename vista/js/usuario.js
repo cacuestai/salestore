@@ -10,7 +10,7 @@ export class Usuario {
         let idPersona = $('#login-usuario').value;
         let contrasena = $('#login-password').value;
 
-        util.fetchData(util.URL, {
+        util.fetchData(util.URL_APP, {
             'method': 'POST',
             'headers': {
                 'Content-Type': 'application/json'

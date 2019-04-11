@@ -1,10 +1,10 @@
 'use strict';
 
 var verLog = true;
-let captcha = false; // si se coloca en true hace validación de captcha
+let captcha = true; // si se coloca en true hace validación de captcha
 
 export let usuario = {}; // se llena con los datos del usuario autenticado
-export const URL = './controlador/fachada.php';
+export const URL_APP = './controlador/fachada.php';
 
 export let setUsuario = usuario => {
     util.usuario.id_persona = usuario.id_persona;
@@ -57,6 +57,22 @@ export let gestionarOpciones = (opciones, opcion) => {
             mensaje(log, 'La opción no está disponible');
         }
     }
+}
+
+/**
+ * Verifica si la URL dada como argumento corresponde a un script cargado.
+ * Importante: no requiere dar la ruta completa, así que tenga cuidado...
+ * @param {String} strURL la URL del script que se quiere comprobar
+ * @returns {url} Si la URL existe devuelve un objeto de tipo URL
+ */
+export function existeScript(strURL) {
+    let scripts = Array.from(document.querySelectorAll('script')).map(script => script.src);
+    let script = scripts.find(a => a.includes(strURL));
+    let url;
+    if (script) {
+        url = new URL(script);
+    }
+    return url;
 }
 
 /**
@@ -127,7 +143,7 @@ export let crearLista = (listaSeleccionable, elementos, clave, valor, primerItem
  *  primerItem: opcionalmente un elemento que se agrega al inicio de la lista
  */
 export let cargarLista = opciones => {
-    return util.fetchData(util.URL, {
+    return util.fetchData(util.URL_APP, {
         'body': opciones
     }).then(data => {
         if (data.ok) {
@@ -143,7 +159,7 @@ export let cargarLista = opciones => {
  * Si la solicitud al back-end tiene éxito, devuelve una promesa con el siguiente ID de una tabla determinada
  */
 export let siguiente = (tabla, campo) => {
-    return util.fetchData(util.URL, { // determinar el ID de la siguiente venta
+    return util.fetchData(util.URL_APP, { // determinar el ID de la siguiente venta
         'method': 'POST',
         'body': {
             clase: 'Conexion',
@@ -204,27 +220,37 @@ export let esNumero = n => !isNaN(parseFloat(n)) && isFinite(n);
 export let validarCaptcha = () => {
     if (captcha) {
         grecaptcha.ready(() => {
-            grecaptcha.execute('6LezR3oUAAAAAAathx5ZMnKqfbmtXH0uUk5H5sOg', {
-                action: 'login'
-            }).then((token) => {
-                fetchData(util.URL, {
-                    'method': 'POST',
-                    'body': {
-                        'clase': 'Conexion',
-                        'accion': 'validarCaptcha',
-                        'token': token
-                    }
-                }).then(data => {
-                    if (data.respuesta.success) {
-                        console.log('captcha correcto');
-                        document.querySelector('#login_btnautenticar').className = 'col s12 btn btn-large waves-effect teal';
-                    } else {
-                        console.log(data);
-                    }
-                }).catch(error => {
-                    mensaje(error, 'No se pudo iniciar sesión');
-                });
-            });
+            // se obtiene el objeto URL del script captcha que se debió incluir en el index.html de la aplicación
+            let objURLCaptcha = util.existeScript('www.google.com/recaptcha/api.js');
+            if (objURLCaptcha) {
+                // si se pudo referenciar la URL de reCaptcha se utiliza enseguida el parámetro 'render' de dicha URL
+                // como primer argumento de la siguiente solicitud de verificación
+                try {
+                    grecaptcha.execute(objURLCaptcha.searchParams.get('render'), {
+                        action: 'login'
+                    }).then((token) => {
+                        fetchData(util.URL_APP, {
+                            'method': 'POST',
+                            'body': {
+                                'clase': 'Conexion',
+                                'accion': 'validarCaptcha',
+                                'token': token
+                            }
+                        }).then(data => {
+                            if (data.respuesta.success) {
+                                console.log('captcha correcto');
+                                document.querySelector('#login_btnautenticar').className = 'col s12 btn btn-large waves-effect teal';
+                            } else {
+                                throw 'Falló la verificación reCaptcha del lado del servidor';
+                            }
+                        }).catch(error => {
+                            mensaje(error, 'No se pudo comprobar que el usuario sea humano');
+                        });
+                    });
+                } catch (e) {
+                    mensaje(e, 'No se pudo comprobar que el usuario sea humano');
+                }
+            }
         });
     } else {
         document.querySelector('#login_btnautenticar').className = 'col s12 btn btn-large waves-effect teal';

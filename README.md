@@ -36,6 +36,11 @@ Asegúrese de asignar aquí los parámetros de conexión a su base de datos y de
 
 Luego de haber cargado la base de datos, para ingresar a la aplicación use un usuario con **ID** entre **001** y **013**. la contraseña para cualquiera de estos usuarios es **123**
 
+### Características de la versión 0.9.1
+  - Se cambia en Utilidades.js el nombre de la constante URL por URL_APP, para evitar conflictos con el objeto URL de Javascript.
+  - Se agrega a Utilidades.js la función existeScript(strURL) que devuelve un objeto URL si la cadena dada como argumento está contenida en la propiedad "src" de alguno de los scripts cargados por la aplicación.
+  - Se mejora la verificación en la función Utilidades.validarCaptcha()
+
 ### Características de la versión 0.9.0
   - Se verifica mediante [reCaptcha] que sea un humano quien accede al sistema.
   - Se agrega el método "autenticar" a la clase Personal.php para verificar contraseñas mediante [password_verify].
@@ -44,7 +49,7 @@ Luego de haber cargado la base de datos, para ingresar a la aplicación use un u
   - En main.js se hacer pequeños ajustes para incorporar la utilización de reCaptcha y la autenticación de usuarios.
   - **Importante**: si PHP reporta el error: failed loading cafile stream: `C:\xampp\apache\bin\curl-ca-bundle.crt', descargue curl-7.64.0_3-win64-mingw.zip (o una versión más actualizada si existe) de https://curl.haxx.se/windows/, descomprima y copie de ./curl-7.64.0-win64-mingw/bin el archivo curl-ca-bundle.crt a C:/xampp/apache/bin.
   - Tenga en cuenta además que la contraseña de ingreso para todos los usuarios es "123".
-  - ESta versión incluye [Tabulator] versión 4.2.5.
+  - Esta versión incluye [Tabulator] versión 4.2.5.
   - Puede que su base de datos requiera incorporar cambios a partir de tdbsystem-pgscript.sql en lo que respecta a vistas y procedimientos almacenados.
 
 ### Características de la versión 0.1.0

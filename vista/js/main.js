@@ -35,7 +35,6 @@ window.MaterialDialog = MaterialDialog;
     }
 
     doc.addEventListener('DOMContentLoaded', event => {
-
         // se carga la página de autenticación de usuarios
         $('#index-contenedor').cargar('./vista/html/autenticacion.html', (contenedor) => {
             // se crea un diálogo modal con la página cargada

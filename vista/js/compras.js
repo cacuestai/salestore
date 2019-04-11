@@ -48,7 +48,7 @@ new class Compra {
             $('#compra-proveedor').value = '';
             M.FormSelect.init($('#compra-proveedor'));
 
-            util.siguiente('ventas', 'id_venta').then(data => {
+            util.siguiente('compras', 'id_compra').then(data => {
                 if (data.ok) {
                     $('#compra-numero').value = data.siguiente;
                     M.updateTextFields();
@@ -70,7 +70,7 @@ new class Compra {
      * éxito, se inicia la creación de una tabla para ingresar las líneas de compra (detalles de compra).
      */
     crearListaProductos() {
-        util.fetchData(util.URL, {
+        util.fetchData(util.URL_APP, {
             'body': {
                 'clase': 'Producto',
                 'accion': 'listar'
@@ -251,7 +251,7 @@ new class Compra {
             detalle: this.tablaCompras.getData()
         };
 
-        util.fetchData(util.URL, {
+        util.fetchData(util.URL_APP, {
             'method': 'POST',
             'body': {
                 clase: 'Compra',

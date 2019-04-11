@@ -81,7 +81,7 @@ new class Venta {
      * éxito, se inicia la creación de una tabla para ingresar las líneas de venta (detalles de venta).
      */
     crearListaProductos() {
-        util.fetchData(util.URL, {
+        util.fetchData(util.URL_APP, {
             'body': {
                 'clase': 'Producto',
                 'accion': 'listar'
@@ -249,7 +249,7 @@ new class Venta {
             detalle: this.tablaLineasVentas.getData()
         };
 
-        util.fetchData(util.URL, {
+        util.fetchData(util.URL_APP, {
             'method': 'POST',
             'body': {
                 clase: 'Venta',
@@ -367,7 +367,7 @@ new class Venta {
                 { title: "Total", field: "total", width: 100, align: "right", formatter: "money", formatterParams: { precision: 0 }, bottomCalc: "sum", bottomCalcFormatter: "money", bottomCalcFormatterParams: { precision: 0 } },
                 { title: "Vendedor", field: "vendedor" }
             ],
-            ajaxURL: util.URL,
+            ajaxURL: util.URL_APP,
             ajaxParams: { // parámetros que se envían al servidor para mostrar la tabla
                 clase: 'Venta',
                 accion: 'listar',
@@ -396,7 +396,7 @@ new class Venta {
 
     actualizarListaVentas(elemento) {
         if (elemento.id === 'venta-listado') {
-            this.tablaVentas.setData(util.URL, {
+            this.tablaVentas.setData(util.URL_APP, {
                 clase: 'Venta',
                 accion: 'listar',
                 opcion: 2

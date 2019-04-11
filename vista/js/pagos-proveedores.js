@@ -58,7 +58,7 @@ new class PagoProveedor {
      * Consulta al back-end el número de pago siguiente y lo muestra.
      */
     siguientePago() {
-        return util.fetchData(util.URL, { // determinar el ID del siguiente pago
+        return util.fetchData(util.URL_APP, { // determinar el ID del siguiente pago
             'method': 'POST',
             'body': {
                 clase: 'Conexion',
@@ -85,7 +85,7 @@ new class PagoProveedor {
 
         this.tablaCreditos = new Tabulator('#tabla-creditos', {
             height: "200px",
-            ajaxURL: util.URL,
+            ajaxURL: util.URL_APP,
             ajaxParams: { // parámetros que se envían al servidor para mostrar la tabla
                 clase: 'Compra',
                 accion: 'seleccionar',
@@ -121,7 +121,7 @@ new class PagoProveedor {
         console.log('cargando pagos');
         this.tablaPagos = new Tabulator('#tabla-pagos', {
             height: "200px",
-            ajaxURL: util.URL,
+            ajaxURL: util.URL_APP,
             ajaxParams: { // parámetros que se envían al servidor para mostrar la tabla
                 clase: 'PagoProveedor',
                 accion: 'seleccionar',
@@ -163,13 +163,13 @@ new class PagoProveedor {
 
         $('#pago_proveedor-proveedor').addEventListener('change', event => {
             // mostrar la lista de créditos del proveedor actual
-            tablaCreditos.setData(util.URL, {
+            tablaCreditos.setData(util.URL_APP, {
                 clase: 'Compra',
                 accion: 'seleccionar',
                 proveedor: $('#pago_proveedor-proveedor').value
             }).then(() => {
                 // mostrar la lista de pagos del proveedor actual
-                tablaPagos.setData(util.URL, {
+                tablaPagos.setData(util.URL_APP, {
                     clase: 'PagoProveedor',
                     accion: 'seleccionar',
                     proveedor: $('#pago_proveedor-proveedor').value
@@ -195,7 +195,7 @@ new class PagoProveedor {
                     valor: abonoActual,
                     fecha: $('#pago_proveedor-fecha').value
                 }
-                util.fetchData(util.URL, {
+                util.fetchData(util.URL_APP, {
                     'method': 'POST',
                     'body': {
                         clase: 'PagoProveedor',

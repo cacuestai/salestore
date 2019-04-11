@@ -33,7 +33,7 @@ new class BajaProducto {
                 $('#baja-id').value = data.siguiente;
                 M.updateTextFields();
                 // se solicita la lista de productos para crear un input-autocompletar
-                util.fetchData(util.URL, {
+                util.fetchData(util.URL_APP, {
                     'body': {
                         clase: 'Producto',
                         accion: 'listar'
@@ -102,7 +102,7 @@ new class BajaProducto {
             cantidad: $('#baja-cantidad').value
         };
 
-        util.fetchData(util.URL, {
+        util.fetchData(util.URL_APP, {
             'method': 'POST',
             'body': {
                 clase: 'BajaProducto',

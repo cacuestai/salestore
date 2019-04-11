@@ -109,7 +109,7 @@ new class Producto {
 
     generarTabla() {
         return new Tabulator(this.contenedor, {
-            ajaxURL: util.URL,
+            ajaxURL: util.URL_APP,
             ajaxParams: this.parametros,
             ajaxConfig: 'POST', // tipo de solicitud HTTP ajax
             ajaxContentType: 'json', // enviar parámetros al servidor como una cadena JSON
@@ -195,7 +195,7 @@ new class Producto {
         };
 
         // se envían los datos del nuevo producto al back-end y se nuestra la nueva fila en la tabla
-        util.fetchData(util.URL, {
+        util.fetchData(util.URL_APP, {
             'method': 'POST',
             'body': {
                 clase: this.parametros.clase,
@@ -266,7 +266,7 @@ new class Producto {
         };
 
         // se envían los datos del nuevo producto al back-end y se nuestra la nueva fila en la tabla
-        util.fetchData(util.URL, {
+        util.fetchData(util.URL_APP, {
             'method': 'POST',
             'body': {
                 clase: this.parametros.clase,
@@ -309,7 +309,7 @@ new class Producto {
                             let idFila = filaActual.getData().id_producto;
 
                             // se envía el ID del producto al back-end para el eliminado y se actualiza la tabla
-                            util.fetchData(util.URL, {
+                            util.fetchData(util.URL_APP, {
                                 'method': 'POST',
                                 'body': {
                                     clase: 'Producto',
