@@ -61,18 +61,14 @@ export let gestionarOpciones = (opciones, opcion) => {
 
 /**
  * Verifica si el string dado como argumento forma parte de la URL de un script cargado.
- * @param {String} strURL la URL del script que se quiere comprobar
+ * @param {String} strURL Una porción de la URL del script que se quiere comprobar
  * Importante: como no requiere dar la ruta completa, tenga cuidado...
  * @returns {url} Si la URL existe devuelve un objeto de tipo URL
  */
 export function urlScript(strURL) {
     let scripts = Array.from(document.querySelectorAll('script')).map(script => script.src);
     let script = scripts.find(a => a.includes(strURL));
-    let url;
-    if (script) {
-        url = new URL(script);
-    }
-    return url;
+    return script ? new URL(script) : '';
 }
 
 /**
