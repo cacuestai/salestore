@@ -19,7 +19,7 @@ new class Compra {
         this.inicializarProveedores();
 
         $('#compra-cancelar').addEventListener('click', event => {
-            this.cancelarCompra();
+            this.inicializarFormulario();
         });
 
         $('#compra-registrar').addEventListener('click', event => {
@@ -259,20 +259,12 @@ new class Compra {
                 compra: compra
             }
         }).then(data => {
-            console.log(data);
-
             // si todo sale bien se retorna el ID de la compra registrada
             if (data.ok) {
                 this.actualizarStock(compra.detalle);
                 $('#compra-numero').value = data.id_compra;
                 util.mensaje('', '<i class="material-icons">done</i> <p>  compra exitosa</p>', 'teal');
-                this.tablaCompras.clearData();
-                $('#compra-proveedor').value = '';
-                $('#compra-paga').value = '';
-                $('#compra-adeuda').value = '';
-                $('#compra-total').value = '';
-                $('#compra-iva').value = '';
-                M.FormSelect.init($('#compra-proveedor'));
+                this.inicializarFormulario();
             } else {
                 throw new Error(data.mensaje);
             }
@@ -297,10 +289,10 @@ new class Compra {
     /**
      * Al pulsar este botón los datos que se estén editando actualmente, se perderán.
      */
-    cancelarCompra() {
+    inicializarFormulario() {
         this.tablaCompras.clearData();
-        $('#compra-proveedor').value = '';
-        $('#compra-vendedor').value = '';
+        $('#compra-proveedor').selectedIndex = 0;
+        M.FormSelect.init($('#compra-proveedor'));
         $('#compra-paga').value = '';
         $('#compra-adeuda').value = '';
         $('#compra-total').value = '';

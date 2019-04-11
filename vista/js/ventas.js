@@ -27,7 +27,7 @@ new class Venta {
         this.inicializarClientes();
 
         $('#venta-cancelar').addEventListener('click', event => {
-            this.cancelarVenta();
+            this.inicializarFormulario();
         });
 
         $('#venta-registrar').addEventListener('click', event => {
@@ -262,9 +262,7 @@ new class Venta {
                 this.actualizarStock(venta.detalle);
                 $('#venta-numero').value = data.id_venta;
                 M.toast({ html: `Venta insertada con éxito. Seguimos con la ${data.id_venta}` });
-                $('#venta-paga').value = '';
-                $('#venta-cliente').selectedIndex = 0;
-                M.FormSelect.init($('#venta-cliente'));
+                this.inicializarFormulario();
             } else {
                 throw new Error(data.mensaje);
             }
@@ -289,13 +287,15 @@ new class Venta {
     /**
      * Al pulsar este botón los datos que se estén editando actualmente, se perderán.
      */
-    cancelarVenta() {
+    inicializarFormulario() {
         this.tablaLineasVentas.clearData();
-        $('#venta-cliente').value = '';
+        $('#venta-cliente').selectedIndex = 0;
+        M.FormSelect.init($('#venta-cliente'));
         $('#venta-paga').value = '';
         $('#venta-adeuda').value = '';
         $('#venta-total').value = '';
         $('#venta-iva').value = '';
+        $('#venta-paga').value = '';
     }
 
     /**
