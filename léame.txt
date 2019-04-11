@@ -1,0 +1,65 @@
+Pendiente de implementar
+
+- Revisar la posibilidad de usar validity.typeMismatch para validar los formularios
+- Tener en cuenta enviar datos eliminando espacios al principio y al final
+- Tener en cuenta que las devoluciones x venta y las compras adicionan en cantidad de productos
+- Tener en cuenta que las devoluciones x compra y las ventas restan en cantidad de productos
+- Tener en cuenta que pueden quedar saldos a favor x devoluciones x venta
+- Debe verificarse la cantidad disponible antes de vender
+- Cuando los clientes que adeudan queden en cero, permitir eliminar el registro de pagos deudas
+  lo que implica un nuevo campo {#fact, fechaReset} en la tabla clientes que indique a partir de qué número de 
+  venta se debe calcular la deuda, la próxima vez que se realice un pago. Esto también permite
+  determinar cuál fue la última fecha en que el cliente quedó sin deudas. 
+  Se podría preguntar a los estudiantes sobre cómo implementar esta estrategia.
+  registros que estén "pagado=false"
+- Un cliente sin crédito no puede quedar debiendo
+- Agregar placeholder a los elementos HTML que lo requieran
+- Organizar las funciones "seleccionar" de PHP, conforme a PagoCliente
+- Los títulos de las páginas como en PagoCliente
+- Al seleccionar una fila de "Personal" debe actualizar incluso el perfil *** 
+- Cambiar mensaje "Mostrar u ocultar ID" sólo por "Mostrar ID..."
+- Hacer un sistema de validación basado en Toast que tome todo el formulario y lo valide
+- Sólo a los clientes con crédito se les puede fiar
+- Probar sin registros en las tablas
+- Revisar tomando como base ventas, los mensajes de fallo al insertar registros con autonuméricos
+- Mirar la posibilidad de una función de validación genérica para formularios
+  Podría ser agregando una data-xxx a los campos para recorrerlos fácilmente al validar.  
+- Solo cuando un administrador esté autenticado, puede hacer compras
+- Actualmente no se registra quién hace las compras. Debe corregirse el detalle
+- Al hacer la compra el precio de compra debe ser un porcentaje menor que el de venta
+- En compras, la cantidad recibida debe validarse contra la cantidad pedida
+- Tener en cuenta que las devoluciones afectan la lista que visualiza los créditos en pagos clientes/proveedores
+- Tener en cuenta que las devoluciones afectan la cantidad de productos disponibles
+- Revisar que al insertar los autonuméricos desplieguen el siguiente correctamente.
+- Es posible que la cantidad disponible de un producto para la venta quede sin actualizar luego
+  de realizada una venta, como estaba sucediendo con bajas ya fue corregido mediante una lista de productos
+  que recuerda su índice para modificar fácilmente la cantidad disponible.
+- Cargar un menú distinto para cada tipo de usuario
+- Puede pensarse en deshacer baja. Normalmente las bajas no se modifican. Lo que se requiere es un aviso de que la 
+  acción es irreversible y permitir cancelar o continuar con la acción. De cualquier manera el sistema deja la 
+  puerta abierta para que por productos se pueda modificar la cantidad disponible para estos casos o cuando haya 
+  que cuadrar los inventarios a las malas.
+- Pagos de clientes y pagos a proveedores en una misma página con pestañas  <<<<<<<<<<<<<<<<
+- En ventas, al seleccionar un producto o cambiar la cantidad a vender debe actualizarse un mensaje con
+  la cantidad que queda disponible.
+- Dar formato a los ID que se están mostrando con varios ceros a la izquierda
+- Todos los métodos listar hacerlos de muestra del de Venta.php
+- Ojo con las operaciones y consultas relacionadas con ventas en las que no se está aplicando IVA y descuentos
+- Verificar cuando un addEventListener se asigna varias veces sobre el mismo objeto porque puede darse el caso
+  que se esté disparando N veces
+- Ver DevolucionVenta.js::enRango() para usar como modelo de validación de entradas en los demás grid
+- Inserciones como ventas, compras, devoluciones, requieren manejarse como una transacción con commit y 
+- >>> Recordar que la cantidad disponible para una devolución es igual a lo vendido menos lo posiblemente devuelto antes <<<<
+-       Para esto tener en cuenta que un producto puede aparecen en varias lineas de venta en la misma venta
+-       Pueden haber varias devoluciones de un mismo producto en una venta.
+- El formulario de ventas no se inicializa cuando se registra una venta
+- La lista de clientes y proveedores en "PAGOS" sólo debería mostrar a los que se les debe *******************
+- Para pagos a proveedores, listar sólo a los que se les deba, igual con clientes
+- Permitir descargar el log del sistema
+
+  
+    
+  
+
+
+
