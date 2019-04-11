@@ -1,7 +1,7 @@
 'use strict';
 
 var verLog = true;
-let captcha = true; // si se coloca en true hace validación de captcha
+let captcha = false; // si se coloca en true hace validación de captcha
 
 export let usuario = {}; // se llena con los datos del usuario autenticado
 export const URL_APP = './controlador/fachada.php';
