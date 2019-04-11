@@ -35,13 +35,23 @@ window.MaterialDialog = MaterialDialog;
     }
 
     doc.addEventListener('DOMContentLoaded', event => {
+        let claveSitioWeb;
+        // se obtiene el objeto URL del script reCAPTCHA que se debió incluir en el index.html de la aplicación
+        let objURLCaptcha = util.existeScript('www.google.com/recaptcha/api.js');
+        if (objURLCaptcha) {
+            // si se pudo referenciar la URL de reCAPTCHA se utiliza enseguida el parámetro 'render' de dicha URL
+            // para mantener dicha referencia de manera global
+            claveSitioWeb = objURLCaptcha.searchParams.get('render');
+        }
+
         // se carga la página de autenticación de usuarios
         $('#index-contenedor').cargar('./vista/html/autenticacion.html', (contenedor) => {
+            $('#recaptcha').dataset.sitekey = claveSitioWeb;
             // se crea un diálogo modal con la página cargada
             formAutenticacion = M.Modal.init($('#modal-autenticacion'), {
                 dismissible: false, // impedir el acceso a la aplicación durante la autenticación
                 onOpenStart: () => {
-                    util.validarCaptcha();
+                    util.validarCaptcha(claveSitioWeb);
                 }
             });
 

@@ -217,39 +217,33 @@ export let tabulatorES = {
  */
 export let esNumero = n => !isNaN(parseFloat(n)) && isFinite(n);
 
-export let validarCaptcha = () => {
+export let validarCaptcha = claveSitioWeb => {
     if (captcha) {
         grecaptcha.ready(() => {
-            // se obtiene el objeto URL del script captcha que se debió incluir en el index.html de la aplicación
-            let objURLCaptcha = util.existeScript('www.google.com/recaptcha/api.js');
-            if (objURLCaptcha) {
-                // si se pudo referenciar la URL de reCaptcha se utiliza enseguida el parámetro 'render' de dicha URL
-                // como primer argumento de la siguiente solicitud de verificación
-                try {
-                    grecaptcha.execute(objURLCaptcha.searchParams.get('render'), {
-                        action: 'login'
-                    }).then((token) => {
-                        fetchData(util.URL_APP, {
-                            'method': 'POST',
-                            'body': {
-                                'clase': 'Conexion',
-                                'accion': 'validarCaptcha',
-                                'token': token
-                            }
-                        }).then(data => {
-                            if (data.respuesta.success) {
-                                console.log('captcha correcto');
-                                document.querySelector('#login_btnautenticar').className = 'col s12 btn btn-large waves-effect teal';
-                            } else {
-                                throw 'Falló la verificación reCaptcha del lado del servidor';
-                            }
-                        }).catch(error => {
-                            mensaje(error, 'No se pudo comprobar que el usuario sea humano');
-                        });
+            try {
+                grecaptcha.execute(claveSitioWeb, {
+                    action: 'login'
+                }).then((token) => {
+                    fetchData(util.URL_APP, {
+                        'method': 'POST',
+                        'body': {
+                            'clase': 'Conexion',
+                            'accion': 'validarCaptcha',
+                            'token': token
+                        }
+                    }).then(data => {
+                        if (data.respuesta.success) {
+                            console.log('captcha correcto');
+                            document.querySelector('#login_btnautenticar').className = 'col s12 btn btn-large waves-effect teal';
+                        } else {
+                            throw 'Falló la verificación reCaptcha del lado del servidor';
+                        }
+                    }).catch(error => {
+                        mensaje(error, 'No se pudo comprobar que el usuario sea humano');
                     });
-                } catch (e) {
-                    mensaje(e, 'No se pudo comprobar que el usuario sea humano');
-                }
+                });
+            } catch (e) {
+                mensaje(e, 'No se pudo comprobar que el usuario sea humano');
             }
         });
     } else {

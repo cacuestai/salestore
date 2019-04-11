@@ -38,8 +38,8 @@ Luego de haber cargado la base de datos, para ingresar a la aplicación use un u
 
 ### Características de la versión 0.9.1
   - Se cambia en Utilidades.js el nombre de la constante URL por URL_APP, para evitar conflictos con el objeto URL de Javascript.
-  - Se agrega a Utilidades.js la función existeScript(strURL) que devuelve un objeto URL si la cadena dada como argumento está contenida en la propiedad "src" de alguno de los scripts cargados por la aplicación.
-  - Se mejora la verificación en la función Utilidades.validarCaptcha()
+  - Se agrega a Utilidades.js la función urlScript(strURL) que devuelve un objeto URL si la cadena dada como argumento está contenida en la propiedad "src" de alguno de los scripts cargados por la aplicación.
+  - Se simplifica la verificación en la función Utilidades.validarCaptcha(), ahora sólo se requiere ingresar la clave del front-end una sola vez en la cabecera de index.html.
 
 ### Características de la versión 0.9.0
   - Se verifica mediante [reCaptcha] que sea un humano quien accede al sistema.
