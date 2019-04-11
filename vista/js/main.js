@@ -39,8 +39,8 @@ window.MaterialDialog = MaterialDialog;
         // se obtiene el objeto URL del script reCAPTCHA que se debió incluir en el index.html de la aplicación
         let objURLCaptcha = util.urlScript('www.google.com/recaptcha/api.js');
         if (objURLCaptcha) {
-            // si se pudo referenciar la URL de reCAPTCHA se utiliza enseguida el parámetro 'render' de dicha URL
-            // para mantener dicha referencia de manera global
+            // si se pudo referenciar la URL de reCAPTCHA se utiliza enseguida el parámetro 'render' 
+            // de dicha URL para mantener dicha referencia de manera global
             claveSitioWeb = objURLCaptcha.searchParams.get('render');
         }
 
