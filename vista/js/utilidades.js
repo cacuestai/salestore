@@ -1,7 +1,7 @@
 'use strict';
 
 var verLog = true;
-let captcha = false; // si se coloca en true hace validación de captcha
+let captcha = true; // si se coloca en true hace validación de captcha
 
 export let usuario = {}; // se llena con los datos del usuario autenticado
 export const URL_APP = './controlador/fachada.php';
@@ -60,9 +60,9 @@ export let gestionarOpciones = (opciones, opcion) => {
 }
 
 /**
- * Verifica si la URL dada como argumento corresponde a un script cargado.
- * Importante: no requiere dar la ruta completa, así que tenga cuidado...
+ * Verifica si el string dado como argumento forma parte de la URL de un script cargado.
  * @param {String} strURL la URL del script que se quiere comprobar
+ * Importante: como no requiere dar la ruta completa, tenga cuidado...
  * @returns {url} Si la URL existe devuelve un objeto de tipo URL
  */
 export function existeScript(strURL) {

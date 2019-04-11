@@ -22,16 +22,16 @@ export class Usuario {
                 contrasena: contrasena
             }
         }).then(data => {
-            /////////////////////////////////////////////////////////////////
-            //// QUITAR ESTO CUANDO TERMINE CUANDO EL PRODUCTO ESTÉ TERMINADO
-            util.setUsuario({
-                id_persona: '001',
-                nombre: 'Carlos',
-                perfil: 'Administrador'
-            });
-            hacerAlgo();
-            return;
-            /////////////////////////////////////////////////////////////////
+            // //////////////////////////////////////////////////
+            // //// QUITAR ESTO CUANDO EL PRODUCTO ESTÉ TERMINADO
+            // util.setUsuario({
+            //     id_persona: '001',
+            //     nombre: 'Carlos',
+            //     perfil: 'Administrador'
+            // });
+            // hacerAlgo();
+            // return;
+            // //////////////////////////////////////////////////
 
             if (data.ok) {
                 util.setUsuario(data.usuario);
