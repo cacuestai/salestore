@@ -287,7 +287,7 @@ new class Compra {
     }
 
     /**
-     * Al pulsar este botón los datos que se estén editando actualmente, se perderán.
+     * Inicializa el formulario de compras.
      */
     inicializarFormulario() {
         this.tablaCompras.clearData();

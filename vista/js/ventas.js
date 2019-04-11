@@ -285,7 +285,7 @@ new class Venta {
     }
 
     /**
-     * Al pulsar este botón los datos que se estén editando actualmente, se perderán.
+     * Inicializa el formulario de ventas.
      */
     inicializarFormulario() {
         this.tablaLineasVentas.clearData();
@@ -406,6 +406,5 @@ new class Venta {
             this.tablaVentas.redraw();
         }
     }
-
 
 }
