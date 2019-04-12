@@ -7,16 +7,13 @@ import { ControlDeInactividad } from '../libs/idle-timeout.js';
 
 window.util = util;
 window.MaterialDialog = MaterialDialog;
+let controlDeInactividad;
 
 ((doc, win) => {
 
     let menuPrincipal;
     let formAutenticacion; // objeto que referencia al formulario de autenticación
     const usuario = new Usuario();
-
-    let ctrlInactividad = new ControlDeInactividad();
-    ctrlInactividad.inactivityTime();
-
 
     // cada clave de las propiedades de este objeto, está asociada a un elemento de lista en menu.html y
     // cada valor asociado a una clave corresponde a una página que debe cargarse o a una función que 
@@ -106,6 +103,7 @@ window.MaterialDialog = MaterialDialog;
 
             if (typeof formAutenticacion === 'object') {
                 formAutenticacion.close();
+                controlDeInactividad = new ControlDeInactividad();
             }
         });
 

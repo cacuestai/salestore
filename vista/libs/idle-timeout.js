@@ -7,46 +7,49 @@ export class ControlDeInactividad {
 
     constructor() {
 
-        this.idTimeOut;
+        this.idleDurationSecs = 3; // X number of seconds
+        this.redirectUrl = 'index.html'; // Redirect idle users to this URL
+        this.idleTimeout; // variable to hold the timeout, do not modify
 
-        document.onmousedown = function() {
-            inactivityTime();
-        };
+        // Init on page load
+        this.resetIdleTimeout();
 
-        document.onkeypress = function() {
-            inactivityTime();
-        };
-
-        document.ontouchstart = function() {
-            inactivityTime();
-        };
-
-        this.resetTimer();
+        // Reset the idle timeout on any of the events listed below
+        ['click', 'touchstart', 'mousemove'].forEach(evt =>
+            document.addEventListener(evt, this.resetIdleTimeout, false)
+        );
     }
 
-    inactivityTime() {
-        document.addEventListener('mousemove', this.resetTimer);
-        document.addEventListener('keypress', this.resetTimer);
+    fsfsfsfsdfsdf() {
+        MaterialDialog.dialog('Esto se va a cerrar', {
+            title: 'Filtrar datos',
+            buttons: {
+                close: {
+                    text: 'Terminar',
+                    callback: () => location.href = this.redirectUrl
+                },
+                confirm: {
+                    text: 'Filtrar',
+                    //callback: buscarDatos // uso de la función definida en la línea 27
+                }
+            }
+        });
+    }
+
+    resetIdleTimeout() {
+        let x = this.fsfsfsfsdfsdf;
+        // Clears the existing timeout
+        if (this.idleTimeout) {
+            clearTimeout(this.idleTimeout);
+        }
+
+        // Set a new idle timeout to load the redirectUrl after idleDurationSecs
+        this.idleTimeout = setTimeout(() => {
+            // location.href = this.redirectUrl;
+            x()
+        }, this.idleDurationSecs * 1000);
     };
 
-    resetTimer() {
-        /*
-            Debe quedar funcionando así:
-            - reiniciar un conteo de 20 segundos
-            - desplegar un diálogo donde se vea el conteo
-            - si se pulsa el botón continuar
-            -   clearTimeout & setTimeout(logout, segundosEstablecidos)
-            - si no
-            -   si se alcanza el tiempo de espera, terminar la sesión
-            - Fin si 
-        */
-        clearTimeout(this.idTimeOut);
-        this.idTimeOut = setTimeout(logout, 6000)
 
-        function logout() {
-            console.log('Se acabó su tiempo');
-            //location.href = 'logout.php'
-        }
-    }
 
 }
