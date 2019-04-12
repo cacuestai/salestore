@@ -3,6 +3,7 @@
 import * as util from './utilidades.js';
 import { Usuario } from './usuario.js';
 import { MaterialDialog } from '../libs/material-dialog.js';
+import { ControlDeInactividad } from '../libs/idle-timeout.js';
 
 window.util = util;
 window.MaterialDialog = MaterialDialog;
@@ -12,6 +13,10 @@ window.MaterialDialog = MaterialDialog;
     let menuPrincipal;
     let formAutenticacion; // objeto que referencia al formulario de autenticación
     const usuario = new Usuario();
+
+    let ctrlInactividad = new ControlDeInactividad();
+    ctrlInactividad.inactivityTime();
+
 
     // cada clave de las propiedades de este objeto, está asociada a un elemento de lista en menu.html y
     // cada valor asociado a una clave corresponde a una página que debe cargarse o a una función que 
@@ -36,6 +41,8 @@ window.MaterialDialog = MaterialDialog;
 
     doc.addEventListener('DOMContentLoaded', event => {
         let claveSitioWeb;
+
+
         // se obtiene el objeto URL del script reCAPTCHA que se debió incluir en el index.html de la aplicación
         let objURLCaptcha = util.urlScript('www.google.com/recaptcha/api.js');
         if (objURLCaptcha) {
